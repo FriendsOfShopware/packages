@@ -1,0 +1,32 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+    <div class="container">
+        <h2>Getting Started</h2>
+
+        <p>
+            Login with your Shopware credentials and select your domain.
+            Follow the wizard and add the new composer repository to your <strong>composer.json</strong>
+            <br>
+            <strong>No credentials will be saved. Your credentials will be encrypted to an token and has to be passed to each interaction</strong>
+        </p>
+
+        <h2>FAQ</h2>
+
+        <h4>A package is missing?</h4>
+        <p>
+            Login to your Account, automatically will the new updates fetched. It happens also on every composer update
+        </p>
+
+        <h4>Where can i find the Source code or can I host it myself?</h4>
+        <p>
+            You can find the Source code at <a href="https://github.com/FriendsOfShopware/packagist/">Github</a> with an Setup introduction for selfhosting.
+        </p>
+
+        <h4>It's not working anymore!</h4>
+        <p>
+            Please send me an Tweet <a href="https://twitter.com/@Shyim97">@Shyim97</a>. This project bases on API routes, which changing very often
+        </p>
+    </div>
+{% endblock %}

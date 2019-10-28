@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Packages :: FriendsOfShopware{% endblock %}</title>
+        <link rel="shortcut icon" type=image/png href="https://avatars3.githubusercontent.com/u/36633261?s=32&v=4">
+        <meta name=theme-color content=#189eff>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="navbar-wrapper">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/">
+                        <img src="https://d33wubrfki0l68.cloudfront.net/ba0770ca3d1c8b5f3df42cf96d7f8f0461270737/ed8ae/images/frosh_rgb.svg" width="50"/>
+                        Packages
+                    </a>
+
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav float-right">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Login</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        {% block search_bar %}
+        <div class="search-wrapper">
+            <div class="container">
+                <input type="text" class="form-control" placeholder="Search packages..."/>
+                <div class="helpText">
+                    It aggregates Shopware plugins as installable Composer packages. If a plugin is missing, please press login and press refresh
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+        <main class="bg-light">
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="text-muted">
+            <div class="container">
+                <p>FriendsOfShopware Packages is not associated with the shopware AG. If you have problems please submit your issues <a href="https://github.com/FriendsOfShopware/packages/issues">here</a>.</p>
+            </div>
+        </footer>
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </body>
+</html>
