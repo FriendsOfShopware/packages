@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block search_bar %}{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+        <div class="card p-2" style="margin-top: 10px">
+            <div class="cart-body">
+                <h5 class="cart-title">Available packages</h5>
+
+                <div class="accordion" id="accordionExample">
+                    {% for package in packages %}
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapsePackage-{{ loop.index }}" aria-expanded="true" aria-controls="collapsePackage-{{ loop.index }}">
+                                        {{ package.getComposerName }}
+                                    </button>
+                                </h5>
+                            </div>
+
+                            <div id="collapsePackage-{{ loop.index }}" class="collapse{% if loop.first %} show{% endif %}" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <p>Install it using <code>composer req {{ package.getComposerName }}</code></p>
+                                    <p>Available in following versions: {% for version in package.versions %}{{ version.version }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -20,19 +20,23 @@
       symfony_cmd = pkgs.writeScriptBin "symfony-console" ''
         #! ${pkgs.stdenv.shell}
         cd ${pkgs.packages}
-        exec /run/wrappers/bin/sudo -u packages \
+        /run/wrappers/bin/sudo -E -u packages \
           ${phpPackage}/bin/php \
           -c ${pkgs.writeText "php.ini" phpOptions}\
           bin/console $*
       '';
+      phpEnv = {
+        APP_ENV = "prod";
+        APP_SECRET = builtins.getEnv "APP_SECRET";
+        APP_URL = "https://packages.friendsofshopware.de";
+        DATABASE_URL = "mysql://root:${builtins.getEnv "MYSQL_PASSWORD"}@localhost/packages";
+      };
     in {
       imports = [ ./hardware-configuration.nix ];
       nixpkgs.overlays = import ./overlays.nix;
-      deployment.targetHost = "78.46.250.5";
 
       boot.loader.grub.enable = true;
       boot.loader.grub.version = 2;
-      boot.loader.grub.device = "/dev/sda";
 
       environment.systemPackages = with pkgs; [
         htop
@@ -55,6 +59,7 @@
       services.mysql = {
         enable = true;
         package = pkgs.mariadb;
+        ensureDatabases = [ "packages" ];
       };
 
       services.phpfpm.pools.packages = {
@@ -62,7 +67,9 @@
         group = "nginx";
         phpOptions = phpOptions;
         phpPackage = pkgs.php73;
+        phpEnv = phpEnv;
         settings = {
+          "clear_env" = "no";
           "pm" = "dynamic";
           "pm.max_children" = "32";
           "pm.start_servers" = "2";
@@ -73,8 +80,6 @@
           "listen.group" = "nginx";
           "user" = "packages";
           "group" = "nginx";
-          "env[PATH]" =
-            "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
         };
       };
 
@@ -100,9 +105,6 @@
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
 
                 include ${pkgs.nginx}/conf/fastcgi.conf;
-                fastcgi_param APP_ENV    "prod";
-                fastcgi_param APP_SECRET "${builtins.getEnv "APP_SECRET"}";
-                fastcgi_param APP_URL "https://packages.friendsofshopware.de";
                 fastcgi_param HTTP_PROXY "";
                 fastcgi_buffers 8 16k;
                 fastcgi_buffer_size 32k;
@@ -119,6 +121,7 @@
         after = [ "mysql.service" ];
         wantedBy = [ "multi-user.target" ];
         before = [ "phpfpm-packages.service" ];
+        environment = phpEnv;
         script = ''
           # Clear cache
           if [[ -e /var/lib/packages/var/cache/ ]]; then
@@ -126,6 +129,7 @@
           fi
 
           ${symfony_cmd}/bin/symfony-console cache:warmup
+          ${symfony_cmd}/bin/symfony-console doctrine:migrations:migrate --no-interaction
 
         '';
         serviceConfig.Type = "oneshot";

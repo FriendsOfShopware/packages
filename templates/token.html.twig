@@ -37,7 +37,7 @@
                             <div id="collapsePackage-{{ loop.index }}" class="collapse{% if loop.first %} show{% endif %}" aria-labelledby="headingOne" data-parent="#accordionExample">
                                 <div class="card-body">
                                     <p>Install it using <code>composer req {{ name }}</code></p>
-                                    <p>Available in following versions: {% for version, info in package %}{{ version }}, {% endfor %}</p>
+                                    <p>Available in following versions: {% for version, info in package %}{{ version }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
                                 </div>
                             </div>
                         </div>

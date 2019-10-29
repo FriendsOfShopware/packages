@@ -13,7 +13,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Client
 {
-    private const ENDPOINT = 'https://api.shopware.com/';
+    public const ENDPOINT = 'https://api.shopware.com/';
 
     /**
      * @var HttpClientInterface

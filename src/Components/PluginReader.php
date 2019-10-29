@@ -62,10 +62,6 @@ class PluginReader
             if (isset($xml['label']['en'])) {
                 $data['description'] = $xml['label']['en'];
             }
-
-            if (isset($xml['description']['en'])) {
-                $data['description'] = $xml['description']['en'];
-            }
         } elseif (file_exists($extractLocation . '/' . $pluginName . '/composer.json')) {
             $composerJson = json_decode(file_get_contents($extractLocation . '/' . $pluginName . '/composer.json'), true);
 

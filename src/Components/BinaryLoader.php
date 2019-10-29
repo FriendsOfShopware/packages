@@ -21,6 +21,11 @@ class BinaryLoader
     private $curl;
 
     /**
+     * @var MultiCurl
+     */
+    private $downloadLinkCurl;
+
+    /**
      * @var Client
      */
     private $client;
@@ -28,6 +33,7 @@ class BinaryLoader
     public function __construct(Storage $storage, Client $client)
     {
         $this->curl = new MultiCurl();
+        $this->downloadLinkCurl = new MultiCurl(3);
         $this->storage = $storage;
         $this->client = $client;
     }
@@ -43,21 +49,19 @@ class BinaryLoader
                 $composerVersion->$k = $v;
             }
         } else {
-            $binaryLink = $this->client->fetchDownloadLink($composerVersion->dist['url']);
-
-            if (!$binaryLink) {
-                $composerVersion->invalid = true;
-                return;
-            }
-
-            $this->curl->addRequest(
-                $binaryLink,
+            $shopId = $this->client->currentToken()->getShop()->id;
+            $this->downloadLinkCurl->addRequest(
+                Client::ENDPOINT . $composerVersion->dist['url'] . '?json=true&shopId=' . $shopId,
                 null,
-                [$this, 'processFile'],
+                [$this, 'processDownloadLink'],
                 [
                     'pluginName' => $pluginName,
                     'binary' => $binary,
                     'composerVersion' => $composerVersion
+                ],
+                null,
+                [
+                    'X-Shopware-Token: ' . $this->client->currentToken()->getToken()
                 ]
             );
         }
@@ -67,8 +71,32 @@ class BinaryLoader
 
     public function load()
     {
+        $this->downloadLinkCurl->execute();
+        $this->downloadLinkCurl->reset();
         $this->curl->execute();
         $this->curl->reset();
+    }
+
+    public function processDownloadLink($response, $url, $requestInfo, $userData)
+    {
+        if ($response === false) {
+            $userData['composerVersion']->invalid = true;
+            return;
+        }
+
+        $json = json_decode($response, true);
+
+        if (!array_key_exists('url', $json)) {
+            $userData['composerVersion']->invalid = true;
+            return;
+        }
+
+        $this->curl->addRequest(
+            $json['url'],
+            null,
+            [$this, 'processFile'],
+            $userData
+        );
     }
 
     public function processFile($response, $url, $requestInfo, $userData)

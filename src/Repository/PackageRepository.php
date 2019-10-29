@@ -19,32 +19,16 @@ class PackageRepository extends ServiceEntityRepository
         parent::__construct($registry, Package::class);
     }
 
-    // /**
-    //  * @return Package[] Returns an array of Package objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Package[]
+     */
+    public function findAllPackages(): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('package');
+        $qb->innerJoin('package.versions', 'versions')
+            ->addSelect('versions');
 
-    /*
-    public function findOneBySomeField($value): ?Package
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $qb->getQuery()->getResult();
     }
-    */
+
 }

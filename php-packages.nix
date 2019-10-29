@@ -807,7 +807,7 @@ composerEnv.buildPackage {
   };
 
   postInstall = ''
-    rm -rf storage ssl var node_modules
+    rm -rf storage ssl var node_modules .env
     ln -s /var/lib/packages/ssl ssl
     ln -s /var/lib/packages/var var
     '';

@@ -11,6 +11,8 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
+  boot.loader.grub.device = "/dev/sda";
+  deployment.targetHost = "78.46.250.5";
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/74cd1b2c-7a12-42e2-946f-c2568c8ac0b1";
