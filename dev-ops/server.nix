@@ -17,6 +17,14 @@
         php_admin_flag[log_errors] = on
         max_execution_time = 300
       '';
+      symfony_cmd = pkgs.writeScriptBin "symfony-console" ''
+        #! ${pkgs.stdenv.shell}
+        cd ${pkgs.packages}
+        exec /run/wrappers/bin/sudo -u packages \
+          ${phpPackage}/bin/php \
+          -c ${pkgs.writeText "php.ini" phpOptions}\
+          bin/console $*
+      '';
     in {
       imports = [ ./hardware-configuration.nix ];
       nixpkgs.overlays = import ./overlays.nix;
@@ -105,6 +113,22 @@
             '';
           };
         };
+      };
+
+      systemd.services."packages-setup" = {
+        after = [ "mysql.service" ];
+        wantedBy = [ "multi-user.target" ];
+        before = [ "phpfpm-packages.service" ];
+        script = ''
+          # Clear cache
+          if [[ -e /var/lib/packages/var/cache/ ]]; then
+            rm -rf /var/lib/packages/var/cache/*
+          fi
+
+          ${symfony_cmd}/bin/symfony-console cache:warmup
+
+        '';
+        serviceConfig.Type = "oneshot";
       };
 
       services.redis.enable = true;
