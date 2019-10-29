@@ -3,6 +3,7 @@
 
 namespace App\Components;
 
+use App\Components\Api\AccessToken;
 use App\Struct\License\Binaries;
 use Psr\SimpleCache\CacheInterface;
 
@@ -39,13 +40,13 @@ class Storage
         return $this->cache->set($this->buildCacheKey($pluginName, $binary), $info);
     }
 
-    public function generateLink(Binaries $binary, Client $client): string
+    public function generateLink(Binaries $binary, AccessToken $token): string
     {
         $data = [
-            'filePath' => $binary->filePath,
-            'domain' => $client->getShop()->domain,
-            'username' => $client->getUsername(),
-            'password' => $client->getPassword()
+            'filePath' => substr($binary->filePath, 1),
+            'domain' => $token->getShop()->domain,
+            'username' => $token->getUsername(),
+            'password' => $token->getPassword()
         ];
 
         return getenv('APP_URL') . '/download?token=' . urlencode($this->encryption->encrypt($data));

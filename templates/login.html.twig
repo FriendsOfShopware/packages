@@ -13,13 +13,13 @@
             </div>
         {% endif %}
 
-        {% if domains is defined %}
-            <form method="post" action="{{ url('token') }}">
+        {% if shops is defined %}
+            <form method="post" action="{{ url('shop-selection') }}">
                 <div class="form-group">
-                    <label>Choose domain</label>
-                    <select name="domain" class="form-control">
-                        {% for domain in domains %}
-                            <option value="{{ domain.domain }}">{{ domain.domain }}</option>
+                    <label>Choose shops</label>
+                    <select name="shop" class="form-control">
+                        {% for shop in shops %}
+                            <option value="{{ shop.domain }}">{{ shop.domain }}</option>
                         {% endfor %}
                     </select>
                 </div>

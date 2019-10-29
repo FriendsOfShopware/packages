@@ -2,40 +2,63 @@
 
 namespace App\Controller;
 
+use App\Components\Api\AccessToken;
+use App\Components\Api\Exceptions\AccessDeniedException;
 use App\Components\Client;
 use App\Components\Encryption;
 use App\Components\PackagistLoader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class Login extends AbstractController
 {
     /**
-     * @Route(path="/login", methods={"GET"})
+     * @var \App\Components\Api\Client
+     */
+    private $client;
+
+    public function __construct(\App\Components\Api\Client $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @Route(path="/login", name="login", methods={"GET"})
      */
     public function loginForm(): Response
     {
+        if ($this->getUser() instanceof AccessToken) {
+            return $this->redirectToRoute('account');
+        }
+
         return $this->render('login.html.twig');
     }
 
     /**
      * @Route(path="/login", methods={"POST"})
      */
-    public function domainSelection(Request $request, Client $client): Response
+    public function loginSubmit(Request $request, EventDispatcherInterface $dispatcher): Response
     {
         $username = $request->request->get('shopwareId');
         $password = $request->request->get('password');
 
         try {
-            $client->login($username, $password, null, false);
+            $accessToken = $this->client->login($username, $password);
 
-            $session = $request->getSession();
-            $session->set('credentials', ['username' => $username, 'password' => $password]);
+            $loginToken = new UsernamePasswordToken($accessToken, null, 'main', ['ROLE_USER']);
+            $this->get('security.token_storage')->setToken($loginToken);
 
-            return $this->render('login.html.twig', ['domains' => $client->getShops()]);
-        } catch (\Exception $e) {
+            $event = new InteractiveLoginEvent($request, $loginToken);
+            $dispatcher->dispatch($event);
+
+            return $this->redirectToRoute('shop-selection');
+        } catch (AccessDeniedException $e) {
             return $this->render('login.html.twig', [
                 'loginError' => true
             ]);
@@ -43,28 +66,26 @@ class Login extends AbstractController
     }
 
     /**
-     * @Route(path="/token", name="token", methods={"POST"})
+     * @Route(path="/login/shop-selection", name="shop-selection")
      */
-    public function tokenPage(Request $request, PackagistLoader $packagistLoader, Encryption $encryption): Response
+    public function shopSelection(Request $request)
     {
-        $domain = $request->request->get('domain');
-        $credentials = $request->getSession()->get('credentials');
+        /** @var AccessToken $token */
+        $token = $this->getUser();
+        $shops = $this->client->shops($token);
 
-        $data = $packagistLoader->load($domain, $credentials['username'], $credentials['password']);
+        if ($selectedShop = $request->request->get('shop')) {
+            foreach ($shops as $shop) {
+                if ($shop->domain === $selectedShop) {
+                    $token->setShop($shop);
 
-        $token = $encryption->encrypt([
-            'username' => $credentials['username'],
-            'password' => $credentials['password'],
-            'domain' => $domain
-        ]);
+                    return $this->redirectToRoute('account');
+                }
+            }
+        }
 
-        return $this->render('token.html.twig', [
-            'packages' => $data,
-            'token' => $token,
-            'domain' => $domain,
-            'shop' => $packagistLoader->getClient()->getShop()
+        return $this->render('login.html.twig', [
+            'shops' => $shops
         ]);
     }
-
-
 }

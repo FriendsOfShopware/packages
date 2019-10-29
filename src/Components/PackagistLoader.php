@@ -5,6 +5,7 @@ namespace App\Components;
 use App\Struct\ComposerPackageVersion;
 use App\Struct\License\Binaries;
 use App\Struct\License\License;
+use App\Struct\Shop\Shop;
 
 class PackagistLoader
 {
@@ -13,34 +14,23 @@ class PackagistLoader
      */
     private $binaryLoader;
 
-    /**
-     * @var Client|null
-     */
-    private $client;
-
-    public function __construct(BinaryLoader $binaryLoader, Client $client)
+    public function __construct(BinaryLoader $binaryLoader)
     {
         $this->binaryLoader = $binaryLoader;
-        $this->client = $client;
     }
 
-    public function load(string $domain, string $username, string $password): array
+    /**
+     * @param License[] $licenses
+     */
+    public function load(array $licenses): array
     {
-        $this->client->login($username, $password, $domain);
-        $licenses = $this->client->getLicenses();
-
         $response = [
-            'packages' => $this->mapLicensesToComposerPackages($licenses, $this->client)
+            'packages' => $this->mapLicensesToComposerPackages($licenses)
         ];
 
         $this->binaryLoader->load();
 
         return $this->removeInvalidEntries($response);
-    }
-
-    public function getClient(): ?Client
-    {
-        return $this->client;
     }
 
     /**
@@ -50,13 +40,13 @@ class PackagistLoader
     {
         $response = [];
 
-        foreach ($licenses as $licens) {
-            if ($licens->type->id === 1 || $licens->isExpired || !isset($licens->plugin)) {
+        foreach ($licenses as $license) {
+            if ($license->type->id === 1 || $license->isExpired || !isset($license->plugin)) {
                 continue;
             }
-            $packageName = 'store.shopware.com/' . strtolower($licens->plugin->name);
+            $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
 
-            $response[$packageName] = $this->convertBinaries($packageName, $licens->plugin->name, $licens->plugin->binaries);
+            $response[$packageName] = $this->convertBinaries($packageName, $license->plugin->name, $license->plugin->binaries);
         }
 
         return $response;
@@ -74,7 +64,7 @@ class PackagistLoader
             $version->name = $packageName;
             $version->version = $binary->version;
             $version->dist = [
-                'url' => $binary->filePath . '?json=true&shopId=' . $this->client->getShop()->id,
+                'url' => substr($binary->filePath, 1),
                 'type' => 'zip'
             ];
             $version->type = 'shopware-plugin';
@@ -87,7 +77,7 @@ class PackagistLoader
 
             $versions[$binary->version] = $version;
 
-            $this->binaryLoader->add($pluginName, $binary, $versions[$binary->version], $this->client);
+            $this->binaryLoader->add($pluginName, $binary, $versions[$binary->version]);
         }
 
         return $versions;

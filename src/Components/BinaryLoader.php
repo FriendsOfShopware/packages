@@ -4,6 +4,7 @@
 namespace App\Components;
 
 
+use App\Components\Api\Client;
 use App\Struct\ComposerPackageVersion;
 use App\Struct\License\Binaries;
 
@@ -19,13 +20,19 @@ class BinaryLoader
      */
     private $curl;
 
-    public function __construct(Storage $storage)
+    /**
+     * @var Client
+     */
+    private $client;
+
+    public function __construct(Storage $storage, Client $client)
     {
         $this->curl = new MultiCurl();
         $this->storage = $storage;
+        $this->client = $client;
     }
 
-    public function add(string $pluginName, Binaries $binary, ComposerPackageVersion $composerVersion, Client $client)
+    public function add(string $pluginName, Binaries $binary, ComposerPackageVersion $composerVersion)
     {
         if ($this->storage->hasBinary($pluginName, $binary)) {
             $info = $this->storage->getBinaryInfo($pluginName, $binary);
@@ -36,7 +43,7 @@ class BinaryLoader
                 $composerVersion->$k = $v;
             }
         } else {
-            $binaryLink = $client->getBinaryLink($composerVersion->dist['url']);
+            $binaryLink = $this->client->fetchDownloadLink($composerVersion->dist['url']);
 
             if (!$binaryLink) {
                 $composerVersion->invalid = true;
@@ -55,7 +62,7 @@ class BinaryLoader
             );
         }
 
-        $composerVersion->dist['url'] = $this->storage->generateLink($binary, $client);
+        $composerVersion->dist['url'] = $this->storage->generateLink($binary, $this->client->currentToken());
     }
 
     public function load()
