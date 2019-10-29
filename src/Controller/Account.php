@@ -43,8 +43,6 @@ class Account extends AbstractController
 
         $licenses = $this->client->licenses($token);
 
-        dd($licenses[4]);
-
         $data = $this->packagistLoader->load($licenses);
 
         return $this->render('token.html.twig', [
