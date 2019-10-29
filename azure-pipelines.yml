@@ -1,0 +1,23 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    bash <(curl https://nixos.org/nix/install)
+    source ~/.nix-profile/etc/profile.d/nix.sh
+    nix-env -iA nixpkgs.nixops -iA nixpkgs.openssh
+
+  displayName: 'Setup Nix Package Manager'
+
+- task: InstallSSHKey@0
+  inputs:
+    knownHostsEntry: '78.46.250.5 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDM1zZE8fdCc7ad/nS+NoM5H0jiAnRGyT9flmYKTmwqTZ7K7/T8tODo7zoKguzmlFApTi2X/ogLd3HzwtzattUK7qpywF88SqHUe4aAr6Wl46Z70C1lkc8/krs7YK6L+ULGMYpJdROdlln/KAvqKOChbYQ8WB26yXs/cZ5qLw3rUXeeltKvGL818TO0uK//Yjh6FL9iL2r/42FwoXo4qWdW4REc9r8mmZmtJ7rEu2AmGkcw5Y4iUKoK4Qpj+VeQ/I2+Wk7Kg8+D7zN7QVCHfgnCD82AW2IL4cpoiiG6aiGbbohaoWma1Tq9HgoV7ntSgczdADmkgMb6n0QBn/nCb/R2xgbaOgkj/x3XGxEmxzp6Gzzb7Tyyje7zZ+kUigoGg1yoDlw2e+UxVz7Awjr+6cc5PNnWDTac9HxIBjRuh2embsK5mIq4O7azN71v4KWUcylZCKXqfkcbXgSfvyNYahherAIh5xKoTTJwSzOrjgC1ueB/Ntyu8TL0Rcp9Gd6qNid30Ho5wqQJuqNf8UYuPpim/29px1yDLAhe1nsO8Cd73K2lckr9s9o7OiVLq+1kcdzV5hZSWyjFG38ys/r1EOkuPrvCdUokfsgao8blu1kqdGkMJIAo1S5sIwzDPE1hQQsDnOis2ZbKDFtv2dh+eurLSV/wY46KyX7zDoI6ml7jYw=='
+    sshKeySecureFile: 'deploy.key'
+    sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCuWcP/jRKwkqYF51/mkiw5zpGox6v7kCN6EnGoUeXbOBt77ZnSfM7uU3e3Ynp3fjxc5lXueiVFyQmtdt8RcezuZUVz0BzSii/OB0CPAzHHQ3PC87Bq6tyKaDaF5ogoDb2RvsDYdSXnRRwlOc0hD1szqq8gSjXiMUlsJ6IaysOn47U9UyYo5OeLjsqT18CMsUquYuHT+rpoqAV4K3Q+jzxgU2BcHG5dZfr7vV/vP/CibZBf4J49xa825PrW9rCVhMtV+WcCeEEpzeE/ACrdEidCvnKfUIQvYkSCrhObVw6zIvj1TcpvFKaR4g0Ec1obeLWWsApkxrXN2iEdIZCxrjnb'
+
+- script: |
+    source ~/.nix-profile/etc/profile.d/nix.sh
+    nixops create -d packages ./dev-ops/server.nix
+    nixops deploy -d packages
+    
+  displayName: 'Deploy to packages.friendsofshopware.de'
