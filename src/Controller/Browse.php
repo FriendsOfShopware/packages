@@ -15,10 +15,10 @@ class Browse extends AbstractController
      */
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $packages = $entityManager->getRepository(Package::class)->findAllPackages();
+        $repository = $entityManager->getRepository(Package::class);
 
         return $this->render('browse.html.twig', [
-            'packages' => $packages
+            'newPackages' => $repository->findNewPackages(),
         ]);
     }
 }

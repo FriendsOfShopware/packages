@@ -1,0 +1,48 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="container package-detail">
+        <h1>{{ package.composerName }}</h1>
+
+        <div class="row">
+            <div class="col-8">
+                <input type="text" readonly class="form-control" value="composer require {{ package.composerName }}">
+
+                <h4 style="margin-top: 10px">requires:</h4>
+                <ul>
+                    {% for key, val in version.requireSection %}
+                        {% set url = "https://packagist.org/packages/" ~ key %}
+
+                        {% if 'store.shopware.com' in key %}
+                            {% set url = url('package', {name: key ~ '/'}) %}
+                        {% endif %}
+
+                        <li><a href="{{ url }}" target="_blank">{{ key }}</a>: {{ val }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-4">
+                <div class="package-sidebar">
+                    <p>
+                        Maintainers: {{ package.producer.name }}<br>
+                        Version: {{ version.version }}<br>
+                        Type: {{ version.type }}<br>
+                        {% if version.homepage %}
+                        <a href="{{ version.homepage }}" target="_blank">Homepage</a>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="package-sidebar">
+                    <ul class="list-unstyled">
+                        {% for versionLoop in package.versions %}
+                            <li>
+                                <a href="?version={{ versionLoop.version }}">{{ versionLoop.version }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

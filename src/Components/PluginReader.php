@@ -55,26 +55,26 @@ class PluginReader
                 }
             }
 
-            if (isset($xml['compatibility']['minVersion'])) {
-                $data['require']['shopware/shopware'] = '>=' . $xml['compatibility']['minVersion'];
-            }
-
             if (isset($xml['label']['en'])) {
                 $data['description'] = $xml['label']['en'];
+            }
+
+            if (isset($xml['license'])) {
+                $data['license'] = $xml['license'];
+            }
+
+            if (isset($xml['link'])) {
+                $data['homepage'] = $xml['link'];
             }
         } elseif (file_exists($extractLocation . '/' . $pluginName . '/composer.json')) {
             $composerJson = json_decode(file_get_contents($extractLocation . '/' . $pluginName . '/composer.json'), true);
 
-            if (isset($composerJson['type'])) {
-                $data['type'] = $composerJson['type'];
-            }
+            $allowedKeys = ['type', 'description', 'extra', 'homepage', 'authors', 'require'];
 
-            if (isset($composerJson['description'])) {
-                $data['description'] = $composerJson['description'];
-            }
-
-            if (isset($composerJson['extra'])) {
-                $data['extra'] = $composerJson['extra'];
+            foreach ($allowedKeys as $allowedKey) {
+                if (isset($composerJson[$allowedKey])) {
+                    $data[$allowedKey] = $composerJson[$allowedKey];
+                }
             }
         }
 

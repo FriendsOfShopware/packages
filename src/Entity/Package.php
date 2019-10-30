@@ -19,7 +19,7 @@ class Package
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
 
@@ -27,6 +27,12 @@ class Package
      * @ORM\OneToMany(targetEntity="App\Entity\Version", mappedBy="package", orphanRemoval=true)
      */
     private $versions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Producer", inversedBy="package")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $producer;
 
     public function __construct()
     {
@@ -53,6 +59,20 @@ class Package
     public function getComposerName(): string
     {
         return 'store.shopware.com/' . strtolower($this->name);
+    }
+
+    public function getNewestVersion(): string
+    {
+        $currentVersion = '0.0.0';
+
+        /** @var Version $version */
+        foreach ($this->versions as $version) {
+            if (version_compare($version->getVersion(), $currentVersion, '>')) {
+                $currentVersion = $version->getVersion();
+            }
+        }
+
+        return $currentVersion;
     }
 
     /**
@@ -82,6 +102,18 @@ class Package
                 $version->setPackage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProducer(): ?Producer
+    {
+        return $this->producer;
+    }
+
+    public function setProducer(?Producer $producer): self
+    {
+        $this->producer = $producer;
 
         return $this;
     }

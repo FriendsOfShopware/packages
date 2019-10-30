@@ -28,6 +28,8 @@
       phpEnv = {
         APP_ENV = "prod";
         APP_SECRET = builtins.getEnv "APP_SECRET";
+        ALGOLIA_APP_ID = builtins.getEnv "ALGOLIA_APP_ID";
+        ALGOLIA_API_KEY = builtins.getEnv "ALGOLIA_API_KEY";
         APP_URL = "https://packages.friendsofshopware.de";
         DATABASE_URL = "mysql://root:${builtins.getEnv "MYSQL_PASSWORD"}@localhost/packages";
       };

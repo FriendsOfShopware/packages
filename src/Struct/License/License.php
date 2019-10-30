@@ -1,73 +1,75 @@
 <?php
-
 namespace App\Struct\License;
 
-class License extends \App\Struct\Struct
+/**
+ * @property integer $id
+ * @property BookingShop $bookingShop
+ * @property BookingShop $licenseShop
+ * @property VariantType $variantType
+ * @property string $orderNumber
+ * @property integer $price
+ * @property string $creationDate
+ * @property boolean $payed
+ * @property boolean $archived
+ * @property integer $shopwareMajorVersion
+ * @property Subscription $subscription
+ * @property NULL $expirationDate
+ * @property Plugin $plugin
+ * @property NULL $charging
+ * @property boolean $disbursed
+ * @property integer $quantity
+ * @property string $description
+ * @property string $licenseKey
+ * @property boolean $licenseMigrated
+ */
+class License extends Struct
 {
-    /** @var int */
-    public $id;
 
-    /** @var string */
-    public $name;
+    public $id = null;
 
-    /** @var string */
-    public $description;
+    public $bookingShop = null;
 
-    /** @var Type */
-    public $type;
+    public $licenseShop = null;
 
-    /** @var string */
-    public $shop;
+    public $variantType = null;
 
-    /** @var int */
-    public $shopId;
+    public $orderNumber = null;
 
-    /** @var Type */
-    public $status;
+    public $price = null;
 
-    /** @var bool */
-    public $subscription;
+    public $creationDate = null;
 
-    /** @var bool */
-    public $isExpired;
+    public $payed = null;
 
-    /** @var string */
-    public $licenseKey;
+    public $archived = null;
 
-    /** @var PriceModel */
-    public $priceModel;
+    public $shopwareMajorVersion = null;
 
-    /** @var bool */
-    public $payed;
+    public $subscription = null;
 
-    /** @var bool */
-    public $rentIsActive;
+    public $expirationDate = null;
 
-    /** @var string */
-    public $domain;
+    public $plugin = null;
 
-    /** @var int */
-    public $shopwareMajorVersion;
+    public $charging = null;
 
-    /** @var int */
-    public $quantity;
+    public $disbursed = null;
 
-    /** @var int */
-    public $pluginId;
+    public $quantity = null;
 
-    /** @var string */
-    public $creationDate;
+    public $description = null;
 
-    /** @var string */
-    public $expirationDate;
+    public $licenseKey = null;
 
-    /** @var Plugin */
-    public $plugin;
+    public $licenseMigrated = null;
 
-    public static $mappedFields = [
-        'type' => 'App\Struct\License\Type',
-        'status' => 'App\Struct\License\Type',
-        'priceModel' => 'App\Struct\License\PriceModel',
-        'plugin' => 'App\Struct\License\Plugin',
+    protected static $mappedFields = [
+        'bookingShop' => 'App\\Struct\\License\\BookingShop',
+        'licenseShop' => 'App\\Struct\\License\\BookingShop',
+        'variantType' => 'App\\Struct\\License\\VariantType',
+        'subscription' => 'App\\Struct\\License\\Subscription',
+        'plugin' => 'App\\Struct\\License\\Plugin',
     ];
+
+
 }

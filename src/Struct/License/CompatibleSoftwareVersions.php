@@ -1,29 +1,35 @@
 <?php
-
 namespace App\Struct\License;
 
-class CompatibleSoftwareVersions extends \App\Struct\Struct
+/**
+ * @property integer $id
+ * @property string $name
+ * @property integer $parent
+ * @property boolean $selectable
+ * @property string $major
+ * @property NULL $releaseDate
+ * @property boolean $public
+ */
+class CompatibleSoftwareVersions extends Struct
 {
-    /** @var int */
-    public $id;
 
-    /** @var string */
-    public $name;
+    public $id = null;
 
-    /** @var int */
-    public $parent;
+    public $name = null;
 
-    /** @var bool */
-    public $selectable;
+    public $parent = null;
 
-    /** @var string */
-    public $major;
+    public $selectable = null;
 
-    /** @var null */
-    public $releaseDate;
+    public $major = null;
 
-    /** @var bool */
-    public $public;
+    public $releaseDate = null;
 
-    public static $mappedFields = [];
+    public $public = null;
+
+    protected static $mappedFields = [
+        
+    ];
+
+
 }

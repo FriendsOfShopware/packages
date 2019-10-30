@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Components\Api\AccessToken;
 use App\Components\Api\Client;
 use App\Components\PackagistLoader;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,10 +24,16 @@ class Account extends AbstractController
      */
     private $packagistLoader;
 
-    public function __construct(Client $client, PackagistLoader $packagistLoader)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(Client $client, PackagistLoader $packagistLoader, EntityManagerInterface $entityManager)
     {
         $this->client = $client;
         $this->packagistLoader = $packagistLoader;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -44,9 +51,16 @@ class Account extends AbstractController
         $licenses = $this->client->licenses($token);
 
         $data = $this->packagistLoader->load($licenses);
+        $packageNames = array_map(static function (string $name) {
+            return str_replace('store.shopware.com/', '', $name);
+        }, array_keys($data['packages']));
 
-        return $this->render('token.html.twig', [
-            'packages' => $data,
+        /** @var \App\Entity\Package[] $packages */
+        $packages = $this->entityManager->getRepository(\App\Entity\Package::class)->findPackagesByNames($packageNames);
+
+
+        return $this->render('account.html.twig', [
+            'packages' => $packages,
             'token' => (string)$token,
             'shop' => $token->getShop()
         ]);

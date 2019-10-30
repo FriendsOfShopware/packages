@@ -14,6 +14,21 @@ class ComposerPackageVersion extends Struct
     /**
      * @var string
      */
+    public $description = '';
+
+    /**
+     * @var string
+     */
+    public $license = 'proprietary';
+
+    /**
+     * @var string
+     */
+    public $homepage;
+
+    /**
+     * @var string
+     */
     public $version;
 
     /**
@@ -22,7 +37,7 @@ class ComposerPackageVersion extends Struct
     public $dist;
 
     /**
-     * @var array
+     * @var string
      */
     public $type;
 
@@ -35,4 +50,9 @@ class ComposerPackageVersion extends Struct
      * @var array
      */
     public $require;
+
+    /**
+     * @var array
+     */
+    public $authors;
 }

@@ -2,6 +2,16 @@
 
 let
   packages = {
+    "algolia/algoliasearch-client-php" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "algolia-algoliasearch-client-php-602748161cecbf9d329379a9949d63e1dc683852";
+        src = fetchurl {
+          url = https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/602748161cecbf9d329379a9949d63e1dc683852;
+          sha256 = "0w0r88j6di5zpdx26hvpwb0mxj1sasdah3z9v90j5rm4jxkypmr6";
+        };
+      };
+    };
     "doctrine/annotations" = {
       targetDir = "";
       src = composerEnv.buildZipPackage {
@@ -209,6 +219,16 @@ let
         src = fetchurl {
           url = https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f;
           sha256 = "0rkz64vgwb0gfi09klvgay4qnw993l1dc03vyip7d7m2zxi6cy4j";
+        };
+      };
+    };
+    "psr/http-message" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "psr-http-message-f6561bf28d520154e4b0ec72be95418abe6d9363";
+        src = fetchurl {
+          url = https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363;
+          sha256 = "195dd67hva9bmr52iadr4kyp2gw2f5l51lplfiay2pv6l9y4cf45";
         };
       };
     };

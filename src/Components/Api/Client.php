@@ -6,6 +6,7 @@ use App\Components\Api\Exceptions\AccessDeniedException;
 use App\Components\Api\Exceptions\TokenMissingException;
 use App\Struct\License\License;
 use App\Struct\Shop\Shop;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +26,15 @@ class Client
      */
     protected $currentToken;
 
-    public function __construct()
+    /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    public function __construct(CacheInterface $cache)
     {
         $this->client = HttpClient::create();
+        $this->cache = $cache;
     }
 
     public function login(string $username, string $password): AccessToken
@@ -99,14 +106,20 @@ class Client
     public function licenses(AccessToken $token): array
     {
         $this->useToken($token);
-        $content = $this->client->request('GET', self::ENDPOINT . 'licenses', [
-            'query' => [
-                'domain' => $token->getShop()->domain,
-                'partnerId' => $token->getUserId()
-            ]
-        ])->getContent();
 
-        return License::mapList(json_decode($content));
+        $content = $this->cachedRequest('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
+            'query' => [
+                'variantTypes' => 'buy,free,rent,support,test',
+                'limit' => 1000
+            ]
+        ]);
+
+        foreach ($content as &$plugin) {
+            $plugin = $this->cachedRequest('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin['id']));
+        }
+        unset($plugin);
+
+        return License::mapList(json_decode(json_encode($content)));
     }
 
     public function fetchDownloadLink(string $binaryLink): ?string
@@ -136,5 +149,37 @@ class Client
     public function currentToken(): ?AccessToken
     {
         return $this->currentToken;
+    }
+
+    private function getLicensesListPath(AccessToken $token): string
+    {
+        if ($token->getShop()->ownerId === $token->getUserId()) {
+            return 'shops/' . $token->getShop()->id . '/pluginlicenses';
+        }
+
+        return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
+    }
+
+    private function getPluginInfoPath(AccessToken $token, int $licenseId): string
+    {
+        if ($token->getShop()->ownerId === $token->getUserId()) {
+            return 'shops/' . $token->getShop()->id . '/pluginlicenses/' . $licenseId;
+        }
+
+        return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses/' . $licenseId;
+    }
+
+    private function cachedRequest(string $method, string $uri, array $options = []): array
+    {
+        $cacheKey = md5(json_encode($this->currentToken) . $method . $uri . json_encode($options));
+
+        if ($this->cache->has($cacheKey)) {
+            return $this->cache->get($cacheKey);
+        }
+
+        $response = $this->client->request($method, $uri, $options)->toArray();
+        $this->cache->set($cacheKey, $response, 3600);
+
+        return $response;
     }
 }

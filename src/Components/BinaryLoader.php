@@ -33,15 +33,15 @@ class BinaryLoader
     public function __construct(Storage $storage, Client $client)
     {
         $this->curl = new MultiCurl();
-        $this->downloadLinkCurl = new MultiCurl(3);
+        $this->downloadLinkCurl = new MultiCurl(2);
         $this->storage = $storage;
         $this->client = $client;
     }
 
     public function add(string $pluginName, Binaries $binary, ComposerPackageVersion $composerVersion)
     {
-        if ($this->storage->hasBinary($pluginName, $binary)) {
-            $info = $this->storage->getBinaryInfo($pluginName, $binary);
+        if ($this->storage->hasBinary($pluginName, $binary, $composerVersion)) {
+            $info = $this->storage->getBinaryInfo($pluginName, $binary, $composerVersion);
 
             $info = array_merge(get_object_vars($composerVersion), $info);
 
@@ -66,7 +66,7 @@ class BinaryLoader
             );
         }
 
-        $composerVersion->dist['url'] = $this->storage->generateLink($binary, $this->client->currentToken());
+        $composerVersion->dist['url'] = $this->storage->generateLink($composerVersion->dist['url'], $this->client->currentToken());
     }
 
     public function load()
@@ -80,6 +80,14 @@ class BinaryLoader
     public function processDownloadLink($response, $url, $requestInfo, $userData)
     {
         if ($response === false) {
+            if ($requestInfo['http_code'] === 429) {
+
+            }
+
+            var_dump($response);
+            dump($requestInfo);
+            dd($userData['composerVersion']);
+            die("WHAT");
             $userData['composerVersion']->invalid = true;
             return;
         }
@@ -117,6 +125,6 @@ class BinaryLoader
             $userData['composerVersion']->$k = $v;
         }
 
-        $this->storage->saveBinary($userData['pluginName'], $userData['binary'], $info);
+        $this->storage->saveBinary($userData['pluginName'], $userData['binary'], $userData['composerVersion']);
     }
 }

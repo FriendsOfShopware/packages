@@ -23,5 +23,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    Algolia\AlgoliaSearch\SearchClient:
+        class: Algolia\AlgoliaSearch\SearchClient
+        factory: ['Algolia\AlgoliaSearch\SearchClient', 'create']
+        arguments: ['%env(string:ALGOLIA_APP_ID)%', '%env(string:ALGOLIA_API_KEY)%']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

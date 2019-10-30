@@ -5,7 +5,7 @@ namespace App\Components;
 use App\Struct\ComposerPackageVersion;
 use App\Struct\License\Binaries;
 use App\Struct\License\License;
-use App\Struct\Shop\Shop;
+use App\Struct\License\Plugin;
 
 class PackagistLoader
 {
@@ -41,12 +41,23 @@ class PackagistLoader
         $response = [];
 
         foreach ($licenses as $license) {
-            if ($license->type->id === 1 || $license->isExpired || !isset($license->plugin)) {
+            // Don't list archived plugins
+            if ($license->archived || !isset($license->plugin)) {
                 continue;
             }
+
+            // Don't list expired test plugins
+            if (
+                $license->variantType->name === 'test' &&
+                !empty($license->expirationDate) &&
+                time() >= strtotime($license->expirationDate))
+            {
+                continue;
+            }
+
             $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
 
-            $response[$packageName] = $this->convertBinaries($packageName, $license->plugin->name, $license->plugin->binaries);
+            $response[$packageName] = $this->convertBinaries($packageName, $license->plugin, $license->plugin->binaries);
         }
 
         return $response;
@@ -55,29 +66,43 @@ class PackagistLoader
     /**
      * @param Binaries[] $binaries
      */
-    private function convertBinaries(string $packageName, string $pluginName, array $binaries): array
+    private function convertBinaries(string $packageName, Plugin $plugin, array $binaries): array
     {
         $versions = [];
 
         foreach ($binaries as $binary) {
+            if (empty($binary->version)) {
+                continue;
+            }
+
             $version = new ComposerPackageVersion();
             $version->name = $packageName;
             $version->version = $binary->version;
             $version->dist = [
-                'url' => substr($binary->filePath, 1),
+                'url' => 'plugins/' . $plugin->id . '/binaries/' . $binary->id .'/file',
                 'type' => 'zip'
             ];
             $version->type = 'shopware-plugin';
             $version->extra = [
-                'installer-name' => $pluginName
+                'installer-name' => $plugin->name
             ];
             $version->require = [
                 'composer/installers' => '~1.0'
             ];
+            $version->authors = [
+                [
+                    'name' => $plugin->producer->name
+                ]
+            ];
+
+            // Shopware 1 to 5
+            if ($plugin->generation->name === 'classic') {
+                $version->require['shopware/shopware'] = '>=' . $binary->compatibleSoftwareVersions[0]->name;
+            }
 
             $versions[$binary->version] = $version;
 
-            $this->binaryLoader->add($pluginName, $binary, $versions[$binary->version]);
+            $this->binaryLoader->add($plugin->name, $binary, $versions[$binary->version]);
         }
 
         return $versions;

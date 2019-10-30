@@ -1,60 +1,74 @@
 <?php
-
 namespace App\Struct\License;
 
-class Plugin extends \App\Struct\Struct
+/**
+ * @property integer $id
+ * @property string $name
+ * @property string $code
+ * @property string $iconUrl
+ * @property Infos $infos
+ * @property StoreAvailabilities $storeAvailabilities
+ * @property StoreAvailabilities $activationStatus
+ * @property ApprovalStatus $approvalStatus
+ * @property Generation $generation
+ * @property boolean $isPremiumPlugin
+ * @property boolean $isAdvancedFeature
+ * @property boolean $isEnterpriseAccelerator
+ * @property boolean $hasPriceModelBuy
+ * @property boolean $isSubscriptionEnabled
+ * @property boolean $support
+ * @property boolean $supportOnlyCommercial
+ * @property Producer $producer
+ * @property Binaries[] $binaries
+ */
+class Plugin extends Struct
 {
-    /** @var int */
-    public $id;
 
-    /** @var bool */
-    public $active;
+    public $id = null;
 
-    /** @var string */
-    public $code;
+    public $name = null;
 
-    /** @var string */
-    public $name;
+    public $code = null;
 
-    /** @var string */
-    public $iconPath;
+    public $iconUrl = null;
 
-    /** @var Infos */
-    public $infos;
+    public $infos = null;
 
-    /** @var Binaries[] */
-    public $binaries;
+    public $storeAvailabilities = null;
 
-    /** @var bool */
-    public $isPremiumPlugin;
+    public $activationStatus = null;
 
-    /** @var bool */
-    public $isEnterpriseAccelerator;
+    public $approvalStatus = null;
 
-    /** @var bool */
-    public $isAdvancedFeature;
+    public $generation = null;
 
-    /** @var bool */
-    public $isLicenseCheckEnabled;
+    public $isPremiumPlugin = null;
 
-    /** @var bool */
-    public $hasPriceModelBuy;
+    public $isAdvancedFeature = null;
 
-    /** @var bool */
-    public $isSubscriptionEnabled;
+    public $isEnterpriseAccelerator = null;
 
-    /** @var Producer */
-    public $producer;
+    public $hasPriceModelBuy = null;
 
-    /** @var bool */
-    public $support;
+    public $isSubscriptionEnabled = null;
 
-    /** @var bool */
-    public $supportOnlyCommercial;
+    public $support = null;
 
-    public static $mappedFields = [
-        'infos' => 'App\Struct\License\Infos',
-        'binaries' => 'App\Struct\License\Binaries',
-        'producer' => 'App\Struct\License\Producer',
+    public $supportOnlyCommercial = null;
+
+    public $producer = null;
+
+    public $binaries = null;
+
+    protected static $mappedFields = [
+        'infos' => 'App\\Struct\\License\\Infos',
+        'storeAvailabilities' => 'App\\Struct\\License\\StoreAvailabilities',
+        'activationStatus' => 'App\\Struct\\License\\StoreAvailabilities',
+        'approvalStatus' => 'App\\Struct\\License\\ApprovalStatus',
+        'generation' => 'App\\Struct\\License\\Generation',
+        'producer' => 'App\\Struct\\License\\Producer',
+        'binaries' => 'App\\Struct\\License\\Binaries',
     ];
+
+
 }

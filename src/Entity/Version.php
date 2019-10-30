@@ -32,6 +32,21 @@ class Version
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $homepage;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $license;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $authors = [];
+
+    /**
      * @ORM\Column(type="json_array")
      */
     private $extra = [];
@@ -122,6 +137,39 @@ class Version
         $this->package = $package;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHomepage()
+    {
+        return $this->homepage;
+    }
+
+    public function setHomepage($homepage): void
+    {
+        $this->homepage = $homepage;
+    }
+
+    public function getLicense()
+    {
+        return $this->license;
+    }
+
+    public function setLicense($license): void
+    {
+        $this->license = $license;
+    }
+
+    public function getAuthors(): array
+    {
+        return $this->authors;
+    }
+
+    public function setAuthors(array $authors): void
+    {
+        $this->authors = $authors;
     }
 
     public function toJson(): array

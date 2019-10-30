@@ -5,6 +5,8 @@
         <title>{% block title %}Packages :: FriendsOfShopware{% endblock %}</title>
         <link rel="shortcut icon" type=image/png href="https://avatars3.githubusercontent.com/u/36633261?s=32&v=4">
         <meta name=theme-color content=#189eff>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/reset-min.css" integrity="sha256-t2ATOGCtAIZNnzER679jwcFcKYfLlw01gli6F6oszk8=" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -25,6 +27,9 @@
                             </li>
                             <li class="nav-item{% if app.request.attributes.get('_route') == 'browse' %} active{% endif %}">
                                 <a class="nav-link" href="{{ url('browse') }}">Browse</a>
+                            </li>
+                            <li class="nav-item{% if app.request.attributes.get('_route') == 'search' %} active{% endif %}">
+                                <a class="nav-link" href="{{ url('search') }}">Search</a>
                             </li>
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <li class="nav-item{% if app.request.attributes.get('_route') == 'account' %} active{% endif %}">
@@ -47,7 +52,7 @@
         {% block search_bar %}
         <div class="search-wrapper">
             <div class="container">
-                <input type="text" class="form-control" placeholder="Search packages..." autofocus/>
+                <div id="searchContainer"></div>
                 <div class="helpText">
                     It aggregates Shopware plugins as installable Composer packages. If a plugin is missing, please press login and press refresh
                 </div>
@@ -56,7 +61,26 @@
         {% endblock %}
 
         <main class="bg-light">
-            {% block body %}{% endblock %}
+            <div id="search" style="display: none">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-8">
+                            <div id="hits"></div>
+                            <div id="powered-by"></div>
+                        </div>
+                        <div class="col-4">
+                            <h4>Package type:</h4>
+                            <div id="search-sidebar-type"></div>
+                            <h4>Producer:</h4>
+                            <div id="search-sidebar-producer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content">
+                {% block body %}{% endblock %}
+            </div>
         </main>
 
         <footer class="text-muted">
