@@ -80,14 +80,6 @@ class BinaryLoader
     public function processDownloadLink($response, $url, $requestInfo, $userData)
     {
         if ($response === false) {
-            if ($requestInfo['http_code'] === 429) {
-
-            }
-
-            var_dump($response);
-            dump($requestInfo);
-            dd($userData['composerVersion']);
-            die("WHAT");
             $userData['composerVersion']->invalid = true;
             return;
         }
