@@ -16,8 +16,12 @@ steps:
     sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCuWcP/jRKwkqYF51/mkiw5zpGox6v7kCN6EnGoUeXbOBt77ZnSfM7uU3e3Ynp3fjxc5lXueiVFyQmtdt8RcezuZUVz0BzSii/OB0CPAzHHQ3PC87Bq6tyKaDaF5ogoDb2RvsDYdSXnRRwlOc0hD1szqq8gSjXiMUlsJ6IaysOn47U9UyYo5OeLjsqT18CMsUquYuHT+rpoqAV4K3Q+jzxgU2BcHG5dZfr7vV/vP/CibZBf4J49xa825PrW9rCVhMtV+WcCeEEpzeE/ACrdEidCvnKfUIQvYkSCrhObVw6zIvj1TcpvFKaR4g0Ec1obeLWWsApkxrXN2iEdIZCxrjnb'
 
 - script: |
+    npm install
+    npm run build
+  displayName: 'Built frontend'
+
+- script: |
     source ~/.nix-profile/etc/profile.d/nix.sh
     nixops create -d packages ./dev-ops/server.nix
     nixops deploy -d packages
-    
   displayName: 'Deploy to packages.friendsofshopware.de'
