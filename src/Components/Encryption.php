@@ -6,8 +6,6 @@ namespace App\Components;
 
 class Encryption
 {
-    private const METHOD = 'aes256';
-
     /**
      * @var string
      */

@@ -9,6 +9,10 @@ use App\Struct\License\Plugin;
 
 class PackagistLoader
 {
+    private const KNOWN_BROKEN_PLUGINS = [
+        'store.shopware.com/netifoundation_2.1.0' => true
+    ];
+
     /**
      * @var BinaryLoader
      */
@@ -76,6 +80,11 @@ class PackagistLoader
 
         foreach ($binaries as $binary) {
             if (empty($binary->version)) {
+                continue;
+            }
+
+            $key = $packageName . '_' . $binary->version;
+            if (isset(self::KNOWN_BROKEN_PLUGINS[$key])) {
                 continue;
             }
 

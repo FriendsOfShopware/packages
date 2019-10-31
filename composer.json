@@ -32,6 +32,7 @@
     "symfony/web-server-bundle": "4.3.*"
   },
   "config": {
+    "optimize-autoloader": true,
     "preferred-install": {
       "*": "dist"
     },

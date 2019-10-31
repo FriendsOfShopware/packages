@@ -157,7 +157,6 @@ Class MultiCurl
                     $i++;
                 }
             }
-            usleep(15); //save CPU cycles, prevent continuous checking
         } while ($active || count($requests_map));
         $this->reset();
         curl_multi_close($multi_handle);

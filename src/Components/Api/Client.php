@@ -115,11 +115,11 @@ class Client
         ]);
 
         foreach ($content as &$plugin) {
-            $plugin = $this->cachedRequest('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin['id']));
+            $plugin = $this->cachedRequest('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin->id));
         }
         unset($plugin);
 
-        return License::mapList(json_decode(json_encode($content)));
+        return License::mapList($content);
     }
 
     public function fetchDownloadLink(string $binaryLink): ?string
@@ -169,7 +169,7 @@ class Client
         return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses/' . $licenseId;
     }
 
-    private function cachedRequest(string $method, string $uri, array $options = []): array
+    private function cachedRequest(string $method, string $uri, array $options = [])
     {
         $cacheKey = md5(json_encode($this->currentToken) . $method . $uri . json_encode($options));
 
@@ -177,7 +177,7 @@ class Client
             return $this->cache->get($cacheKey);
         }
 
-        $response = $this->client->request($method, $uri, $options)->toArray();
+        $response = json_decode($this->client->request($method, $uri, $options)->getContent());
         $this->cache->set($cacheKey, $response, 3600);
 
         return $response;
