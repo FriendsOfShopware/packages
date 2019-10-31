@@ -10,7 +10,7 @@
         extension=${phpPackages.redis}/lib/php/extensions/redis.so
         zend_extension = opcache.so
         opcache.enable = 1
-        memory_limit = 256M
+        memory_limit = 512M
         post_max_size = 1M
         upload_max_filesize = 1M
         error_log = stderr
@@ -136,6 +136,17 @@
         '';
         serviceConfig.Type = "oneshot";
       };
+
+      systemd.services."packages-algolia-sync" = {
+          after = [ "mysql.service" ];
+          wantedBy = [ "multi-user.target" ];
+          environment = phpEnv;
+          startAt = "hourly";
+          script = ''
+            ${symfony_cmd}/bin/symfony-console search:package:index
+          '';
+          serviceConfig.Type = "oneshot";
+        };
 
       services.redis.enable = true;
     };

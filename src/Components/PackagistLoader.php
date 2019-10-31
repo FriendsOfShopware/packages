@@ -57,6 +57,10 @@ class PackagistLoader
 
             $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
 
+            if (!is_array($license->plugin->binaries)) {
+                $license->plugin->binaries = [$license->plugin->binaries];
+            }
+
             $response[$packageName] = $this->convertBinaries($packageName, $license->plugin, $license->plugin->binaries);
         }
 

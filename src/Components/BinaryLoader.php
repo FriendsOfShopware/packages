@@ -86,6 +86,11 @@ class BinaryLoader
 
         $json = json_decode($response, true);
 
+        if ($json === null) {
+            $userData['composerVersion']->invalid = true;
+            return;
+        }
+
         if (!array_key_exists('url', $json)) {
             $userData['composerVersion']->invalid = true;
             return;
