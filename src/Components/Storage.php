@@ -52,6 +52,8 @@ class Storage
      */
     private $producerCache;
 
+    private $haveWritten = false;
+
     public function __construct(CacheInterface $cache, EntityManagerInterface $entityManager)
     {
         $this->encryption = new Encryption();
@@ -61,7 +63,10 @@ class Storage
         $this->producerRepository = $entityManager->getRepository(Producer::class);
     }
 
-    public function getBinaryInfo(string $pluginName, Binaries $binary, ComposerPackageVersion $packageVersion): array
+    /**
+     * @param Binaries $binary
+     */
+    public function getBinaryInfo(string $pluginName, \stdClass $binary, ComposerPackageVersion $packageVersion): array
     {
         $cacheKey = $this->buildCacheKey($pluginName, $binary);
         if ($this->cache->has($cacheKey)) {
@@ -79,7 +84,10 @@ class Storage
         }
     }
 
-    public function hasBinary(string $pluginName, Binaries $binary, ComposerPackageVersion $packageVersion): bool
+    /**
+     * @param Binaries $binary
+     */
+    public function hasBinary(string $pluginName, \stdClass $binary, ComposerPackageVersion $packageVersion): bool
     {
         if ($this->cache->has($this->buildCacheKey($pluginName, $binary))) {
             return true;
@@ -96,8 +104,12 @@ class Storage
         return false;
     }
 
-    public function saveBinary(string $pluginName, Binaries $binary, ComposerPackageVersion $packageVersion)
+    /**
+     * @param Binaries $binary
+     */
+    public function saveBinary(string $pluginName, \stdClass $binary, ComposerPackageVersion $packageVersion)
     {
+        $this->haveWritten = true;
         $package = $this->getPackage($pluginName, $packageVersion->authors[0]['name']);
 
         $version = new Version();
@@ -169,13 +181,20 @@ class Storage
         return $this->producerCache[$producerName];
     }
 
-    private function buildCacheKey(string $pluginName, Binaries $binary): string
+    /**
+     * @param Binaries $binary
+     */
+    private function buildCacheKey(string $pluginName, \stdClass $binary): string
     {
         return $pluginName . '-' . $binary->version;
     }
 
     public function __destruct()
     {
+        if (!$this->haveWritten) {
+            return;
+        }
+
         $this->entityManager->flush();
     }
 }

@@ -72,9 +72,10 @@ class PackagistLoader
     }
 
     /**
+     * @param Plugin $plugin
      * @param Binaries[] $binaries
      */
-    private function convertBinaries(string $packageName, Plugin $plugin, array $binaries): array
+    private function convertBinaries(string $packageName, \stdClass $plugin, array $binaries): array
     {
         $versions = [];
 

@@ -119,7 +119,7 @@ class Client
         }
         unset($plugin);
 
-        return License::mapList($content);
+        return $content;
     }
 
     public function fetchDownloadLink(string $binaryLink): ?string

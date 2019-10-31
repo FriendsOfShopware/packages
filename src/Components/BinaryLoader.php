@@ -38,7 +38,10 @@ class BinaryLoader
         $this->client = $client;
     }
 
-    public function add(string $pluginName, Binaries $binary, ComposerPackageVersion $composerVersion)
+    /**
+     * @param Binaries $binary
+     */
+    public function add(string $pluginName, \stdClass $binary, ComposerPackageVersion $composerVersion)
     {
         if ($this->storage->hasBinary($pluginName, $binary, $composerVersion)) {
             $info = $this->storage->getBinaryInfo($pluginName, $binary, $composerVersion);
