@@ -13,8 +13,8 @@
         memory_limit = 256M
         post_max_size = 1M
         upload_max_filesize = 1M
-        php_admin_value[error_log] = '/tmp/php.log'
-        php_admin_flag[log_errors] = on
+        error_log = stderr
+        log_errors = true
         max_execution_time = 300
       '';
       symfony_cmd = pkgs.writeScriptBin "symfony-console" ''
