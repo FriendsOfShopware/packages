@@ -10,19 +10,20 @@
 
         {% if loginError is defined %}
             <div class="alert alert-danger" role="alert">
-                Authentification error
+                Authentication error
             </div>
         {% endif %}
 
         {% if shops is defined %}
             <form method="post" action="{{ url('shop-selection') }}">
                 <div class="form-group">
-                    <label>Choose shops</label>
-                    <select name="shop" class="form-control">
-                        {% for shop in shops %}
-                            <option value="{{ shop.domain }}">{{ shop.domain }}</option>
-                        {% endfor %}
-                    </select>
+                    <label>Choose shops
+                        <select name="shop" class="form-control">
+                            {% for shop in shops %}
+                                <option value="{{ shop.domain }}">{{ shop.domain }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
                 </div>
 
                 <button class="btn btn-primary">Login</button>
@@ -30,17 +31,20 @@
         {% else %}
             <form method="post">
                 <div class="form-group">
-                    <label>Shopware ID</label>
-                    <input type="text" class="form-control" name="shopwareId"/>
+                    <label>Shopware ID
+                        <input type="text" class="form-control" name="shopwareId"/>
+                    </label>
                 </div>
 
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" name="password"/>
+                    <label>Password
+                        <input type="password" class="form-control" name="password"/>
+                    </label>
                 </div>
 
                 <div class="clearfix">
-                    <a href="https://account.shopware.com/recovery" rel="noopener noreferrer" class="float-right">Forgot password?</a>
+                    <a href="https://account.shopware.com/recovery" rel="noopener noreferrer" class="float-right">Forgot
+                        password?</a>
                 </div>
 
                 <button class="btn btn-primary">Login</button>
