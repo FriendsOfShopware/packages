@@ -51,7 +51,11 @@ class PluginReader
 
             if (isset($xml['requiredPlugins'])) {
                 foreach ($xml['requiredPlugins'] as $requiredPlugin) {
-                    $data['require']['store.shopware.com/' . strtolower($requiredPlugin['pluginName'])] = '>=' . $requiredPlugin['minVersion'];
+                    if (isset($requiredPlugin['minVersion'])) {
+                        $data['require']['store.shopware.com/' . strtolower($requiredPlugin['pluginName'])] = '>=' . $requiredPlugin['minVersion'];
+                    } else {
+                        $data['require']['store.shopware.com/' . strtolower($requiredPlugin['pluginName'])] = '*';
+                    }
                 }
             }
 

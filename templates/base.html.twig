@@ -2,9 +2,33 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Packages :: FriendsOfShopware{% endblock %}</title>
-        <link rel="shortcut icon" type=image/png href="https://avatars3.githubusercontent.com/u/36633261?s=32&v=4">
-        <meta name=theme-color content=#189eff>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}Home - FriendsOfShopware Packages{% endblock %}</title>
+        <meta name="description" content="{% block description %}The Shopware Package Repository{% endblock %}">
+        <link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
+        <meta property="og:title" content="{{ block('title') }}">
+        <meta property="og:description" content="{{ block('description') }}">
+        <meta property="og:image" content="{{ asset('Frosh_rgb.svg')}}">
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
+        <meta property="twitter:title" content="{{ block('title') }}">
+        <meta property="twitter:description" content="{{ block('description') }}">
+        <meta property="twitter:image" content="{{ asset('Frosh_rgb.svg')}}">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#189eff">
+
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/reset-min.css" integrity="sha256-t2ATOGCtAIZNnzER679jwcFcKYfLlw01gli6F6oszk8=" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
         {% block stylesheets %}
@@ -16,7 +40,7 @@
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <a class="navbar-brand" href="/">
-                        <img src="https://d33wubrfki0l68.cloudfront.net/ba0770ca3d1c8b5f3df42cf96d7f8f0461270737/ed8ae/images/frosh_rgb.svg" width="50"/>
+                        <img src="{{ asset('Frosh_rgb.svg')}}" width="50"/>
                         Packages
                     </a>
 

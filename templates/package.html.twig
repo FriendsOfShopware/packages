@@ -1,5 +1,8 @@
 {% extends "base.html.twig" %}
 
+{% block title %}{{ package.name }} - FriendsOfShopware Packages{% endblock %}
+{% block description %}Install easily {{ package.name }} using Composer{% endblock %}
+
 {% block body %}
     <div class="container package-detail">
         <h1>{{ package.composerName }}</h1>
@@ -17,7 +20,7 @@
                             {% set url = url('package', {name: key ~ '/'}) %}
                         {% endif %}
 
-                        <li><a href="{{ url }}" target="_blank">{{ key }}</a>: {{ val }}</li>
+                        <li><a href="{{ url }}" rel="noopener noreferrer" target="_blank">{{ key }}</a>: {{ val }}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -28,7 +31,7 @@
                         Version: {{ version.version }}<br>
                         Type: {{ version.type }}<br>
                         {% if version.homepage %}
-                        <a href="{{ version.homepage }}" target="_blank">Homepage</a>
+                        <a href="{{ version.homepage }}" rel="noopener noreferrer" target="_blank">Homepage</a>
                         {% endif %}
                     </p>
                 </div>

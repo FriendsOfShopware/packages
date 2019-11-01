@@ -24,6 +24,12 @@ class Package
     private $name;
 
     /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Version", mappedBy="package", orphanRemoval=true)
      */
     private $versions;
@@ -116,5 +122,15 @@ class Package
         $this->producer = $producer;
 
         return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
     }
 }

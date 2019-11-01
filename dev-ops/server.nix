@@ -30,7 +30,7 @@
         APP_SECRET = builtins.getEnv "APP_SECRET";
         ALGOLIA_APP_ID = builtins.getEnv "ALGOLIA_APP_ID";
         ALGOLIA_API_KEY = builtins.getEnv "ALGOLIA_API_KEY";
-        APP_URL = "https://packages.friendsofshopware.de";
+        APP_URL = "https://packages.friendsofshopware.com";
         DATABASE_URL = "mysql://root:${builtins.getEnv "MYSQL_PASSWORD"}@localhost/packages";
       };
     in {
@@ -92,11 +92,11 @@
         recommendedProxySettings = true;
         recommendedTlsSettings = true;
         virtualHosts = {
-          "packages.friendsofshopware.de" = {
+          "packages.friendsofshopware.com" = {
             root = "${pkgs.packages}/public";
             http2 = true;
-            sslCertificate = "/etc/ssl/cloudflare.crt";
-            sslCertificateKey = "/etc/ssl/cloudflare.key";
+            forceSSL = true;
+            enableACME = true;
             extraConfig = ''
               location / {
                 try_files $uri /index.php$is_args$args;
@@ -141,7 +141,7 @@
           after = [ "mysql.service" ];
           wantedBy = [ "multi-user.target" ];
           environment = phpEnv;
-          startAt = "hourly";
+          # startAt = "hourly";
           script = ''
             ${symfony_cmd}/bin/symfony-console search:package:index
           '';

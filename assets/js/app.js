@@ -6,7 +6,6 @@ const $ = require('jquery');
 require('bootstrap/js/src/collapse');
 require('bootstrap/js/src/modal');
 
-
 $('[data-toggle="collpase"]').collapse();
 
 import { searchBox, hits, refinementList, poweredBy } from 'instantsearch.js/es/widgets'
