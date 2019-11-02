@@ -43,6 +43,17 @@ class AccessToken implements \JsonSerializable, UserInterface
      */
     protected $userId;
 
+    public function __toString()
+    {
+        $encryption = new Encryption();
+
+        return $encryption->encrypt([
+            'username' => $this->username,
+            'password' => $this->password,
+            'domain' => $this->shop->domain,
+        ]);
+    }
+
     public function getExpire(): \DateTime
     {
         return $this->expire;
@@ -65,7 +76,7 @@ class AccessToken implements \JsonSerializable, UserInterface
 
     public static function create(array $response): self
     {
-        $me = new self;
+        $me = new self();
         $me->userId = (int) $response['userId'];
         $me->token = $response['token'];
         $me->locale = $response['locale'];
@@ -113,16 +124,5 @@ class AccessToken implements \JsonSerializable, UserInterface
 
     public function eraseCredentials()
     {
-    }
-
-    public function __toString()
-    {
-        $encryption = new Encryption();
-
-        return $encryption->encrypt([
-            'username' => $this->username,
-            'password' => $this->password,
-            'domain' => $this->shop->domain
-        ]);
     }
 }

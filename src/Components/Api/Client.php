@@ -44,10 +44,10 @@ class Client
                 'json' => [
                     'shopwareId' => $username,
                     'password' => $password,
-                ]
+                ],
             ])->toArray();
         } catch (ClientException $exception) {
-            if ($exception->getCode() === Response::HTTP_FORBIDDEN) {
+            if (Response::HTTP_FORBIDDEN === $exception->getCode()) {
                 throw new AccessDeniedException('Access denied');
             }
 
@@ -67,8 +67,8 @@ class Client
         $this->client = HttpClient::create([
             'headers' => [
                 'X-Shopware-Token' => $token->getToken(),
-                'User-Agent' => 'packages.friendsofshopware.de'
-            ]
+                'User-Agent' => 'packages.friendsofshopware.de',
+            ],
         ]);
     }
 
@@ -91,8 +91,8 @@ class Client
 
         $shopsContent = $this->client->request('GET', self::ENDPOINT . 'shops', [
             'query' => [
-                'userId' => $token->getUserId()
-            ]
+                'userId' => $token->getUserId(),
+            ],
         ])->getContent();
 
         $shops = Shop::mapList(json_decode($shopsContent));
@@ -110,8 +110,8 @@ class Client
         $content = $this->cachedRequest('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
             'query' => [
                 'variantTypes' => 'buy,free,rent,support,test',
-                'limit' => 1000
-            ]
+                'limit' => 1000,
+            ],
         ]);
 
         foreach ($content as &$plugin) {
@@ -132,8 +132,8 @@ class Client
             $json = $this->client->request('GET', self::ENDPOINT . $binaryLink, [
                 'query' => [
                     'json' => true,
-                    'shopId' => $this->currentToken->getShop()->id
-                ]
+                    'shopId' => $this->currentToken->getShop()->id,
+                ],
             ])->toArray();
         } catch (ClientException $e) {
             return null;

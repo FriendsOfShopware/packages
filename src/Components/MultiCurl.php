@@ -1,51 +1,64 @@
 <?php
 
-
 namespace App\Components;
 
-Class MultiCurl
+class MultiCurl
 {
     /**
-     * Current curl version
+     * Current curl version.
+     *
      * @var float
      */
     private $_curl_version;
+
     /**
-     * max. number of simultaneous connections allowed
+     * max. number of simultaneous connections allowed.
+     *
      * @var int
      */
     private $_maxConcurrent = 0;
+
     /**
-     * shared cURL options
+     * shared cURL options.
+     *
      * @var array
      */
     private $_options = [];
+
     /**
-     * shared cURL request headers
+     * shared cURL request headers.
+     *
      * @var array
      */
     private $_headers = [];
+
     /**
-     * default callback
+     * default callback.
+     *
      * @var null
      */
     private $_callback = null;
+
     /**
-     * all requests must be completed by this time
+     * all requests must be completed by this time.
+     *
      * @var int
      */
     private $_timeout = 20000;
+
     /**
-     * request_queue
+     * request_queue.
+     *
      * @var array
      */
     private $requests = [];
 
     /**
      * MultiCurl constructor.
+     *
      * @param int $max_concurrent
      */
-    function __construct($max_concurrent = 10)
+    public function __construct($max_concurrent = 10)
     {
         $this->setMaxConcurrent($max_concurrent);
         $this->_curl_version = curl_version()['version'];
@@ -81,17 +94,19 @@ Class MultiCurl
             $this->_timeout = $timeout;
         }
     }
+
     //Add a request to the request queue
 
     /**
-     * Add a request to the request queue
+     * Add a request to the request queue.
      *
-     * @param string $url
-     * @param array|null $post_data
+     * @param string        $url
+     * @param array|null    $post_data
      * @param callable|null $callback
-     * @param array|null $user_data
-     * @param array|null $options
-     * @param array|null $headers
+     * @param array|null    $user_data
+     * @param array|null    $options
+     * @param array|null    $headers
+     *
      * @return int
      */
     public function addRequest(
@@ -101,21 +116,21 @@ Class MultiCurl
         $user_data = null,
         array $options = null,
         array $headers = null
-    )
-    {
+    ) {
         $this->requests[] = [
             'url' => $url,
             'post_data' => ($post_data) ? $post_data : null,
             'callback' => ($callback) ? $callback : $this->_callback,
             'user_data' => ($user_data) ? $user_data : null,
             'options' => ($options) ? $options : null,
-            'headers' => ($headers) ? $headers : null
+            'headers' => ($headers) ? $headers : null,
         ];
+
         return count($this->requests) - 1;
     }
 
     /**
-     * Reset request queue
+     * Reset request queue.
      */
     public function reset()
     {
@@ -123,7 +138,7 @@ Class MultiCurl
     }
 
     /**
-     * Process all requests in queue
+     * Process all requests in queue.
      */
     public function execute()
     {
@@ -132,29 +147,29 @@ Class MultiCurl
         $num_outstanding = 0;
         //start processing the initial request queue
         $num_initial_requests = min($this->_maxConcurrent, count($this->requests));
-        for ($i = 0; $i < $num_initial_requests; $i++) {
+        for ($i = 0; $i < $num_initial_requests; ++$i) {
             $this->initRequest($i, $multi_handle, $requests_map);
-            $num_outstanding++;
+            ++$num_outstanding;
         }
         do {
             do {
                 $mh_status = curl_multi_exec($multi_handle, $active);
-            } while ($mh_status == CURLM_CALL_MULTI_PERFORM);
-            if ($mh_status != CURLM_OK) {
+            } while (CURLM_CALL_MULTI_PERFORM == $mh_status);
+            if (CURLM_OK != $mh_status) {
                 break;
             }
             //a request is just completed, find out which one
             while ($completed = curl_multi_info_read($multi_handle)) {
                 $this->processRequest($completed, $multi_handle, $requests_map);
-                $num_outstanding--;
+                --$num_outstanding;
                 //try to add/start a new requests to the request queue
                 while (
                     $num_outstanding < $this->_maxConcurrent && //under the limit
                     $i < count($this->requests) && isset($this->requests[$i]) // requests left
                 ) {
                     $this->initRequest($i, $multi_handle, $requests_map);
-                    $num_outstanding++;
-                    $i++;
+                    ++$num_outstanding;
+                    ++$i;
                 }
             }
         } while ($active || count($requests_map));
@@ -164,6 +179,7 @@ Class MultiCurl
 
     /**
      * @param array $request
+     *
      * @return array|mixed
      */
     private function buildOptions(array $request)
@@ -194,10 +210,11 @@ Class MultiCurl
         if ($headers) {
             $options[CURLOPT_HTTPHEADER] = $headers;
         }
-        if ($post_data !== null) {
+        if (null !== $post_data) {
             $options[CURLOPT_POST] = 1;
             $options[CURLOPT_POSTFIELDS] = is_array($post_data) ? http_build_query($post_data) : $post_data;
         }
+
         return $options;
     }
 
@@ -208,14 +225,14 @@ Class MultiCurl
      */
     private function initRequest($request_num, $multi_handle, &$requests_map)
     {
-        $request =& $this->requests[$request_num];
+        $request = &$this->requests[$request_num];
         $this->addTimer($request);
         $ch = curl_init();
         $options = $this->buildOptions($request);
         $request['options_set'] = $options;
         curl_setopt_array($ch, $options);
         curl_multi_add_handle($multi_handle, $ch);
-        $ch_hash = (string)$ch;
+        $ch_hash = (string) $ch;
         $requests_map[$ch_hash] = $request_num;
     }
 
@@ -227,15 +244,15 @@ Class MultiCurl
     private function processRequest($completed, $multi_handle, array &$requests_map)
     {
         $ch = $completed['handle'];
-        $ch_hash = (string)$ch;
-        $request =& $this->requests[$requests_map[$ch_hash]];
+        $ch_hash = (string) $ch;
+        $request = &$this->requests[$requests_map[$ch_hash]];
         $request_info = curl_getinfo($ch);
         $request_info['curle'] = $completed['result'];
         $request_info['handle'] = $ch;
         $request_info['time'] = $time = $this->stopTimer($request);
         $request_info['url_raw'] = $url = $request['url'];
         $request_info['user_data'] = $user_data = $request['user_data'];
-        if (curl_errno($ch) !== 0 || intval($request_info['http_code']) !== 200) {
+        if (0 !== curl_errno($ch) || 200 !== intval($request_info['http_code'])) {
             $response = false;
         } else {
             $response = curl_multi_getcontent($ch);
@@ -266,6 +283,7 @@ Class MultiCurl
 
     /**
      * @param array $request
+     *
      * @return mixed
      */
     private function stopTimer(array &$request)
@@ -273,6 +291,7 @@ Class MultiCurl
         $elapsed = $request['timer'] - microtime(true);
         $request['time'] = $elapsed;
         unset($request['timer']);
+
         return $elapsed;
     }
 }

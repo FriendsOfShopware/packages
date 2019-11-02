@@ -4,15 +4,11 @@ namespace App\Controller;
 
 use App\Components\Api\AccessToken;
 use App\Components\Api\Exceptions\AccessDeniedException;
-use App\Components\Client;
-use App\Components\Encryption;
-use App\Components\PackagistLoader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -60,7 +56,7 @@ class Login extends AbstractController
             return $this->redirectToRoute('shop-selection');
         } catch (AccessDeniedException $e) {
             return $this->render('login.html.twig', [
-                'loginError' => true
+                'loginError' => true,
             ]);
         }
     }
@@ -85,7 +81,7 @@ class Login extends AbstractController
         }
 
         return $this->render('login.html.twig', [
-            'shops' => $shops
+            'shops' => $shops,
         ]);
     }
 }

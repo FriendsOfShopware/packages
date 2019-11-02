@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Struct;
-
 
 class ComposerPackageVersion extends Struct
 {

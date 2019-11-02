@@ -1,29 +1,29 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
- * @property string $name
- * @property string $code
- * @property string $iconUrl
- * @property Infos $infos
+ * @property int                 $id
+ * @property string              $name
+ * @property string              $code
+ * @property string              $iconUrl
+ * @property Infos               $infos
  * @property StoreAvailabilities $storeAvailabilities
  * @property StoreAvailabilities $activationStatus
- * @property ApprovalStatus $approvalStatus
- * @property Generation $generation
- * @property boolean $isPremiumPlugin
- * @property boolean $isAdvancedFeature
- * @property boolean $isEnterpriseAccelerator
- * @property boolean $hasPriceModelBuy
- * @property boolean $isSubscriptionEnabled
- * @property boolean $support
- * @property boolean $supportOnlyCommercial
- * @property Producer $producer
- * @property Binaries[] $binaries
+ * @property ApprovalStatus      $approvalStatus
+ * @property Generation          $generation
+ * @property bool                $isPremiumPlugin
+ * @property bool                $isAdvancedFeature
+ * @property bool                $isEnterpriseAccelerator
+ * @property bool                $hasPriceModelBuy
+ * @property bool                $isSubscriptionEnabled
+ * @property bool                $support
+ * @property bool                $supportOnlyCommercial
+ * @property Producer            $producer
+ * @property Binaries[]          $binaries
  */
 class Plugin extends Struct
 {
-
     public $id = null;
 
     public $name = null;
@@ -69,6 +69,4 @@ class Plugin extends Struct
         'producer' => 'App\\Struct\\License\\Producer',
         'binaries' => 'App\\Struct\\License\\Binaries',
     ];
-
-
 }

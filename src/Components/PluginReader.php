@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Components;
 
 use App\Components\XmlReader\XmlPluginReader;
@@ -24,6 +23,7 @@ class PluginReader
             case 'Core':
                 $zip->close();
                 unlink($tmpFile);
+
                 return [
                     'type' => 'shopware-' . strtolower($path) . '-plugin',
                 ];
@@ -35,7 +35,7 @@ class PluginReader
     private static function readNewPluginSystem(\ZipArchive $archive, string $tmpFile, string $pluginName)
     {
         $data = [
-            'type' => 'shopware-plugin'
+            'type' => 'shopware-plugin',
         ];
 
         $reader = new XmlPluginReader();
@@ -86,7 +86,7 @@ class PluginReader
         unlink($tmpFile);
 
         // Clear require, default is composer/installers
-        if ($data['type'] === 'shopware-platform-plugin' && !isset($data['require'])) {
+        if ('shopware-platform-plugin' === $data['type'] && !isset($data['require'])) {
             $data['require'] = [];
         }
 
@@ -98,11 +98,12 @@ class PluginReader
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (is_dir($dir . "/" . $object))
-                        self::rmDir($dir . "/" . $object);
-                    else
-                        unlink($dir . "/" . $object);
+                if ('.' != $object && '..' != $object) {
+                    if (is_dir($dir . '/' . $object)) {
+                        self::rmDir($dir . '/' . $object);
+                    } else {
+                        unlink($dir . '/' . $object);
+                    }
                 }
             }
             rmdir($dir);

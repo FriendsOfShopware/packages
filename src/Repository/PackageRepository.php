@@ -70,11 +70,9 @@ class PackageRepository extends ServiceEntityRepository
             ->addSelect('versions')
             ->addOrderBy('package.id', 'DESC');
 
-
         $paginator = new Paginator($qb->getQuery());
         $paginator->getQuery()->setMaxResults(10);
 
         return $paginator->getIterator();
     }
-
 }

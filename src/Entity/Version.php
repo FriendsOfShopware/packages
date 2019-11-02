@@ -181,8 +181,8 @@ class Version
             'extra' => $this->extra,
             'dist' => [
                 'url' => 'foo',
-                'type' => 'zip'
-            ]
+                'type' => 'zip',
+            ],
         ];
     }
 }

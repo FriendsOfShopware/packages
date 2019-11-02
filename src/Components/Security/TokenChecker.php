@@ -11,7 +11,7 @@ class TokenChecker implements UserCheckerInterface
 {
     public function checkPreAuth(UserInterface $user): void
     {
-        if (! $user instanceof AccessToken) {
+        if (!$user instanceof AccessToken) {
             throw new AccountExpiredException('Invalid token');
         }
     }

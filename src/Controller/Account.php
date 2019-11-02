@@ -58,11 +58,10 @@ class Account extends AbstractController
         /** @var \App\Entity\Package[] $packages */
         $packages = $this->entityManager->getRepository(\App\Entity\Package::class)->findPackagesByNames($packageNames);
 
-
         return $this->render('account.html.twig', [
             'packages' => $packages,
-            'token' => (string)$token,
-            'shop' => $token->getShop()
+            'token' => (string) $token,
+            'shop' => $token->getShop(),
         ]);
     }
 

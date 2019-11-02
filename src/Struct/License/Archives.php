@@ -1,16 +1,16 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
+ * @property int    $id
  * @property string $localPath
  * @property string $remoteLink
- * @property NULL $shopwareMajorVersion
- * @property boolean $ioncubeEncrypted
+ * @property null   $shopwareMajorVersion
+ * @property bool   $ioncubeEncrypted
  */
 class Archives extends Struct
 {
-
     public $id = null;
 
     public $localPath = null;
@@ -22,8 +22,5 @@ class Archives extends Struct
     public $ioncubeEncrypted = null;
 
     protected static $mappedFields = [
-        
     ];
-
-
 }

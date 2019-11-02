@@ -1,14 +1,14 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
+ * @property int         $id
  * @property VariantType $locale
- * @property string $text
+ * @property string      $text
  */
 class Changelogs extends Struct
 {
-
     public $id = null;
 
     public $locale = null;
@@ -18,6 +18,4 @@ class Changelogs extends Struct
     protected static $mappedFields = [
         'locale' => 'App\\Struct\\License\\VariantType',
     ];
-
-
 }

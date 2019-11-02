@@ -1,14 +1,14 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
+ * @property int    $id
  * @property string $creationDate
  * @property string $expirationDate
  */
 class Subscription extends Struct
 {
-
     public $id = null;
 
     public $creationDate = null;
@@ -16,8 +16,5 @@ class Subscription extends Struct
     public $expirationDate = null;
 
     protected static $mappedFields = [
-        
     ];
-
-
 }

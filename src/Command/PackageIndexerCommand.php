@@ -12,7 +12,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class PackageIndexerCommand extends Command
 {
-    protected static $defaultName  = 'search:package:index';
+    protected static $defaultName = 'search:package:index';
+
     /**
      * @var SearchClient
      */
@@ -42,13 +43,13 @@ class PackageIndexerCommand extends Command
             $items[] = [
                 'objectID' => $package->getId(),
                 'name' => $package->getComposerName(),
-                'description' => array_values(array_filter(array_unique(array_map(static function(Version $version) {
+                'description' => array_values(array_filter(array_unique(array_map(static function (Version $version) {
                     return $version->getDescription();
                 }, $package->getVersions()->toArray())))),
-                'types' => array_values(array_unique(array_map(static function(Version $version) {
+                'types' => array_values(array_unique(array_map(static function (Version $version) {
                     return $version->getType();
                 }, $package->getVersions()->toArray()))),
-                'producerName' => $package->getVersions()->current()->getAuthors()[0]['name']
+                'producerName' => $package->getVersions()->current()->getAuthors()[0]['name'],
             ];
         }
 

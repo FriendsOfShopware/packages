@@ -3,8 +3,6 @@
 namespace App\Components\Security;
 
 use App\Components\Api\AccessToken;
-use Symfony\Component\Security\Core\Exception\AccountExpiredException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -18,6 +16,7 @@ class UserProvider implements UserProviderInterface
 
     /**
      * @param AccessToken $user
+     *
      * @return AccessToken
      */
     public function refreshUser(UserInterface $user)
@@ -38,6 +37,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return $class === AccessToken::class;
+        return AccessToken::class === $class;
     }
 }

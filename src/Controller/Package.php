@@ -45,7 +45,7 @@ class Package extends AbstractController
 
         return $this->render('package.html.twig', [
             'package' => $package,
-            'version' => $foundVersion
+            'version' => $foundVersion,
         ]);
     }
 }

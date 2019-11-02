@@ -1,18 +1,18 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
+ * @property int    $id
  * @property string $name
- * @property integer $parent
- * @property boolean $selectable
+ * @property int    $parent
+ * @property bool   $selectable
  * @property string $major
- * @property NULL $releaseDate
- * @property boolean $public
+ * @property null   $releaseDate
+ * @property bool   $public
  */
 class CompatibleSoftwareVersions extends Struct
 {
-
     public $id = null;
 
     public $name = null;
@@ -28,8 +28,5 @@ class CompatibleSoftwareVersions extends Struct
     public $public = null;
 
     protected static $mappedFields = [
-        
     ];
-
-
 }

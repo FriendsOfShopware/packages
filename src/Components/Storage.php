@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Components;
 
 use App\Components\Api\AccessToken;
@@ -9,7 +8,6 @@ use App\Entity\Producer;
 use App\Entity\Version;
 use App\Repository\PackageRepository;
 use App\Repository\ProducerRepository;
-use App\Repository\VersionRepository;
 use App\Struct\ComposerPackageVersion;
 use App\Struct\License\Binaries;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,6 +61,15 @@ class Storage
         $this->producerRepository = $entityManager->getRepository(Producer::class);
     }
 
+    public function __destruct()
+    {
+        if (!$this->haveWritten) {
+            return;
+        }
+
+        $this->entityManager->flush();
+    }
+
     /**
      * @param Binaries $binary
      */
@@ -79,6 +86,7 @@ class Storage
             if ($version->getVersion() === $binary->version) {
                 $data = $version->toJson();
                 $this->cache->set($cacheKey, $data);
+
                 return $data;
             }
         }
@@ -117,7 +125,7 @@ class Storage
         $version->setType($packageVersion->type);
         $version->setLicense($packageVersion->license);
         $version->setHomepage($packageVersion->homepage);
-        $version->setDescription(substr($packageVersion->description, 0 ,255));
+        $version->setDescription(substr($packageVersion->description, 0, 255));
         $version->setExtra($packageVersion->extra);
         $version->setRequireSection($packageVersion->require);
         $version->setAuthors($packageVersion->authors);
@@ -135,7 +143,7 @@ class Storage
             'filePath' => $filePath,
             'domain' => $token->getShop()->domain,
             'username' => $token->getUsername(),
-            'password' => $token->getPassword()
+            'password' => $token->getPassword(),
         ];
 
         return getenv('APP_URL') . '/download?token=' . urlencode($this->encryption->encrypt($data));
@@ -160,7 +168,7 @@ class Storage
             $this->packageCache[$pluginName] = $package;
         }
 
-        /** @var Package $package */
+        /* @var Package $package */
         return $this->packageCache[$pluginName];
     }
 
@@ -187,14 +195,5 @@ class Storage
     private function buildCacheKey(string $pluginName, \stdClass $binary): string
     {
         return $pluginName . '-' . $binary->version;
-    }
-
-    public function __destruct()
-    {
-        if (!$this->haveWritten) {
-            return;
-        }
-
-        $this->entityManager->flush();
     }
 }

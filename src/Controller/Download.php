@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller;
 
 use App\Components\Api\Client;
@@ -38,7 +37,7 @@ class Download
 
         if (empty($token)) {
             return new JsonResponse([
-                'Invalid token'
+                'Invalid token',
             ], Response::HTTP_FORBIDDEN);
         }
 

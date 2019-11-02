@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Components\XmlReader;
 
@@ -10,13 +12,14 @@ use InvalidArgumentException;
 use Symfony\Component\Config\Util\XmlUtils;
 
 /**
- * Class XmlReaderBase
+ * Class XmlReaderBase.
  */
 abstract class XmlReaderBase implements XmlReaderInterface
 {
     const SCOPE_LOCALE = 0;
     const SCOPE_SHOP = 1;
     const DEFAULT_LANG = 'en';
+
     /**
      * Map of language shortcuts to locale.
      *
@@ -26,13 +29,14 @@ abstract class XmlReaderBase implements XmlReaderInterface
         'de' => 'de_DE',
         'en' => 'en_GB',
     ];
+
     /**
      * @var string should be set in instance that extends this class
      */
     protected $xsdFile;
 
     /**
-     * load and validate xml file - parse to array
+     * load and validate xml file - parse to array.
      *
      * @param string $xmlFile
      *
@@ -58,7 +62,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
      */
     public static function parseTranslatableNodeList(DOMNodeList $list)
     {
-        if ($list->length === 0) {
+        if (0 === $list->length) {
             return null;
         }
         $translations = [];
@@ -104,7 +108,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
     public static function getFirstChildren(DOMNode $list, $name)
     {
         $children = self::getChildren($list, $name);
-        if (count($children) === 0) {
+        if (0 === count($children)) {
             return null;
         }
 
@@ -121,7 +125,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
      */
     public static function validateBooleanAttribute($value, $defaultValue = false)
     {
-        if ($value === '') {
+        if ('' === $value) {
             return $defaultValue;
         }
 
@@ -135,12 +139,12 @@ abstract class XmlReaderBase implements XmlReaderInterface
      */
     public static function parseOptionsNodeList(DOMNodeList $optionsList)
     {
-        if ($optionsList->length === 0) {
+        if (0 === $optionsList->length) {
             return null;
         }
         $optionsItem = $optionsList->item(0);
         $optionList = $optionsItem->childNodes;
-        if ($optionList->length === 0) {
+        if (0 === $optionList->length) {
             return null;
         }
         $options = [];
@@ -168,7 +172,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
     public static function getElementChildValueByName(DOMElement $element, $name, $throwException = false)
     {
         $children = $element->getElementsByTagName($name);
-        if ($children->length === 0) {
+        if (0 === $children->length) {
             if ($throwException) {
                 throw new InvalidArgumentException(sprintf(
                     'Element with %s not found',
@@ -192,7 +196,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
      */
     public static function validateTextAttribute($type, $defaultValue = '')
     {
-        if ($type === '') {
+        if ('' === $type) {
             return $defaultValue;
         }
 

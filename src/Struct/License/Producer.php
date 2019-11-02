@@ -1,15 +1,15 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
+ * @property int    $id
  * @property string $name
  * @property string $prefix
- * @property integer $companyId
+ * @property int    $companyId
  */
 class Producer extends Struct
 {
-
     public $id = null;
 
     public $name = null;
@@ -19,8 +19,5 @@ class Producer extends Struct
     public $companyId = null;
 
     protected static $mappedFields = [
-        
     ];
-
-
 }

@@ -1,30 +1,30 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
- * @property BookingShop $bookingShop
- * @property BookingShop $licenseShop
- * @property VariantType $variantType
- * @property string $orderNumber
- * @property integer $price
- * @property string $creationDate
- * @property boolean $payed
- * @property boolean $archived
- * @property integer $shopwareMajorVersion
+ * @property int          $id
+ * @property BookingShop  $bookingShop
+ * @property BookingShop  $licenseShop
+ * @property VariantType  $variantType
+ * @property string       $orderNumber
+ * @property int          $price
+ * @property string       $creationDate
+ * @property bool         $payed
+ * @property bool         $archived
+ * @property int          $shopwareMajorVersion
  * @property Subscription $subscription
- * @property NULL $expirationDate
- * @property Plugin $plugin
- * @property NULL $charging
- * @property boolean $disbursed
- * @property integer $quantity
- * @property string $description
- * @property string $licenseKey
- * @property boolean $licenseMigrated
+ * @property null         $expirationDate
+ * @property Plugin       $plugin
+ * @property null         $charging
+ * @property bool         $disbursed
+ * @property int          $quantity
+ * @property string       $description
+ * @property string       $licenseKey
+ * @property bool         $licenseMigrated
  */
 class License extends Struct
 {
-
     public $id = null;
 
     public $bookingShop = null;
@@ -70,6 +70,4 @@ class License extends Struct
         'subscription' => 'App\\Struct\\License\\Subscription',
         'plugin' => 'App\\Struct\\License\\Plugin',
     ];
-
-
 }

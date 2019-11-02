@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Components;
-
 
 use App\Components\Api\Client;
 use App\Struct\ComposerPackageVersion;
@@ -60,11 +58,11 @@ class BinaryLoader
                 [
                     'pluginName' => $pluginName,
                     'binary' => $binary,
-                    'composerVersion' => $composerVersion
+                    'composerVersion' => $composerVersion,
                 ],
                 null,
                 [
-                    'X-Shopware-Token: ' . $this->client->currentToken()->getToken()
+                    'X-Shopware-Token: ' . $this->client->currentToken()->getToken(),
                 ]
             );
         }
@@ -82,20 +80,23 @@ class BinaryLoader
 
     public function processDownloadLink($response, $url, $requestInfo, $userData)
     {
-        if ($response === false) {
+        if (false === $response) {
             $userData['composerVersion']->invalid = true;
+
             return;
         }
 
         $json = json_decode($response, true);
 
-        if ($json === null) {
+        if (null === $json) {
             $userData['composerVersion']->invalid = true;
+
             return;
         }
 
         if (!array_key_exists('url', $json)) {
             $userData['composerVersion']->invalid = true;
+
             return;
         }
 
@@ -109,8 +110,9 @@ class BinaryLoader
 
     public function processFile($response, $url, $requestInfo, $userData)
     {
-        if ($response === false) {
+        if (false === $response) {
             $userData['composerVersion']->invalid = true;
+
             return;
         }
 
@@ -118,6 +120,7 @@ class BinaryLoader
             $info = array_merge(get_object_vars($userData['composerVersion']), PluginReader::readFromZip($response));
         } catch (\InvalidArgumentException $e) {
             $userData['composerVersion']->invalid = true;
+
             return;
         }
 

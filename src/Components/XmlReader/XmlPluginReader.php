@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Components\XmlReader;
 
@@ -15,7 +17,7 @@ class XmlPluginReader extends XmlReaderBase
     protected $xsdFile = __DIR__ . '/schema/plugin.xsd';
 
     /**
-     * parse required plugin blacklist
+     * parse required plugin blacklist.
      *
      * @param DOMNodeList $items
      *
@@ -23,7 +25,7 @@ class XmlPluginReader extends XmlReaderBase
      */
     public static function parseBlacklist(DOMNodeList $items)
     {
-        if ($items->length === 0) {
+        if (0 === $items->length) {
             return null;
         }
         $blacklist = [];
@@ -60,7 +62,7 @@ class XmlPluginReader extends XmlReaderBase
 
         $simpleFields = ['version', 'license', 'author', 'copyright', 'link'];
         foreach ($simpleFields as $simpleField) {
-            if (($fieldValue = self::getElementChildValueByName($pluginData, $simpleField)) !== null) {
+            if (null !== ($fieldValue = self::getElementChildValueByName($pluginData, $simpleField))) {
                 $info[$simpleField] = $fieldValue;
             }
         }
@@ -74,7 +76,7 @@ class XmlPluginReader extends XmlReaderBase
             }
         }
         $compatibility = $xpath->query('//plugin/compatibility')->item(0);
-        if ($compatibility !== null) {
+        if (null !== $compatibility) {
             $info['compatibility'] = [
                 'minVersion' => $compatibility->getAttribute('minVersion'),
                 'maxVersion' => $compatibility->getAttribute('maxVersion'),
@@ -87,7 +89,7 @@ class XmlPluginReader extends XmlReaderBase
             $pluginData,
             'requiredPlugins'
         );
-        if ($requiredPlugins !== null) {
+        if (null !== $requiredPlugins) {
             $info['requiredPlugins'] = $this->parseRequiredPlugins($requiredPlugins);
         }
 
@@ -95,7 +97,7 @@ class XmlPluginReader extends XmlReaderBase
     }
 
     /**
-     * parse required plugins
+     * parse required plugins.
      *
      * @param DOMElement $requiredPluginNode
      *
@@ -118,7 +120,7 @@ class XmlPluginReader extends XmlReaderBase
             $blacklist = self::parseBlacklist(
                 $requiredPlugin->getElementsByTagName('blacklist')
             );
-            if ($blacklist !== null) {
+            if (null !== $blacklist) {
                 $plugin['blacklist'] = $blacklist;
             }
             $plugins[] = $plugin;

@@ -1,15 +1,15 @@
 <?php
+
 namespace App\Struct\License;
 
 class Struct
 {
-
     protected static $mappedFields = [
-        
     ];
 
     /**
      * @param \stdClass $object
+     *
      * @return static
      */
     public static function map($object)
@@ -41,6 +41,7 @@ class Struct
 
     /**
      * @param array $data
+     *
      * @return static[]
      */
     public static function mapList($data)
@@ -48,10 +49,9 @@ class Struct
         if (empty($data)) {
             return [];
         }
+
         return array_map(function ($item) {
             return static::map($item);
         }, $data);
     }
-
-
 }

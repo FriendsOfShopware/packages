@@ -1,14 +1,14 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
+ * @property int    $id
  * @property string $name
  * @property string $description
  */
 class Status extends Struct
 {
-
     public $id = null;
 
     public $name = null;
@@ -16,8 +16,5 @@ class Status extends Struct
     public $description = null;
 
     protected static $mappedFields = [
-        
     ];
-
-
 }

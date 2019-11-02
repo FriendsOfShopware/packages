@@ -1,24 +1,24 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
- * @property string $name
- * @property string $localPath
- * @property string $remoteLink
- * @property string $version
- * @property Status $status
+ * @property int                          $id
+ * @property string                       $name
+ * @property string                       $localPath
+ * @property string                       $remoteLink
+ * @property string                       $version
+ * @property Status                       $status
  * @property CompatibleSoftwareVersions[] $compatibleSoftwareVersions
- * @property Changelogs $changelogs
- * @property string $creationDate
- * @property string $lastChangeDate
- * @property Archives $archives
- * @property boolean $ionCubeEncrypted
- * @property boolean $licenseCheckRequired
+ * @property Changelogs                   $changelogs
+ * @property string                       $creationDate
+ * @property string                       $lastChangeDate
+ * @property Archives                     $archives
+ * @property bool                         $ionCubeEncrypted
+ * @property bool                         $licenseCheckRequired
  */
 class Binaries extends Struct
 {
-
     public $id = null;
 
     public $name = null;
@@ -51,6 +51,4 @@ class Binaries extends Struct
         'changelogs' => 'App\\Struct\\License\\Changelogs',
         'archives' => 'App\\Struct\\License\\Archives',
     ];
-
-
 }

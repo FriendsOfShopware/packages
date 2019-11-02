@@ -1,14 +1,14 @@
 <?php
+
 namespace App\Struct\License;
 
 /**
- * @property integer $id
+ * @property int     $id
  * @property Company $company
- * @property string $domain
+ * @property string  $domain
  */
 class BookingShop extends Struct
 {
-
     public $id = null;
 
     public $company = null;
@@ -18,6 +18,4 @@ class BookingShop extends Struct
     protected static $mappedFields = [
         'company' => 'App\\Struct\\License\\Company',
     ];
-
-
 }

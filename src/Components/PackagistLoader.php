@@ -10,7 +10,7 @@ use App\Struct\License\Plugin;
 class PackagistLoader
 {
     private const KNOWN_BROKEN_PLUGINS = [
-        'store.shopware.com/netifoundation_2.1.0' => true
+        'store.shopware.com/netifoundation_2.1.0' => true,
     ];
 
     /**
@@ -29,7 +29,7 @@ class PackagistLoader
     public function load(array $licenses): array
     {
         $response = [
-            'packages' => $this->mapLicensesToComposerPackages($licenses)
+            'packages' => $this->mapLicensesToComposerPackages($licenses),
         ];
 
         $this->binaryLoader->load();
@@ -52,10 +52,9 @@ class PackagistLoader
 
             // Don't list expired test plugins
             if (
-                $license->variantType->name === 'test' &&
+                'test' === $license->variantType->name &&
                 !empty($license->expirationDate) &&
-                time() >= strtotime($license->expirationDate))
-            {
+                time() >= strtotime($license->expirationDate)) {
                 continue;
             }
 
@@ -72,7 +71,7 @@ class PackagistLoader
     }
 
     /**
-     * @param Plugin $plugin
+     * @param Plugin     $plugin
      * @param Binaries[] $binaries
      */
     private function convertBinaries(string $packageName, \stdClass $plugin, array $binaries): array
@@ -93,24 +92,24 @@ class PackagistLoader
             $version->name = $packageName;
             $version->version = $binary->version;
             $version->dist = [
-                'url' => 'plugins/' . $plugin->id . '/binaries/' . $binary->id .'/file',
-                'type' => 'zip'
+                'url' => 'plugins/' . $plugin->id . '/binaries/' . $binary->id . '/file',
+                'type' => 'zip',
             ];
             $version->type = 'shopware-plugin';
             $version->extra = [
-                'installer-name' => $plugin->name
+                'installer-name' => $plugin->name,
             ];
             $version->require = [
-                'composer/installers' => '~1.0'
+                'composer/installers' => '~1.0',
             ];
             $version->authors = [
                 [
-                    'name' => $plugin->producer->name
-                ]
+                    'name' => $plugin->producer->name,
+                ],
             ];
 
             // Shopware 1 to 5
-            if ($plugin->generation->name === 'classic') {
+            if ('classic' === $plugin->generation->name) {
                 $version->require['shopware/shopware'] = '>=' . $binary->compatibleSoftwareVersions[0]->name;
             }
 
