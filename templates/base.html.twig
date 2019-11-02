@@ -34,56 +34,54 @@
         {% endblock %}
     </head>
     <body>
-        <div class="navbar-wrapper">
+        <nav class="navbar navbar-light navbar-expand-lg bg-white clean-navbar">
             <div class="container">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="navbar-brand" href="/">
-                        <img src="{{ asset('Frosh_rgb.svg')}}" width="50" alt="FriendsOfShopware"/>
-                        Packages
-                    </a>
-
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav float-right">
-                            <li class="nav-item{% if app.request.attributes.get('_route') == 'app_home_index' %} active{% endif %}">
-                                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                <a class="navbar-brand" href="/">
+                    <img src="{{ asset('Frosh_rgb.svg')}}" width="50" alt="FriendsOfShopware"/>
+                    Packages
+                </a>
+                <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item{% if app.request.attributes.get('_route') == 'app_home_index' %} active{% endif %}">
+                            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item{% if app.request.attributes.get('_route') == 'browse' %} active{% endif %}">
+                            <a class="nav-link" href="{{ url('browse') }}">Browse</a>
+                        </li>
+                        <li class="nav-item{% if app.request.attributes.get('_route') == 'search' %} active{% endif %}">
+                            <a class="nav-link" href="{{ url('search') }}">Search</a>
+                        </li>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <li class="nav-item{% if app.request.attributes.get('_route') == 'account' %} active{% endif %}">
+                                <a class="nav-link" href="{{ url('account') }}">My packages</a>
                             </li>
-                            <li class="nav-item{% if app.request.attributes.get('_route') == 'browse' %} active{% endif %}">
-                                <a class="nav-link" href="{{ url('browse') }}">Browse</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('app_logout') }}">Logout</a>
                             </li>
-                            <li class="nav-item{% if app.request.attributes.get('_route') == 'search' %} active{% endif %}">
-                                <a class="nav-link" href="{{ url('search') }}">Search</a>
+                        {% else %}
+                            <li>
+                                <a class="nav-link{% if app.request.attributes.get('_route') == 'login' %} active{% endif %}" href="{{ url('login') }}">Login</a>
                             </li>
-                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                                <li class="nav-item{% if app.request.attributes.get('_route') == 'account' %} active{% endif %}">
-                                    <a class="nav-link" href="{{ url('account') }}">My packages</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('app_logout') }}">Logout</a>
-                                </li>
-                            {% else %}
-                                <li>
-                                    <a class="nav-link{% if app.request.attributes.get('_route') == 'login' %} active{% endif %}" href="{{ url('login') }}">Login</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </nav>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-        </div>
+        </nav>
 
         {% block search_bar %}
         <div class="search-wrapper">
             <div class="container">
-                <input type="text" id="searchField" class="form-control" placeholder="Search packages..." autofocus/>
+                <input type="text" id="searchField" class="form-control" placeholder="Search packages..." value="{{ app.request.query.get('term') }}" autofocus/>
                 <div class="helpText">
-                    It aggregates Shopware plugins as installable Composer packages. If a plugin is missing, please press login and press refresh
+                    It aggregates Shopware plugins as installable Composer packages
                 </div>
             </div>
         </div>
         {% endblock %}
 
-        <main class="bg-light">
-            <div id="search" style="display: none">
+        <main class="page">
+            <div id="search" class="pt-3" style="display: none">
             </div>
 
             <div id="content">

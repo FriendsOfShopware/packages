@@ -1,0 +1,27 @@
+.faq-element {
+    float: initial;
+    margin-bottom: 2rem;
+    p {
+        margin: .5rem;
+    }
+
+    .btn-faq {
+        background-color: #e4e4e4;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        box-shadow: none !important;
+    }
+}
+
+.panel {
+    padding: 0 18px;
+    background-color: white;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}

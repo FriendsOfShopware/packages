@@ -33,7 +33,7 @@ class Login extends AbstractController
             return $this->redirectToRoute('account');
         }
 
-        return $this->render('login.html.twig');
+        return $this->render('login/index.html.twig');
     }
 
     /**
@@ -55,7 +55,7 @@ class Login extends AbstractController
 
             return $this->redirectToRoute('shop-selection');
         } catch (AccessDeniedException $e) {
-            return $this->render('login.html.twig', [
+            return $this->render('login/index.html.twig', [
                 'loginError' => true,
             ]);
         }
@@ -80,7 +80,7 @@ class Login extends AbstractController
             }
         }
 
-        return $this->render('login.html.twig', [
+        return $this->render('login/shop-selection.html.twig', [
             'shops' => $shops,
         ]);
     }

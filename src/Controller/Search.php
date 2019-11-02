@@ -25,7 +25,7 @@ class Search extends AbstractController
      */
     public function search(): Response
     {
-        return $this->render('base.html.twig');
+        return $this->render('search.html.twig');
     }
 
     /**

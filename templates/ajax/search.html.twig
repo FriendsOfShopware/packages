@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container search-page">
     <div class="row">
         <div class="col-md-8 order-1 order-md-0">
             {% for hit in searchResult.hits.hits %}
@@ -16,18 +16,28 @@
             <div class="card mb-2">
                 <div class="card-body">
                     <h5 class="cart-title">Package type:</h5>
-                    {% for entry in searchResult.aggregations.types.aggs.buckets %}
-                        <label><input type="checkbox" name="types" value="{{ entry.key }}" data-filter="true"{% if entry.key in selectedTypes %} checked{% endif %}> <strong>{{ entry.key }}</strong> ({{ entry.doc_count }})</label><br>
-                    {% endfor %}
+                    <ul class="list-group">
+                        {% for entry in searchResult.aggregations.types.aggs.buckets %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center{% if entry.key in selectedTypes %} active{% endif %}" data-filter-name="types" data-filter-value="{{ entry.key }}">
+                            {{ entry.key }}
+                            <span class="badge badge-primary badge-pill">{{ entry.doc_count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-body">
                     <h5 class="cart-title">Producer:</h5>
-                    {% for entry in searchResult.aggregations.producers.buckets %}
-                        <label><input type="checkbox" name="producers" value="{{ entry.key }}" data-filter="true"{% if entry.key in selectedProducers %} checked{% endif %}> <strong>{{ entry.key }}</strong> ({{ entry.doc_count }})</label><br>
-                    {% endfor %}
+                    <ul class="list-group">
+                        {% for entry in searchResult.aggregations.producers.buckets %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center{% if entry.key in selectedProducers %} active{% endif %}" data-filter-name="producers" data-filter-value="{{ entry.key }}">
+                                {{ entry.key }}
+                                <span class="badge badge-primary badge-pill">{{ entry.doc_count }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>

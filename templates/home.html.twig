@@ -2,33 +2,53 @@
 
 
 {% block body %}
-    <div class="container">
+    <div class="container mt-3">
         <h1>Getting Started</h1>
 
-        <p>
-            Login with your Shopware credentials and select your domain.
-            Follow the wizard and add the new composer repository to your <strong>composer.json</strong>
-            <br>
-            <strong>No credentials will be saved. From your login data a Shopware-API token will be created, which is used for fruther authentication with the Shopware-API.</strong>
-        </p>
+        <h3>Requirements</h3>
+        <p>Shopware 5 Composer Project or Shopware 6. Guide to switch <a href="https://developers.shopware.com/blog/2018/07/25/an-easy-example-how-to-switch-from-classic-installation-to-composer-installation/" rel="noopener nofollow">Shopware 5 from classic installation to composer</a></p>
 
-        <h2>FAQ</h2>
+        <h3>Steps</h3>
 
-        <h4>A package is missing?</h4>
-        <p>
-            <a href="/login">Login to your packages account</a> using your Shopware account. After that the plugin index will be regenerated. This includes new updates, since the last login.
-        <br>
-        A regeneration of the index, is also triggered by a <code>composer update</code> on the command line.
-        </p>
+        <ol>
+            <li>Login with your Shopware Account credentials</li>
+            <li>Copy repository configuration and adjust your repository in your project <code>composer.json</code></li>
+            <li>Replace all plugin files with composer require</li>
+        </ol>
 
-        <h4>Where can I find the source code? Can I host this repository myself?</h4>
-        <p>
-            You can find the source code at <a href="https://github.com/FriendsOfShopware/packages/" rel="noopener noreferrer">Github</a> with a brief setup guide for selfhosting.
-        </p>
+    </div>
+    <div class="bg-light">
+        <div class="container p-3">
+            <h2>FAQ</h2>
+            <div class="faq-element">
+                <button class="btn btn-primary btn-faq active" type="button">Will my credentials be saved?</button>
+                <div class="panel">
+                    <p>
+                        Your shopwareId, password and choosen domain will be encrypted and served as token back to you. This token is important to authenticate you further on Shopware services.
+                        On each request the token will be decrypted on server side to get the credentials.<br>
+                        <strong>This token is only saved client-side!</strong><br>
+                        <a href="https://github.com/FriendsOfShopware/packages/blob/master/src/Components/Api/AccessToken.php#L46-L55" target="_blank" rel="noopener nofollow">Feel free to look into code if you are interested into</a>
+                    </p>
+                </div>
+            </div>
 
-        <h4>Something is not working as expected!</h4>
-        <p>
-            Please send me an Tweet <a href="https://twitter.com/@Shyim97" rel="noopener noreferrer">@Shyim97</a>. This project is based on API routes of the Shopware store API, which change from time to time.
-        </p>
+            <div class="faq-element">
+                <button class="btn btn-primary btn-faq active" type="button">Where can I find the source code? Can I host this repository myself?</button>
+                <div class="panel">
+                    <p>
+                        You can find the source code at <a href="https://github.com/FriendsOfShopware/packages/" rel="noopener noreferrer">Github</a> with a brief setup guide for selfhosting.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-element">
+                <button class="btn btn-primary btn-faq active" type="button">Something is not working as expected!</button>
+                <div class="panel">
+                    <p>
+                        Please send me an Tweet <a href="https://twitter.com/@Shyim97" rel="noopener noreferrer">@Shyim97</a>. This project is based on API routes of the Shopware store API, which change from time to time.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

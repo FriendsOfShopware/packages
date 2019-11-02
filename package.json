@@ -7,7 +7,7 @@
         "sass-loader": "^7.3.1",
         "webpack-notifier": "^1.6.0"
     },
-    "license": "UNLICENSED",
+    "license": "mit",
     "private": true,
     "scripts": {
         "dev-server": "encore dev-server",
@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "bootstrap": "^4.3.1",
+        "clipboard": "^2.0.4",
         "jquery": "^3.4.1",
         "popper.js": "^1.16.0"
     }

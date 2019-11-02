@@ -4,29 +4,45 @@
 {% block description %}{% if package.shortDescription %}{{ package.shortDescription }}{% else %}Install easily {{ package.name }} using Composer{% endif %}{% endblock %}
 
 {% block body %}
-    <div class="container package-detail">
-        <h1>{{ package.composerName }}</h1>
+    <div class="container package-detail mt-3">
+        <h1>{{ package.name }}</h1>
 
         <div class="row">
             <div class="col-md-8">
-                <input type="text" readonly class="form-control" value="composer require {{ package.composerName }}" aria-label="Composer package">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" aria-label="Composer Command" id="composerCmd" readonly value="composer require {{ package.composerName }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-copy btn-primary" data-clipboard-target="#composerCmd">Copy</button>
+                    </div>
+                </div>
 
-                <h4 style="margin-top: 10px">requires:</h4>
-                <ul>
-                    {% for key, val in version.requireSection %}
-                        {% set url = "https://packagist.org/packages/" ~ key %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="cart-title">Requirements:</h5>
+                        <p>
+                            <ul>
+                                {% for key, val in version.requireSection %}
+                                    {% set url = "https://packagist.org/packages/" ~ key %}
 
-                        {% if 'store.shopware.com' in key %}
-                            {% set url = url('package', {name: key ~ '/'}) %}
-                        {% endif %}
+                                    {% if 'store.shopware.com' in key %}
+                                        {% set url = url('package', {name: key ~ '/'}) %}
+                                    {% endif %}
 
-                        <li><a href="{{ url }}" rel="noopener noreferrer" target="_blank">{{ key }}</a>: {{ val }}</li>
-                    {% endfor %}
-                </ul>
+                                    <li><a href="{{ url }}" rel="noopener noreferrer" target="_blank">{{ key }}</a>: {{ val }}</li>
+                                {% endfor %}
+                            </ul>
+                        </p>
+                    </div>
+                </div>
 
-                <p>
-                    {{ package.safeDescription|raw }}
-                </p>
+                {% if package.safeDescription %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Store description</h5>
+                            <p>{{ package.safeDescription|raw }}</p>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="col-md-4">
                 <div class="card mb-2">

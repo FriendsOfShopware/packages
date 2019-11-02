@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <div class="container">
+    <div class="container mt-3">
         <h1>My packages</h1>
 
         <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#setup">
@@ -32,7 +32,7 @@
                 <div class="modal-body">
                     <p>Open project composer.json and add following repository</p>
 
-<pre>
+<pre id="composerCmd">
 "repositories": [
     {
         "type": "composer",
@@ -47,6 +47,9 @@
     }
 ]
 </pre>
+                    <p>
+                        <button class="btn btn-copy btn-primary" data-clipboard-target="#composerCmd">Copy config</button>
+                    </p>
                     <p>Now you can use any composer package directly in your composer cli</p>
                 </div>
                 <div class="modal-footer">
