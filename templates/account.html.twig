@@ -4,22 +4,20 @@
     <div class="container">
         <h1>My packages</h1>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#setup">
+        <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#setup">
             Setup Repository in Project
         </button>
 
-        <ul class="list-unstyled package-list">
-            {% for package in packages %}
-                <li>
-                   <div class="package-item">
-                       <div class="col-9">
-                           <h4><a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.composerName }}</a></h4>
-                           <p>{% if package.shortDescription %}{{ package.shortDescription }}{% else %}{{ package.name }}{% endif %}</p>
-                       </div>
-                   </div>
-                </li>
-            {% endfor %}
-        </ul>
+        {% for package in packages %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.composerName }}</a>
+                    </h5>
+                    <p class="card-text">{% if package.shortDescription %}{{ package.shortDescription }}{% else %}{{ package.name }}{% endif %}</p>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
     <div class="modal" tabindex="-1" id="setup" role="dialog">

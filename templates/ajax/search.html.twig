@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 order-1 order-md-0">
+            {% for hit in searchResult.hits.hits %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url('package', {name: hit._source.name ~ '/' }) }}">{{ hit._source.name }}</a>
+                        </h5>
+                        <p class="card-text">{{ hit._source.shortDescription|striptags|slice(0, 100) }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-4 order-0 order-md-1">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="cart-title">Package type:</h5>
+                    {% for entry in searchResult.aggregations.types.aggs.buckets %}
+                        <label><input type="checkbox" name="types" value="{{ entry.key }}" data-filter="true"{% if entry.key in selectedTypes %} checked{% endif %}> <strong>{{ entry.key }}</strong> ({{ entry.doc_count }})</label><br>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="cart-title">Producer:</h5>
+                    {% for entry in searchResult.aggregations.producers.buckets %}
+                        <label><input type="checkbox" name="producers" value="{{ entry.key }}" data-filter="true"{% if entry.key in selectedProducers %} checked{% endif %}> <strong>{{ entry.key }}</strong> ({{ entry.doc_count }})</label><br>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

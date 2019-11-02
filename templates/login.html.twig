@@ -17,7 +17,7 @@
         {% if shops is defined %}
             <form method="post" action="{{ url('shop-selection') }}">
                 <div class="form-group">
-                    <label>Choose shops
+                    <label>Choose shop
                         <select name="shop" class="form-control">
                             {% for shop in shops %}
                                 <option value="{{ shop.domain }}">{{ shop.domain }}</option>

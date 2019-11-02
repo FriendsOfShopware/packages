@@ -1,10 +1,3 @@
-.navbar-wrapper {
-  //background: #2d2d32;
-  .navbar .navbar-brand {
-    //color: #fff;
-  }
-}
-
 h1 {
   border-bottom: 1px solid rgb(24, 158, 255);
   margin: -5px 0 15px;
@@ -30,35 +23,4 @@ footer {
 main {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.list-packages {
-  li {
-    margin-bottom: 12px;
-  }
-}
-
-.package-list {
-  margin-top: 20px;
-  .package-item {
-    padding: 5px 15px;
-    margin-bottom: 10px;
-    background: #fff;
-    border-radius: 4px;
-  }
-}
-
-.package-detail {
-  .package-sidebar {
-    background: #fff;
-    border-radius: 2px;
-    border-top: 0;
-    padding: 10px;
-    margin-left: -15px;
-    margin-right: -15px;
-  }
-}
-
-.ais-Hits-item {
-  width: 100%;
 }

@@ -1,7 +1,4 @@
 {
-    "algolia/algoliasearch-client-php": {
-        "version": "2.4.0"
-    },
     "clue/stream-filter": {
         "version": "v1.4.1"
     },
@@ -90,6 +87,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "elasticsearch/elasticsearch": {
+        "version": "v7.3.0"
+    },
     "friendsofphp/php-cs-fixer": {
         "version": "2.2",
         "recipe": {
@@ -107,6 +107,12 @@
     },
     "guzzlehttp/psr7": {
         "version": "1.6.1"
+    },
+    "guzzlehttp/ringphp": {
+        "version": "1.1.1"
+    },
+    "guzzlehttp/streams": {
+        "version": "3.0.0"
     },
     "http-interop/http-factory-guzzle": {
         "version": "1.0.0"
@@ -149,6 +155,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "ongr/elasticsearch-dsl": {
+        "version": "v7.0.0"
     },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
@@ -212,6 +221,9 @@
     },
     "ramsey/uuid": {
         "version": "3.8.0"
+    },
+    "react/promise": {
+        "version": "v2.7.1"
     },
     "roave/security-advisories": {
         "version": "dev-master"
@@ -421,6 +433,9 @@
     },
     "symfony/security-http": {
         "version": "v4.3.5"
+    },
+    "symfony/serializer": {
+        "version": "v4.3.6"
     },
     "symfony/service-contracts": {
         "version": "v1.1.6"

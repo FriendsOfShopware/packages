@@ -8,7 +8,7 @@
         <h1>{{ package.composerName }}</h1>
 
         <div class="row">
-            <div class="col-8">
+            <div class="col-md-8">
                 <input type="text" readonly class="form-control" value="composer require {{ package.composerName }}" aria-label="Composer package">
 
                 <h4 style="margin-top: 10px">requires:</h4>
@@ -28,8 +28,8 @@
                     {{ package.safeDescription|raw }}
                 </p>
             </div>
-            <div class="col-4">
-                <div class="card">
+            <div class="col-md-4">
+                <div class="card mb-2">
                     <div class="card-body">
                         <h5 class="card-title">Version: {{ version.version }}</h5>
                         <p class="card-text">

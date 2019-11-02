@@ -28,8 +28,6 @@
       phpEnv = {
         APP_ENV = "prod";
         APP_SECRET = builtins.getEnv "APP_SECRET";
-        ALGOLIA_APP_ID = builtins.getEnv "ALGOLIA_APP_ID";
-        ALGOLIA_API_KEY = builtins.getEnv "ALGOLIA_API_KEY";
         SENTRY_DSN = builtins.getEnv "SENTRY_DSN";
         APP_URL = "https://packages.friendsofshopware.com";
         DATABASE_URL = "mysql://root:${builtins.getEnv "MYSQL_PASSWORD"}@localhost/packages";
@@ -47,7 +45,10 @@
         redis
       ];
 
+      nixpkgs.config.allowUnfree = true;
       services.openssh.enable = true;
+      services.elasticsearch.enable = true;
+      services.elasticsearch.package = pkgs.elasticsearch7;
 
       time.timeZone = "Europe/Berlin";
 
@@ -134,6 +135,17 @@
           ${symfony_cmd}/bin/symfony-console cache:warmup
           ${symfony_cmd}/bin/symfony-console doctrine:migrations:migrate --no-interaction
 
+        '';
+        serviceConfig.Type = "oneshot";
+      };
+
+      systemd.services."packages-algolia-sync" = {
+        after = [ "mysql.service" "elasticsearch.service" ];
+        wantedBy = [ "multi-user.target" ];
+        environment = phpEnv;
+        startAt = "hourly";
+        script = ''
+          ${symfony_cmd}/bin/symfony-console search:package:index
         '';
         serviceConfig.Type = "oneshot";
       };

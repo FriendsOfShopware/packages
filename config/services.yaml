@@ -23,6 +23,14 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    client.builder:
+        class: Elasticsearch\ClientBuilder
+        factory: ['Elasticsearch\ClientBuilder', 'create']
+
+    Elasticsearch\Client:
+        class: Elasticsearch\Client
+        factory: ['@client.builder', 'build']
+
     Algolia\AlgoliaSearch\SearchClient:
         class: Algolia\AlgoliaSearch\SearchClient
         factory: ['Algolia\AlgoliaSearch\SearchClient', 'create']

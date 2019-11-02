@@ -2,16 +2,6 @@
 
 let
   packages = {
-    "algolia/algoliasearch-client-php" = {
-      targetDir = "";
-      src = composerEnv.buildZipPackage {
-        name = "algolia-algoliasearch-client-php-602748161cecbf9d329379a9949d63e1dc683852";
-        src = fetchurl {
-          url = https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/602748161cecbf9d329379a9949d63e1dc683852;
-          sha256 = "0w0r88j6di5zpdx26hvpwb0mxj1sasdah3z9v90j5rm4jxkypmr6";
-        };
-      };
-    };
     "clue/stream-filter" = {
       targetDir = "";
       src = composerEnv.buildZipPackage {
@@ -182,6 +172,16 @@ let
         };
       };
     };
+    "elasticsearch/elasticsearch" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "elasticsearch-elasticsearch-f8b5d2beeeb22a5a59aabb183b5bcd7e70878d2f";
+        src = fetchurl {
+          url = https://api.github.com/repos/elastic/elasticsearch-php/zipball/f8b5d2beeeb22a5a59aabb183b5bcd7e70878d2f;
+          sha256 = "10j68bx28nijmax5jq8jgl1qyn9q26bbfhliak3dqn9ywxz4ldjn";
+        };
+      };
+    };
     "guzzlehttp/promises" = {
       targetDir = "";
       src = composerEnv.buildZipPackage {
@@ -199,6 +199,26 @@ let
         src = fetchurl {
           url = https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a;
           sha256 = "0mfq93x7ayix6l3v5jkk40a9hnmrxaqr9vk1r26q39d1s6292ma7";
+        };
+      };
+    };
+    "guzzlehttp/ringphp" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "guzzlehttp-ringphp-5e2a174052995663dd68e6b5ad838afd47dd615b";
+        src = fetchurl {
+          url = https://api.github.com/repos/guzzle/RingPHP/zipball/5e2a174052995663dd68e6b5ad838afd47dd615b;
+          sha256 = "09n1znwxawmsidyq6zk94mg85hibsg8kxm1j0bi795pa55fiqzj9";
+        };
+      };
+    };
+    "guzzlehttp/streams" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "guzzlehttp-streams-47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5";
+        src = fetchurl {
+          url = https://api.github.com/repos/guzzle/streams/zipball/47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5;
+          sha256 = "1ax2b61l31vsx5814iak7l35rmh9yk0rbps5gndrkwlf27ciq9jy";
         };
       };
     };
@@ -249,6 +269,16 @@ let
         src = fetchurl {
           url = https://api.github.com/repos/Ocramius/ProxyManager/zipball/4d154742e31c35137d5374c998e8f86b54db2e2f;
           sha256 = "0444f7rcac7y1cs0kw44mjyqg7ac7dmv7cabl595riv82svdvwj7";
+        };
+      };
+    };
+    "ongr/elasticsearch-dsl" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "ongr-elasticsearch-dsl-b86153ce7a4192ff7caf8d93f59c2e7c151cba1f";
+        src = fetchurl {
+          url = https://api.github.com/repos/ongr-io/ElasticsearchDSL/zipball/b86153ce7a4192ff7caf8d93f59c2e7c151cba1f;
+          sha256 = "0grxpdcdlkymlrrgpbixzh2kva93j58shwarjim8rkrcqj00q4zn";
         };
       };
     };
@@ -409,6 +439,16 @@ let
         src = fetchurl {
           url = https://api.github.com/repos/ramsey/uuid/zipball/d09ea80159c1929d75b3f9c60504d613aeb4a1e3;
           sha256 = "1hgnf32xy2cxfwihncmsndnxgkf2hhs6zjqnhyxdhwjyhv4apb67";
+        };
+      };
+    };
+    "react/promise" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "react-promise-31ffa96f8d2ed0341a57848cbb84d88b89dd664d";
+        src = fetchurl {
+          url = https://api.github.com/repos/reactphp/promise/zipball/31ffa96f8d2ed0341a57848cbb84d88b89dd664d;
+          sha256 = "12pz35wc1zy4djkigqikg74fxi88s46fk22hzp5qkyjy829bbj42";
         };
       };
     };
@@ -809,6 +849,16 @@ let
         src = fetchurl {
           url = https://api.github.com/repos/symfony/security-http/zipball/a2f67dfe0ecfb713734847f4ada0f4231e28ae71;
           sha256 = "1bf18wsf1dq32jfl5ij8ngjwam7gvdki1fd5qm8gw9l95vfabxza";
+        };
+      };
+    };
+    "symfony/serializer" = {
+      targetDir = "";
+      src = composerEnv.buildZipPackage {
+        name = "symfony-serializer-cb2d8c6e82b4966a5cc5762385e6e0f70ee1388a";
+        src = fetchurl {
+          url = https://api.github.com/repos/symfony/serializer/zipball/cb2d8c6e82b4966a5cc5762385e6e0f70ee1388a;
+          sha256 = "03s4sc0za9jgs0yg998f9vhm09g6p8xsl7z65vwipjr9llqynj87";
         };
       };
     };

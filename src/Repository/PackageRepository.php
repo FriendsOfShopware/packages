@@ -6,6 +6,7 @@ use App\Entity\Package;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -48,16 +49,22 @@ class PackageRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findAllPackagesTotal(): int
+    {
+        $paginator = new Paginator($this->findAllPackagesQuery());
+        return $paginator->count();
+    }
+
     /**
      * @return Package[]
      */
-    public function findAllPackages(): array
+    public function findAllPackages(int $offset = 0, int $limit = 100): iterable
     {
-        $qb = $this->createQueryBuilder('package');
-        $qb->innerJoin('package.versions', 'versions')
-            ->addSelect('versions');
+        $paginator = new Paginator($this->findAllPackagesQuery());
+        $paginator->getQuery()->setMaxResults($limit);
+        $paginator->getQuery()->setFirstResult($offset);
 
-        return $qb->getQuery()->getResult();
+        return $paginator->getIterator();
     }
 
     /**
@@ -74,5 +81,17 @@ class PackageRepository extends ServiceEntityRepository
         $paginator->getQuery()->setMaxResults(10);
 
         return $paginator->getIterator();
+    }
+
+    private function findAllPackagesQuery(): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('package');
+        $qb
+            ->innerJoin('package.versions', 'versions')
+            ->innerJoin('package.producer', 'producer')
+            ->addSelect('versions')
+            ->addSelect('producer');
+
+        return $qb;
     }
 }

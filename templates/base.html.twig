@@ -29,8 +29,6 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#189eff">
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/reset-min.css" integrity="sha256-t2ATOGCtAIZNnzER679jwcFcKYfLlw01gli6F6oszk8=" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous">
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -76,7 +74,7 @@
         {% block search_bar %}
         <div class="search-wrapper">
             <div class="container">
-                <div id="searchContainer"></div>
+                <input type="text" id="searchField" class="form-control" placeholder="Search packages..." autofocus/>
                 <div class="helpText">
                     It aggregates Shopware plugins as installable Composer packages. If a plugin is missing, please press login and press refresh
                 </div>
@@ -86,20 +84,6 @@
 
         <main class="bg-light">
             <div id="search" style="display: none">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-8">
-                            <div id="hits"></div>
-                            <div id="powered-by"></div>
-                        </div>
-                        <div class="col-4">
-                            <h4>Package type:</h4>
-                            <div id="search-sidebar-type"></div>
-                            <h4>Producer:</h4>
-                            <div id="search-sidebar-producer"></div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div id="content">
