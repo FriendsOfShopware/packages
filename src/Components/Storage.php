@@ -157,6 +157,7 @@ class Storage
             if (!$package) {
                 $package = new Package();
                 $package->setName($pluginName);
+                $package->setReleaseDate(new \DateTime());
 
                 $producer = $this->getProducer($producerName);
                 $producer->addPackage($package);

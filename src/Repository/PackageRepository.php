@@ -68,7 +68,7 @@ class PackageRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('package');
         $qb->innerJoin('package.versions', 'versions')
             ->addSelect('versions')
-            ->addOrderBy('package.id', 'DESC');
+            ->addOrderBy('package.releaseDate', 'DESC');
 
         $paginator = new Paginator($qb->getQuery());
         $paginator->getQuery()->setMaxResults(10);

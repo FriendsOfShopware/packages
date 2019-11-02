@@ -30,6 +30,24 @@ class Package
     private $description;
 
     /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $shortDescription;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $storeLink;
+
+    /**
+     * @var \DateTimeInterface|null
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $releaseDate;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Version", mappedBy="package", orphanRemoval=true)
      */
     private $versions;
@@ -129,8 +147,59 @@ class Package
         return $this->description;
     }
 
+    public function getSafeDescription(): ?string
+    {
+        if (null === $this->description) {
+            return null;
+        }
+
+        $text = strip_tags($this->description, '<h2><h3><h4><h5><h6><p><b><strong><li><ol><ul><br><i><a><style>');
+        $text = preg_replace('/style=\\"[^\\"]*\\"/', '', $text);
+        $text = preg_replace('/class=\\"[^\\"]*\\"/', '', $text);
+
+        $followList = [
+            getenv('APP_URL'),
+        ];
+
+        return preg_replace(
+            '%(<a\s*(?!.*\brel=)[^>]*)(href="https?://)((?!(?:(?:www\.)?' . implode('|(?:www\.)?', $followList) . '))[^"]+)"((?!.*\brel=)[^>]*)(?:[^>]*)>%',
+            '$1$2$3"$4 rel="noopener noreferrer">',
+            $text
+        );
+    }
+
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(?string $shortDescription): void
+    {
+        $this->shortDescription = $shortDescription;
+    }
+
+    public function getStoreLink(): ?string
+    {
+        return $this->storeLink;
+    }
+
+    public function setStoreLink(?string $storeLink): void
+    {
+        $this->storeLink = $storeLink;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(?\DateTimeInterface $releaseDate): void
+    {
+        $this->releaseDate = $releaseDate;
     }
 }

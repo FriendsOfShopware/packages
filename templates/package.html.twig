@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block title %}{{ package.name }} - FriendsOfShopware Packages{% endblock %}
-{% block description %}Install easily {{ package.name }} using Composer{% endblock %}
+{% block description %}{% if package.shortDescription %}{{ package.shortDescription }}{% else %}Install easily {{ package.name }} using Composer{% endif %}{% endblock %}
 
 {% block body %}
     <div class="container package-detail">
@@ -23,27 +23,41 @@
                         <li><a href="{{ url }}" rel="noopener noreferrer" target="_blank">{{ key }}</a>: {{ val }}</li>
                     {% endfor %}
                 </ul>
+
+                <p>
+                    {{ package.safeDescription|raw }}
+                </p>
             </div>
             <div class="col-4">
-                <div class="package-sidebar">
-                    <p>
-                        Maintainers: {{ package.producer.name }}<br>
-                        Version: {{ version.version }}<br>
-                        Type: {{ version.type }}<br>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Version: {{ version.version }}</h5>
+                        <p class="card-text">
+                            Maintainers: {{ package.producer.name }}<br>
+                            Version: {{ version.version }}<br>
+                            License: {{ version.license }}<br>
+                            Type: {{ version.type }}<br>
+                        </p>
                         {% if version.homepage %}
-                        <a href="{{ version.homepage }}" rel="noopener noreferrer" target="_blank">Homepage</a>
+                            <a href="{{ version.homepage }}" class="btn btn-primary" rel="noopener noreferrer" target="_blank">Homepage</a>
                         {% endif %}
-                    </p>
+                        {% if package.storeLink %}
+                            <a href="{{ package.storeLink }}" class="btn btn-primary" rel="noopener noreferrer" target="_blank">Store page</a>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div class="package-sidebar">
-                    <ul class="list-unstyled">
-                        {% for versionLoop in package.versions %}
-                            <li>
-                                <a href="?version={{ versionLoop.version }}">{{ versionLoop.version }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Available versions</h5>
+                        <ul class="list-unstyled">
+                            {% for versionLoop in package.versions %}
+                                <li>
+                                    <a href="?version={{ versionLoop.version }}">{{ versionLoop.version }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

@@ -12,14 +12,14 @@
         <meta property="og:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
         <meta property="og:title" content="{{ block('title') }}">
         <meta property="og:description" content="{{ block('description') }}">
-        <meta property="og:image" content="{{ asset('Frosh_rgb.svg')}}">
+        <meta property="og:image" content="{{ absolute_url(asset('Frosh_rgb.svg')) }}">
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
         <meta property="twitter:title" content="{{ block('title') }}">
         <meta property="twitter:description" content="{{ block('description') }}">
-        <meta property="twitter:image" content="{{ asset('Frosh_rgb.svg')}}">
+        <meta property="twitter:image" content="{{ absolute_url(asset('Frosh_rgb.svg')) }}">
 
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
