@@ -30,6 +30,7 @@
         APP_SECRET = builtins.getEnv "APP_SECRET";
         ALGOLIA_APP_ID = builtins.getEnv "ALGOLIA_APP_ID";
         ALGOLIA_API_KEY = builtins.getEnv "ALGOLIA_API_KEY";
+        SENTRY_DSN = builtins.getEnv "SENTRY_DSN";
         APP_URL = "https://packages.friendsofshopware.com";
         DATABASE_URL = "mysql://root:${builtins.getEnv "MYSQL_PASSWORD"}@localhost/packages";
       };
@@ -136,17 +137,6 @@
         '';
         serviceConfig.Type = "oneshot";
       };
-
-      systemd.services."packages-algolia-sync" = {
-          after = [ "mysql.service" ];
-          wantedBy = [ "multi-user.target" ];
-          environment = phpEnv;
-          # startAt = "hourly";
-          script = ''
-            ${symfony_cmd}/bin/symfony-console search:package:index
-          '';
-          serviceConfig.Type = "oneshot";
-        };
 
       services.redis.enable = true;
     };

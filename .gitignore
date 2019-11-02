@@ -4,6 +4,7 @@
 /.env
 /.env.local.php
 /.env.*.local
+/.deploy_env
 /public/bundles/
 /var/
 /vendor/
