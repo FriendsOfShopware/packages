@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,10 @@ class Package extends AbstractController
      */
     public function package(string $name, Request $request): Response
     {
-        $package = $this->entityManager->getRepository(\App\Entity\Package::class)->findOne($name);
+        /** @var PackageRepository $repository */
+        $repository = $this->entityManager->getRepository(\App\Entity\Package::class);
+
+        $package = $repository->findOne($name);
 
         if (!$package) {
             throw new NotFoundHttpException(sprintf('Cannot find package by name %s', $name));

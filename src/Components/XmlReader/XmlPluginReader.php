@@ -75,6 +75,7 @@ class XmlPluginReader extends XmlReaderBase
                 $info['changelog'][$version][$lang][] = $changes->nodeValue;
             }
         }
+        /** @var DOMElement|null $compatibility */
         $compatibility = $xpath->query('//plugin/compatibility')->item(0);
         if (null !== $compatibility) {
             $info['compatibility'] = [

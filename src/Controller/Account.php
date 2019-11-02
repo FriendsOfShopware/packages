@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Components\Api\AccessToken;
 use App\Components\Api\Client;
 use App\Components\PackagistLoader;
+use App\Entity\Package;
+use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -55,8 +57,11 @@ class Account extends AbstractController
             return str_replace('store.shopware.com/', '', $name);
         }, array_keys($data['packages']));
 
+        /** @var PackageRepository $repository */
+        $repository = $this->entityManager->getRepository(Package::class);
+
         /** @var \App\Entity\Package[] $packages */
-        $packages = $this->entityManager->getRepository(\App\Entity\Package::class)->findPackagesByNames($packageNames);
+        $packages = $repository->findPackagesByNames($packageNames);
 
         return $this->render('account.html.twig', [
             'packages' => $packages,

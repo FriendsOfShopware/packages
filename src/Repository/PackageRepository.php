@@ -63,7 +63,7 @@ class PackageRepository extends ServiceEntityRepository
     /**
      * @return Package[]
      */
-    public function findNewPackages(): \ArrayIterator
+    public function findNewPackages(): iterable
     {
         $qb = $this->createQueryBuilder('package');
         $qb->innerJoin('package.versions', 'versions')

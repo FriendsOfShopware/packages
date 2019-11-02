@@ -73,7 +73,7 @@ class Storage
     /**
      * @param Binaries $binary
      */
-    public function getBinaryInfo(string $pluginName, \stdClass $binary, ComposerPackageVersion $packageVersion): array
+    public function getBinaryInfo(string $pluginName, $binary, ComposerPackageVersion $packageVersion): array
     {
         $cacheKey = $this->buildCacheKey($pluginName, $binary);
         if ($this->cache->has($cacheKey)) {
@@ -95,7 +95,7 @@ class Storage
     /**
      * @param Binaries $binary
      */
-    public function hasBinary(string $pluginName, \stdClass $binary, ComposerPackageVersion $packageVersion): bool
+    public function hasBinary(string $pluginName, $binary, ComposerPackageVersion $packageVersion): bool
     {
         if ($this->cache->has($this->buildCacheKey($pluginName, $binary))) {
             return true;
@@ -115,7 +115,7 @@ class Storage
     /**
      * @param Binaries $binary
      */
-    public function saveBinary(string $pluginName, \stdClass $binary, ComposerPackageVersion $packageVersion)
+    public function saveBinary(string $pluginName, $binary, ComposerPackageVersion $packageVersion)
     {
         $this->haveWritten = true;
         $package = $this->getPackage($pluginName, $packageVersion->authors[0]['name']);
@@ -192,7 +192,7 @@ class Storage
     /**
      * @param Binaries $binary
      */
-    private function buildCacheKey(string $pluginName, \stdClass $binary): string
+    private function buildCacheKey(string $pluginName, $binary): string
     {
         return $pluginName . '-' . $binary->version;
     }

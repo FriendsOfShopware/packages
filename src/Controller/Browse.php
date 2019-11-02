@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Package;
+use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ class Browse extends AbstractController
      */
     public function index(EntityManagerInterface $entityManager): Response
     {
+        /** @var PackageRepository $repository */
         $repository = $entityManager->getRepository(Package::class);
 
         return $this->render('browse.html.twig', [

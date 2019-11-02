@@ -39,7 +39,7 @@ class BinaryLoader
     /**
      * @param Binaries $binary
      */
-    public function add(string $pluginName, \stdClass $binary, ComposerPackageVersion $composerVersion)
+    public function add(string $pluginName, $binary, ComposerPackageVersion $composerVersion)
     {
         if ($this->storage->hasBinary($pluginName, $binary, $composerVersion)) {
             $info = $this->storage->getBinaryInfo($pluginName, $binary, $composerVersion);

@@ -5,6 +5,7 @@ namespace App\Command;
 use Algolia\AlgoliaSearch\SearchClient;
 use App\Entity\Package;
 use App\Entity\Version;
+use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +36,10 @@ class PackageIndexerCommand extends Command
     {
         $index = $this->client->initIndex($this->getIndexName());
 
-        $packages = $this->entityManager->getRepository(Package::class)->findAllPackages();
+        /** @var PackageRepository $repository */
+        $repository = $this->entityManager->getRepository(Package::class);
+
+        $packages = $repository->findAllPackages();
 
         $items = [];
 

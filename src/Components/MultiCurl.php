@@ -7,7 +7,7 @@ class MultiCurl
     /**
      * Current curl version.
      *
-     * @var float
+     * @var string
      */
     private $_curl_version;
 
@@ -35,9 +35,9 @@ class MultiCurl
     /**
      * default callback.
      *
-     * @var null
+     * @var callable|null
      */
-    private $_callback = null;
+    private $_callback;
 
     /**
      * all requests must be completed by this time.
@@ -219,9 +219,9 @@ class MultiCurl
     }
 
     /**
-     * @param $request_num
-     * @param $multi_handle
-     * @param $requests_map
+     * @param int      $request_num
+     * @param resource $multi_handle
+     * @param array    $requests_map
      */
     private function initRequest($request_num, $multi_handle, &$requests_map)
     {
@@ -237,9 +237,9 @@ class MultiCurl
     }
 
     /**
-     * @param $completed
-     * @param $multi_handle
-     * @param array $requests_map
+     * @param array    $completed
+     * @param resource $multi_handle
+     * @param array    $requests_map
      */
     private function processRequest($completed, $multi_handle, array &$requests_map)
     {
@@ -252,7 +252,7 @@ class MultiCurl
         $request_info['time'] = $time = $this->stopTimer($request);
         $request_info['url_raw'] = $url = $request['url'];
         $request_info['user_data'] = $user_data = $request['user_data'];
-        if (0 !== curl_errno($ch) || 200 !== intval($request_info['http_code'])) {
+        if (0 !== curl_errno($ch) || 200 !== (int) $request_info['http_code']) {
             $response = false;
         } else {
             $response = curl_multi_getcontent($ch);
@@ -260,14 +260,14 @@ class MultiCurl
         $callback = $request['callback'];
         $options = $request['options_set'];
         if ($response && !empty($options[CURLOPT_HEADER])) {
-            $k = intval($request_info['header_size']);
+            $k = (int) $request_info['header_size'];
             $request_info['response_header'] = substr($response, 0, $k);
             $response = substr($response, $k);
         }
         unset($requests_map[$ch_hash]);
         curl_multi_remove_handle($multi_handle, $ch);
         if ($callback) {
-            call_user_func($callback, $response, $url, $request_info, $user_data, $time);
+            $callback($response, $url, $request_info, $user_data, $time);
         }
         $request = null;
     }
@@ -275,7 +275,7 @@ class MultiCurl
     /**
      * @param array $request
      */
-    private function addTimer(array &$request)
+    private function addTimer(array &$request): void
     {
         $request['timer'] = microtime(true);
         $request['time'] = false;
