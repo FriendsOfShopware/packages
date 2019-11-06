@@ -1,0 +1,19 @@
+<feed>
+    <link href="{{ feed.link }}" rel="self" type="application/atom+xml"/>
+    <author>
+        <name>FriendsOfShopware Packages</name>
+    </author>
+    <title>{{ feed.title }}</title>
+    <id>{{ feed.link }}</id>
+    <updated>{{ feed.date | date("Y-m-d\TH:i:sP") }}</updated>
+    {% for item in feed.items %}
+        <entry>
+            <title type="text">{{ item.title }}</title>
+            <id>{{ item.link }}</id>
+            <link href="{{ item.link }}"/>
+            <summary type="html"><![CDATA[ {{ item.description|raw }}]]></summary>
+            <content type="html"><![CDATA[ {{ item.description|raw }}]]></content>
+            <updated>{{ item.date | date("Y-m-d\TH:i:sP") }}</updated>
+        </entry>
+    {% endfor %}
+</feed>

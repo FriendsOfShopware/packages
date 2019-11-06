@@ -20,10 +20,13 @@
     <div class="bg-light">
         <div class="container p-3">
             <h2>FAQ</h2>
-            <div class="faq-element">
-                <button class="btn btn-primary btn-faq active" type="button">Will my credentials be saved?</button>
-                <div class="panel">
-                    <p>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    Will my credentials be saved?
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
                         Your shopwareId, password and choosen domain will be encrypted and served as token back to you. This token is important to authenticate you further on Shopware services.
                         On each request the token will be decrypted on server side to get the credentials.<br>
                         <strong>This token is only saved client-side!</strong><br>
@@ -32,19 +35,23 @@
                 </div>
             </div>
 
-            <div class="faq-element">
-                <button class="btn btn-primary btn-faq active" type="button">Where can I find the source code? Can I host this repository myself?</button>
-                <div class="panel">
-                    <p>
+            <div class="card mb-3">
+                <div class="card-header">
+                    Where can I find the source code? Can I host this repository myself?
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
                         You can find the source code at <a href="https://github.com/FriendsOfShopware/packages/" rel="noopener noreferrer">Github</a> with a brief setup guide for selfhosting.
                     </p>
                 </div>
             </div>
 
-            <div class="faq-element">
-                <button class="btn btn-primary btn-faq active" type="button">Something is not working as expected!</button>
-                <div class="panel">
-                    <p>
+            <div class="card">
+                <div class="card-header">
+                    Something is not working as expected!
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
                         Please send me an Tweet <a href="https://twitter.com/@Shyim97" rel="noopener noreferrer">@Shyim97</a>. This project is based on API routes of the Shopware store API, which change from time to time.
                     </p>
                 </div>

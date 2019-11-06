@@ -1,0 +1,19 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <atom:link href="{{ feed.link }}" rel="self" type="application/rss+xml"/>
+        <title>{{ feed.title }}</title>
+        <link>{{ feed.link }}</link>
+        <description>{{ feed.description }}</description>
+        <language>en-gb</language>
+        <lastBuildDate>{{ feed.date | date("D, d M Y h:i:s O") }}</lastBuildDate>
+        {% for item in feed.items %}
+            <item>
+                <title>{{ item.title }}</title>
+                <guid>{{ item.link }}</guid>
+                <link>{{ item.link }}</link>
+                <description><![CDATA[ {{ item.description|raw }}]]></description>
+                <pubDate>{{ item.date | date("D, d M Y h:i:s O") }}</pubDate>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>

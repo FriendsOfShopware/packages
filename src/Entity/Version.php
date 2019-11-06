@@ -57,6 +57,18 @@ class Version
     private $requireSection = [];
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     */
+    private $changelog;
+
+    /**
+     * @var \DateTimeInterface|null
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $releaseDate;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Package", inversedBy="versions")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -170,6 +182,26 @@ class Version
     public function setAuthors(array $authors): void
     {
         $this->authors = $authors;
+    }
+
+    public function getChangelog(): ?string
+    {
+        return $this->changelog;
+    }
+
+    public function setChangelog(?string $changelog): void
+    {
+        $this->changelog = $changelog;
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
+    {
+        return $this->releaseDate;
+    }
+
+    public function setReleaseDate(?\DateTimeInterface $releaseDate): void
+    {
+        $this->releaseDate = $releaseDate;
     }
 
     public function toJson(): array

@@ -79,7 +79,7 @@ class Search extends AbstractController
         }
 
         if ($request->query->has('term')) {
-            $term = $request->query->get('term');
+            $term = mb_strtolower($request->query->get('term'));
             $boolQuery = new BoolQuery();
             $boolQuery->addParameter('minimum_should_match', 1);
             $boolQuery->add(new FuzzyQuery('name', $term), BoolQuery::SHOULD);

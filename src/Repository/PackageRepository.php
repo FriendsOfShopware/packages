@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Package;
+use App\Entity\Version;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
@@ -30,11 +32,26 @@ class PackageRepository extends ServiceEntityRepository
             ->addSelect('versions')
             ->addSelect('producer');
 
-        $qb->addOrderBy('versions.version', 'DESC');
         $qb->where('package.name = :name')
             ->setParameter('name', rtrim(str_replace('store.shopware.com/', '', $name), '/'));
 
-        return $qb->getQuery()->getOneOrNullResult();
+        /** @var Package|null $package */
+        $package = $qb->getQuery()->getOneOrNullResult();
+
+        if (null === $package) {
+            return null;
+        }
+
+        $this->getEntityManager()->detach($package);
+
+        $versions = $package->getVersions()->toArray();
+        uasort($versions, static function (Version $a, Version $b) {
+            return version_compare($a->getVersion(), $b->getVersion());
+        });
+
+        $package->setVersions(new ArrayCollection(array_reverse($versions)));
+
+        return $package;
     }
 
     public function findPackagesByNames(array $names): array
@@ -52,6 +69,7 @@ class PackageRepository extends ServiceEntityRepository
     public function findAllPackagesTotal(): int
     {
         $paginator = new Paginator($this->findAllPackagesQuery());
+
         return $paginator->count();
     }
 

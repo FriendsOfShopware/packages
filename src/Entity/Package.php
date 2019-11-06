@@ -99,6 +99,11 @@ class Package
         return $currentVersion;
     }
 
+    public function setVersions(Collection $versions): void
+    {
+        $this->versions = $versions;
+    }
+
     /**
      * @return Collection|Version[]
      */

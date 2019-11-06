@@ -60,6 +60,16 @@
                         {% if package.storeLink %}
                             <a href="{{ package.storeLink }}" class="btn btn-primary" rel="noopener noreferrer" target="_blank">Store page</a>
                         {% endif %}
+
+                        <div class="dropdown mt-3">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Feed
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="{{ url('feed_package', {format: 'rss', packageName: package.composerName}) }}">RSS</a>
+                                <a class="dropdown-item" href="{{ url('feed_package', {format: 'atom', packageName: package.composerName}) }}">Atom</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
