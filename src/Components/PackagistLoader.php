@@ -2,25 +2,36 @@
 
 namespace App\Components;
 
-use App\Struct\ComposerPackageVersion;
-use App\Struct\License\Binaries;
+use App\Components\Api\AccessToken;
+use App\Components\Api\Client;
+use App\Entity\Package;
+use App\Entity\Version;
+use App\Repository\PackageRepository;
 use App\Struct\License\License;
-use App\Struct\License\Plugin;
+use Doctrine\ORM\EntityManagerInterface;
 
 class PackagistLoader
 {
-    private const KNOWN_BROKEN_PLUGINS = [
-        'store.shopware.com/netifoundation_2.1.0' => true,
-    ];
+    /**
+     * @var PackageRepository
+     */
+    private $packageRepository;
 
     /**
-     * @var BinaryLoader
+     * @var Client
      */
-    private $binaryLoader;
+    private $client;
 
-    public function __construct(BinaryLoader $binaryLoader)
+    /**
+     * @var Encryption
+     */
+    private $encryption;
+
+    public function __construct(EntityManagerInterface $entityManager, Client $client, Encryption $encryption)
     {
-        $this->binaryLoader = $binaryLoader;
+        $this->packageRepository = $entityManager->getRepository(Package::class);
+        $this->client = $client;
+        $this->encryption = $encryption;
     }
 
     /**
@@ -28,13 +39,9 @@ class PackagistLoader
      */
     public function load(array $licenses): array
     {
-        $response = [
+        return [
             'packages' => $this->mapLicensesToComposerPackages($licenses),
         ];
-
-        $this->binaryLoader->load();
-
-        return $this->removeInvalidEntries($response);
     }
 
     /**
@@ -60,81 +67,76 @@ class PackagistLoader
 
             $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
 
+            $package = $this->packageRepository->findOne($packageName);
+
+            if (null === $package) {
+                continue;
+            }
+
             if (!is_array($license->plugin->binaries)) {
                 $license->plugin->binaries = [$license->plugin->binaries];
             }
 
-            $response[$packageName] = $this->convertBinaries($packageName, $license->plugin, $license->plugin->binaries);
+            $response[$packageName] = $this->convertBinaries($packageName, $license, $package);
         }
 
         return $response;
     }
 
     /**
-     * @param Plugin     $plugin
-     * @param Binaries[] $binaries
+     * @param License $license
      */
-    private function convertBinaries(string $packageName, $plugin, array $binaries): array
+    private function convertBinaries(string $packageName, $license, Package $package): array
     {
         $versions = [];
 
-        foreach ($binaries as $binary) {
+        foreach ($license->plugin->binaries as $binary) {
             if (empty($binary->version)) {
                 continue;
             }
 
-            $key = $packageName . '_' . $binary->version;
-            if (isset(self::KNOWN_BROKEN_PLUGINS[$key])) {
+            $databaseItem = null;
+
+            /** @var Version $item */
+            foreach ($package->getVersions()->toArray() as $item) {
+                if ($item->getVersion() === $binary->version) {
+                    $databaseItem = $item;
+                    break;
+                }
+            }
+
+            if (null === $databaseItem) {
+                // We don't have this version. Should be fixed with next update
                 continue;
             }
 
-            $version = new ComposerPackageVersion();
-            $version->name = $packageName;
-            $version->version = $binary->version;
-            $version->dist = [
-                'url' => 'plugins/' . $plugin->id . '/binaries/' . $binary->id . '/file',
-                'type' => 'zip',
-            ];
-            $version->type = 'shopware-plugin';
-            $version->extra = [
-                'installer-name' => $plugin->name,
-            ];
-            $version->require = [
-                'composer/installers' => '~1.0',
-            ];
-            $version->authors = [
-                [
-                    'name' => $plugin->producer->name,
-                ],
-            ];
-
-            // Shopware 1 to 5
-            if ('classic' === $plugin->generation->name) {
-                $version->require['shopware/shopware'] = '>=' . $binary->compatibleSoftwareVersions[0]->name;
+            if (isset($license->subscription) && strtotime($binary->creationDate) >= strtotime($license->subscription->expirationDate)) {
+                // Subscription left
+                continue;
             }
 
-            $versions[$binary->version] = $version;
+            $version = $databaseItem->toJson();
+            $version['name'] = $packageName;
+            $version['dist'] = [
+                'url' => $this->generateLink('plugins/' . $license->plugin->id . '/binaries/' . $binary->id . '/file', $this->client->currentToken()),
+                'type' => 'zip',
+            ];
 
-            $this->binaryLoader->add($plugin->name, $binary, $versions[$binary->version]);
+            $versions[$binary->version] = $version;
         }
 
         return $versions;
     }
 
-    private function removeInvalidEntries(array $response): array
+    private function generateLink(string $filePath, AccessToken $token): string
     {
-        foreach ($response['packages'] as $packageName => &$versions) {
-            foreach ($versions as $key => $version) {
-                if (isset($version->invalid)) {
-                    unset($versions[$key]);
-                }
-            }
-        }
+        $data = [
+            'filePath' => $filePath,
+            'domain' => $token->getShop()->domain,
+            'username' => $token->getUsername(),
+            'password' => $token->getPassword(),
+        ];
 
-        unset($versions);
-
-        $response['packages'] = array_filter($response['packages']);
-
-        return $response;
+        return getenv('APP_URL') . '/download?token=' . urlencode($this->encryption->encrypt($data));
     }
 }

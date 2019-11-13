@@ -13,7 +13,14 @@ class PluginReader
 
         $zip = new \ZipArchive();
         $zip->open($tmpFile);
-        $folderPath = str_replace('\\', '/', $zip->statIndex(0)['name']);
+
+        $zipIndex = @$zip->statIndex(0);
+
+        if (!is_array($zipIndex)) {
+            throw new \InvalidArgumentException('Invalid zip file');
+        }
+
+        $folderPath = str_replace('\\', '/', $zipIndex['name']);
         $pos = strpos($folderPath, '/');
         $path = substr($folderPath, 0, $pos);
 
@@ -51,10 +58,16 @@ class PluginReader
 
             if (isset($xml['requiredPlugins'])) {
                 foreach ($xml['requiredPlugins'] as $requiredPlugin) {
+                    $requiredPluginName = strtolower($requiredPlugin['pluginName']);
+
+                    if ($requiredPluginName === 'cron') {
+                        continue;
+                    }
+
                     if (isset($requiredPlugin['minVersion'])) {
-                        $data['require']['store.shopware.com/' . strtolower($requiredPlugin['pluginName'])] = '>=' . $requiredPlugin['minVersion'];
+                        $data['require']['store.shopware.com/' . $requiredPluginName] = '>=' . $requiredPlugin['minVersion'];
                     } else {
-                        $data['require']['store.shopware.com/' . strtolower($requiredPlugin['pluginName'])] = '*';
+                        $data['require']['store.shopware.com/' . $requiredPluginName] = '*';
                     }
                 }
             }

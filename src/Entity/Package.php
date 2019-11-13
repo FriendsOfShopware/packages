@@ -48,7 +48,7 @@ class Package
     private $releaseDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Version", mappedBy="package", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Version", mappedBy="package", orphanRemoval=true, cascade={"persist"})
      */
     private $versions;
 
