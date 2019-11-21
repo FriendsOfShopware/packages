@@ -17,18 +17,18 @@
         "sensio/framework-extra-bundle": "^5.4",
         "sentry/sentry-symfony": "^3.0",
         "symfony-bundles/json-request-bundle": "^2.0",
-        "symfony/cache": "4.3.*",
-        "symfony/console": "4.3.*",
-        "symfony/dotenv": "4.3.*",
+        "symfony/cache": "4.4.*",
+        "symfony/console": "4.4.*",
+        "symfony/dotenv": "4.4.*",
         "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "4.3.*",
-        "symfony/http-client": "4.3.*",
+        "symfony/framework-bundle": "4.4.*",
+        "symfony/http-client": "4.4.*",
         "symfony/orm-pack": "^1.0",
         "symfony/profiler-pack": "^1.0",
-        "symfony/security-bundle": "4.3.*",
+        "symfony/security-bundle": "4.4.*",
         "symfony/twig-pack": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "4.3.*"
+        "symfony/yaml": "4.4.*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.15",
@@ -36,8 +36,7 @@
         "phpstan/phpstan": "^0.11.19",
         "phpstan/phpstan-doctrine": "^0.11.6",
         "roave/security-advisories": "dev-master",
-        "symfony/maker-bundle": "^1.13",
-        "symfony/web-server-bundle": "4.3.*"
+        "symfony/maker-bundle": "^1.13"
     },
     "config": {
         "optimize-autoloader": true,
@@ -82,7 +81,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.3.*"
+            "require": "4.4.*"
         }
     }
 }
