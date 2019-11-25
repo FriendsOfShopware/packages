@@ -13,6 +13,8 @@
   boot.extraModulePackages = [ ];
   boot.loader.grub.device = "/dev/sda";
   deployment.targetHost = "78.46.250.5";
+  networking.interfaces.ens3.ipv6.addresses = [ { address = "2a01:4f8:c2c:5834::1"; prefixLength = 64; } ];
+  networking.defaultGateway6 = { address = "fe80::1"; interface = "ens3"; };
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/74cd1b2c-7a12-42e2-946f-c2568c8ac0b1";
