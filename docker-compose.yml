@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+    web:
+        image: friendsofshopware/packages
+        env_file: .env.docker
+        ports:
+            - 80:80
+        volumes:
+            - ./src:/var/www/html/src
+    mysql:
+        image: mariadb:10.4
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 1
+            MYSQL_USER: packages
+            MYSQL_PASSWORD: packages
+            MYSQL_DATABASE: packages
+    elasticsearch:
+        image: elasticsearch:7.5.1
+        environment:
+            discovery: "type=single-node"

@@ -16,11 +16,10 @@ If you want to contribute, please check before the open issues
 * npm run watch
 * Should be running
 
-### Nixops-Way
+### Docker
 
-* Modifiy `dev-ops/server.nix`
-* `nixops create -d your-deployment dev-ops/server.nix`
-* `nixops deploy -d your-deployment`
-* Its running
-
-
+* docker-compose up -d
+* docker-compose exec web sh
+    * php generate_ssl.php
+    * ./bin/console database:migrate
+* Running at localhost
