@@ -208,6 +208,7 @@ class Version
     {
         return [
             'version' => $this->version,
+            'type' => $this->type,
             'description' => $this->description,
             'require' => $this->requireSection,
             'extra' => $this->extra,
