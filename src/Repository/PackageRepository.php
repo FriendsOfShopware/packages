@@ -24,6 +24,17 @@ class PackageRepository extends ServiceEntityRepository
         parent::__construct($registry, Package::class);
     }
 
+    public function findJoinedAll(): array
+    {
+        $qb = $this->createQueryBuilder('package');
+        $qb->innerJoin('package.versions', 'versions')
+            ->innerJoin('package.producer', 'producer')
+            ->addSelect('versions')
+            ->addSelect('producer');
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
     public function findOne(string $name): ?Package
     {
         $qb = $this->createQueryBuilder('package');
