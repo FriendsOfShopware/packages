@@ -31,7 +31,7 @@ class Shop extends \App\Struct\Struct
     /** @var null */
     public $subaccount;
 
-    /** @var SubscriptionModules */
+    /** @var SubscriptionModules[] */
     public $subscriptionModules;
 
     /** @var bool */
@@ -69,6 +69,17 @@ class Shop extends \App\Struct\Struct
 
     /** @var LatestVerificationStatusChange */
     public $latestVerificationStatusChange;
+
+    public function hasActiveSubscription(): bool
+    {
+        foreach ($this->subscriptionModules as $subscription) {
+            if (strtotime($subscription->expirationDate) >= time()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public static $mappedFields = [
         'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',

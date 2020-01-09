@@ -8,6 +8,7 @@ use App\Entity\Package;
 use App\Entity\Version;
 use App\Repository\PackageRepository;
 use App\Struct\License\License;
+use App\Struct\Shop\Shop;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PackagistLoader
@@ -36,18 +37,20 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
+     * @param Shop      $shop
      */
-    public function load(array $licenses): array
+    public function load(array $licenses, object $shop): array
     {
         return [
-            'packages' => $this->mapLicensesToComposerPackages($licenses),
+            'packages' => $this->mapLicensesToComposerPackages($licenses, $shop),
         ];
     }
 
     /**
      * @param License[] $licenses
+     * @param Shop      $shop
      */
-    private function mapLicensesToComposerPackages(array $licenses): array
+    private function mapLicensesToComposerPackages(array $licenses, object $shop): array
     {
         $response = [];
 
@@ -77,7 +80,7 @@ class PackagistLoader
                 $license->plugin->binaries = [$license->plugin->binaries];
             }
 
-            $response[$packageName] = $this->convertBinaries($packageName, $license, $package);
+            $response[$packageName] = $this->convertBinaries($packageName, $license, $package, $shop);
         }
 
         return $response;
@@ -85,8 +88,9 @@ class PackagistLoader
 
     /**
      * @param License $license
+     * @param Shop    $shop
      */
-    private function convertBinaries(string $packageName, $license, Package $package): array
+    private function convertBinaries(string $packageName, $license, Package $package, object $shop): array
     {
         $versions = [];
 
@@ -110,7 +114,14 @@ class PackagistLoader
                 continue;
             }
 
-            if (isset($license->subscription) && strtotime($binary->creationDate) >= strtotime($license->subscription->expirationDate)) {
+            $subscriptionLeft = isset($license->subscription) && strtotime($binary->creationDate) >= strtotime($license->subscription->expirationDate);
+
+            // If shop has a active subscription all premium / advanced features are unlocked
+            if (($license->plugin->isPremiumPlugin || $license->plugin->isAdvancedFeature) && $shop->hasActiveSubscription()) {
+                $subscriptionLeft = false;
+            }
+
+            if ($subscriptionLeft) {
                 // Subscription left
                 continue;
             }
