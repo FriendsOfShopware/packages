@@ -34,3 +34,14 @@ services:
     Elasticsearch\Client:
         class: Elasticsearch\Client
         factory: ['@client.builder', 'build']
+
+    Redis:
+        class: Redis
+        calls:
+            -   method: connect
+                arguments:
+                    - '%env(REDIS_HOST)%'
+                    - '%env(int:REDIS_PORT)%'
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            - '@Redis'

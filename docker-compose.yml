@@ -6,8 +6,11 @@ services:
         ports:
             - 80:80
         volumes:
+            - ./config:/var/www/html/config
             - ./src:/var/www/html/src
             - ./ssl:/var/www/html/ssl
+    redis:
+        image: redis:5-alpine
     mysql:
         image: mariadb:10.4
         environment:
