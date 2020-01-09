@@ -37,10 +37,6 @@ abstract class XmlReaderBase implements XmlReaderInterface
 
     /**
      * load and validate xml file - parse to array.
-     *
-     * @param string $xmlFile
-     *
-     * @return array
      */
     public function read(string $xmlFile): array
     {
@@ -55,8 +51,6 @@ abstract class XmlReaderBase implements XmlReaderInterface
 
     /**
      * Parses translatable node list.
-     *
-     * @param DOMNodeList $list
      *
      * @return array|null
      */
@@ -80,8 +74,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
     /**
      * Get child elements by name.
      *
-     * @param DOMNode $node
-     * @param mixed   $name
+     * @param mixed $name
      *
      * @return array
      */
@@ -100,8 +93,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
     /**
      * Returns first item of DOMNodeList or null.
      *
-     * @param DOMNode $list
-     * @param string  $name
+     * @param string $name
      *
      * @return DOMElement|null
      */
@@ -133,8 +125,6 @@ abstract class XmlReaderBase implements XmlReaderInterface
     }
 
     /**
-     * @param DOMNodeList $optionsList
-     *
      * @return array|null
      */
     public static function parseOptionsNodeList(DOMNodeList $optionsList)
@@ -161,9 +151,8 @@ abstract class XmlReaderBase implements XmlReaderInterface
     /**
      * Returns all element child values by nodeName.
      *
-     * @param DOMElement $element
-     * @param string     $name
-     * @param bool       $throwException
+     * @param string $name
+     * @param bool   $throwException
      *
      * @throws InvalidArgumentException
      *
@@ -174,10 +163,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
         $children = $element->getElementsByTagName($name);
         if (0 === $children->length) {
             if ($throwException) {
-                throw new InvalidArgumentException(sprintf(
-                    'Element with %s not found',
-                    $name
-                ));
+                throw new InvalidArgumentException(sprintf('Element with %s not found', $name));
             }
 
             return null;
@@ -205,8 +191,6 @@ abstract class XmlReaderBase implements XmlReaderInterface
 
     /**
      * This method should be overridden as main entry point to parse a xml file.
-     *
-     * @param DOMDocument $xml
      *
      * @return array
      */

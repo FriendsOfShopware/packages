@@ -58,6 +58,7 @@ class Version
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
      * @var string|null
      */
     private $changelog;

@@ -9,6 +9,7 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@PSR2' => true,
         '@Symfony' => true,
+        'yoda_style' => false,
         'array_syntax' => ['syntax' => 'short'],
         'no_useless_else' => true,
         'no_useless_return' => true,

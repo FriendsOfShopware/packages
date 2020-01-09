@@ -100,12 +100,9 @@ class MultiCurl
     /**
      * Add a request to the request queue.
      *
-     * @param string        $url
-     * @param array|null    $post_data
-     * @param callable|null $callback
-     * @param array|null    $user_data
-     * @param array|null    $options
-     * @param array|null    $headers
+     * @param string     $url
+     * @param array|null $post_data
+     * @param array|null $user_data
      *
      * @return int
      */
@@ -178,8 +175,6 @@ class MultiCurl
     }
 
     /**
-     * @param array $request
-     *
      * @return array|mixed
      */
     private function buildOptions(array $request)
@@ -239,7 +234,6 @@ class MultiCurl
     /**
      * @param array    $completed
      * @param resource $multi_handle
-     * @param array    $requests_map
      */
     private function processRequest($completed, $multi_handle, array &$requests_map)
     {
@@ -272,9 +266,6 @@ class MultiCurl
         $request = null;
     }
 
-    /**
-     * @param array $request
-     */
     private function addTimer(array &$request): void
     {
         $request['timer'] = microtime(true);
@@ -282,8 +273,6 @@ class MultiCurl
     }
 
     /**
-     * @param array $request
-     *
      * @return mixed
      */
     private function stopTimer(array &$request)

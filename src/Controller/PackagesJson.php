@@ -67,6 +67,6 @@ class PackagesJson
         $token->setShop($foundShop);
         $this->client->useToken($token);
 
-        return new JsonResponse($this->packagistLoader->load($this->client->licenses($token)));
+        return new JsonResponse($this->packagistLoader->load($this->client->licenses($token), $token->getShop()));
     }
 }

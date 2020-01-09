@@ -70,6 +70,13 @@ class Shop extends \App\Struct\Struct
     /** @var LatestVerificationStatusChange */
     public $latestVerificationStatusChange;
 
+    public static $mappedFields = [
+        'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',
+        'environment' => 'App\Struct\Shop\Environment',
+        'shopwareVersion' => 'App\Struct\Shop\ShopwareVersion',
+        'latestVerificationStatusChange' => 'App\Struct\Shop\LatestVerificationStatusChange',
+    ];
+
     public function hasActiveSubscription(): bool
     {
         foreach ($this->subscriptionModules as $subscription) {
@@ -80,11 +87,4 @@ class Shop extends \App\Struct\Struct
 
         return false;
     }
-
-    public static $mappedFields = [
-        'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',
-        'environment' => 'App\Struct\Shop\Environment',
-        'shopwareVersion' => 'App\Struct\Shop\ShopwareVersion',
-        'latestVerificationStatusChange' => 'App\Struct\Shop\LatestVerificationStatusChange',
-    ];
 }
