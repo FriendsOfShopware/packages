@@ -9,9 +9,8 @@ use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
 use ONGR\ElasticsearchDSL\Query\FullText\MatchPhraseQuery;
 use ONGR\ElasticsearchDSL\Query\Joining\NestedQuery;
-use ONGR\ElasticsearchDSL\Query\MatchAllQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\FuzzyQuery;
-use ONGR\ElasticsearchDSL\Query\TermLevel\TermsQuery;
+use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\WildcardQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,13 +32,11 @@ class Search extends AbstractController
      */
     public function ajaxSearch(Request $request, Client $client): Response
     {
-        $matchAll = new MatchAllQuery();
-        $search = new \ONGR\ElasticsearchDSL\Search();
-        $search->addQuery($matchAll);
+        $search = $this->buildQuery($request)->toArray();
 
         $searchResult = $client->search([
             'index' => PackageIndexerCommand::INDEX_NAME,
-            'body' => $this->buildQuery($request)->toArray(),
+            'body' => $search,
         ]);
 
         return $this->render('ajax/search.html.twig', [
@@ -69,13 +66,18 @@ class Search extends AbstractController
 
         if ($request->query->has('types')) {
             $types = explode('|', $request->query->get('types'));
-            $typeFilter = new NestedQuery('types', new TermsQuery('types.name', $types));
-            $search->addQuery($typeFilter);
+
+            foreach ($types as $type) {
+                $search->addQuery(new NestedQuery('types', new TermQuery('types.name', $type)));
+            }
         }
 
         if ($request->query->has('producers')) {
             $producers = explode('|', $request->query->get('producers'));
-            $search->addQuery(new TermsQuery('producerName.raw', $producers));
+
+            foreach ($producers as $producer) {
+                $search->addQuery(new TermQuery('producerName.raw', $producer));
+            }
         }
 
         if ($request->query->has('term')) {
