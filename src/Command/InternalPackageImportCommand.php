@@ -137,6 +137,11 @@ class InternalPackageImportCommand extends Command
      */
     private function processPlugin($plugin): void
     {
+        // Don't trigger an error on api server, cause this is an fake plugin
+        if ($plugin->name === 'SwagCorePlatform') {
+            return;
+        }
+
         $package = $this->packageRepository->findOneBy([
             'name' => $plugin->name,
         ]);
