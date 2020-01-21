@@ -114,10 +114,22 @@ class Client
             ],
         ]);
 
+        $enterprisePlugins = $this->cachedRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses');
+
         foreach ($content as &$plugin) {
             $plugin = $this->cachedRequest('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin->id));
         }
         unset($plugin);
+
+        foreach ($enterprisePlugins as $enterprisePlugin) {
+            $enterpriseExtension = $this->cachedRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses/' . $enterprisePlugin->id);
+            $enterpriseExtension->licenseModule->archived = false;
+            $enterpriseExtension->licenseModule->variantType = new \stdClass();
+            $enterpriseExtension->licenseModule->variantType->name = 'buy';
+            $enterpriseExtension->licenseModule->plugin->isPremiumPlugin = false;
+            $enterpriseExtension->licenseModule->plugin->isAdvancedFeature = true;
+            $content[] = $enterpriseExtension->licenseModule;
+        }
 
         return $content;
     }
