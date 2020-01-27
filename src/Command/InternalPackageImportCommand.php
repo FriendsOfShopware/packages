@@ -9,7 +9,6 @@ use App\Entity\Producer;
 use App\Entity\Version;
 use App\Repository\PackageRepository;
 use App\Repository\ProducerRepository;
-use App\Struct\ComposerPackageVersion;
 use App\Struct\License\Binaries;
 use App\Struct\License\Plugin;
 use Composer\Semver\VersionParser;
@@ -142,6 +141,11 @@ class InternalPackageImportCommand extends Command
             return;
         }
 
+        // Invalid broken plugin
+        if ($plugin->id === 2394) {
+            return;
+        }
+
         $package = $this->packageRepository->findOneBy([
             'name' => $plugin->name,
         ]);
@@ -155,6 +159,7 @@ class InternalPackageImportCommand extends Command
             if (!$producer) {
                 $producer = new Producer();
                 $producer->setName($plugin->producer->name);
+                $producer->setPrefix($plugin->producer->prefix);
                 $this->entityManager->persist($producer);
                 $this->entityManager->flush();
             }
@@ -227,24 +232,23 @@ class InternalPackageImportCommand extends Command
                 continue;
             }
 
-            $composerPackageVersion = new ComposerPackageVersion();
-            $composerPackageVersion->name = $package->getComposerName();
-            $composerPackageVersion->version = $binary->version;
-            $composerPackageVersion->type = 'shopware-plugin';
-            $composerPackageVersion->extra = [
+            $version = new Version();
+            $version->setVersion($binary->version);
+            $version->setType('shopware-plugin');
+            $version->setExtra([
                 'installer-name' => $plugin->name,
-            ];
-            $composerPackageVersion->require = [
+            ]);
+            $version->setRequireSection([
                 'composer/installers' => '~1.0',
-            ];
-            $composerPackageVersion->authors = [
+            ]);
+            $version->setAuthors([
                 [
                     'name' => $plugin->producer->name,
                 ],
-            ];
+            ]);
 
             if ('classic' === $plugin->generation->name) {
-                $composerPackageVersion->require['shopware/shopware'] = '>=' . $binary->compatibleSoftwareVersions[0]->name;
+                $version->addRequire('shopware/shopware', '>=' . $binary->compatibleSoftwareVersions[0]->name);
             }
 
             try {
@@ -263,24 +267,12 @@ class InternalPackageImportCommand extends Command
             }
 
             try {
-                $info = array_merge(get_object_vars($composerPackageVersion), PluginReader::readFromZip($pluginZip));
+                PluginReader::readFromZip($pluginZip, $version);
             } catch (\InvalidArgumentException $e) {
                 continue;
             }
 
-            foreach ($info as $k => $v) {
-                $composerPackageVersion->$k = $v;
-            }
-
-            $version = new Version();
-            $version->setVersion($binary->version);
-            $version->setType($composerPackageVersion->type);
-            $version->setLicense($composerPackageVersion->license);
-            $version->setHomepage($composerPackageVersion->homepage);
-            $version->setDescription(mb_substr($composerPackageVersion->description, 0, 255));
-            $version->setExtra($composerPackageVersion->extra);
-            $version->setRequireSection($composerPackageVersion->require);
-            $version->setAuthors($composerPackageVersion->authors);
+            $version->setDescription(mb_substr($version->getDescription(), 0, 255));
             $version->setPackage($package);
             $version->setReleaseDate(new \DateTime($binary->creationDate));
             $package->addVersion($version);

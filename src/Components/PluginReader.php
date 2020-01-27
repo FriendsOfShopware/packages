@@ -3,10 +3,11 @@
 namespace App\Components;
 
 use App\Components\XmlReader\XmlPluginReader;
+use App\Entity\Version;
 
 class PluginReader
 {
-    public static function readFromZip(string $content)
+    public static function readFromZip(string $content, Version $version): void
     {
         $tmpFile = tempnam(sys_get_temp_dir(), 'plugin');
         file_put_contents($tmpFile, $content);
@@ -30,25 +31,23 @@ class PluginReader
             case 'Core':
                 $zip->close();
                 unlink($tmpFile);
-
-                return [
-                    'type' => 'shopware-' . strtolower($path) . '-plugin',
-                ];
+                $version->setType('shopware-' . strtolower($path) . '-plugin');
+                break;
             default:
-                return self::readNewPluginSystem($zip, $tmpFile, $path);
+                self::readNewPluginSystem($zip, $tmpFile, $path, $version);
         }
     }
 
-    private static function readNewPluginSystem(\ZipArchive $archive, string $tmpFile, string $pluginName)
+    private static function readNewPluginSystem(\ZipArchive $archive, string $tmpFile, string $pluginName, Version $version): void
     {
-        $data = [
-            'type' => 'shopware-plugin',
-        ];
+        $version->setType('shopware-plugin');
 
         $reader = new XmlPluginReader();
 
         $extractLocation = sys_get_temp_dir() . '/' . uniqid('location', true);
-        mkdir($extractLocation);
+        if (!mkdir($extractLocation) && !is_dir($extractLocation)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $extractLocation));
+        }
 
         $archive->extractTo($extractLocation);
         $archive->close();
@@ -65,45 +64,64 @@ class PluginReader
                     }
 
                     if (isset($requiredPlugin['minVersion'])) {
-                        $data['require']['store.shopware.com/' . $requiredPluginName] = '>=' . $requiredPlugin['minVersion'];
+                        $version->addRequire('store.shopware.com/' . $requiredPluginName, '>=' . $requiredPlugin['minVersion']);
                     } else {
-                        $data['require']['store.shopware.com/' . $requiredPluginName] = '*';
+                        $version->addRequire('store.shopware.com/' . $requiredPluginName, '*');
                     }
                 }
             }
 
             if (isset($xml['label']['en'])) {
-                $data['description'] = $xml['label']['en'];
+                $version->setDescription($xml['label']['en']);
             }
 
             if (isset($xml['license'])) {
-                $data['license'] = $xml['license'];
+                $version->setLicense($xml['license']);
             }
 
             if (isset($xml['link'])) {
-                $data['homepage'] = $xml['link'];
+                $version->setHomepage($xml['link']);
             }
         } elseif (file_exists($extractLocation . '/' . $pluginName . '/composer.json')) {
-            $composerJson = json_decode(file_get_contents($extractLocation . '/' . $pluginName . '/composer.json'), true);
+            $composerJson = json_decode(file_get_contents($extractLocation . '/' . $pluginName . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
 
-            $allowedKeys = ['type', 'description', 'extra', 'homepage', 'authors', 'require'];
+            if (isset($composerJson['type'])) {
+                $version->setType($composerJson['type']);
+            }
 
-            foreach ($allowedKeys as $allowedKey) {
-                if (isset($composerJson[$allowedKey])) {
-                    $data[$allowedKey] = $composerJson[$allowedKey];
-                }
+            if (isset($composerJson['description'])) {
+                $version->setDescription($composerJson['description']);
+            }
+
+            if (isset($composerJson['extra'])) {
+                $version->setExtra($composerJson['extra']);
+            }
+
+            if (isset($composerJson['homepage'])) {
+                $version->setHomepage($composerJson['homepage']);
+            }
+
+            if (isset($composerJson['authors'])) {
+                $version->setAuthors($composerJson['authors']);
+            }
+
+            if (isset($composerJson['require'])) {
+                $version->setRequireSection($composerJson['require']);
+            } elseif ($version->getType() === 'shopware-platform-plugin') {
+                $version->setRequireSection([]);
+            }
+
+            if (isset($composerJson['autoload'])) {
+                $version->setAutoload($composerJson['autoload']);
+            }
+
+            if (isset($composerJson['autoload-dev'])) {
+                $version->setAutoloadDev($composerJson['autoload-dev']);
             }
         }
 
         self::rmDir($extractLocation);
         unlink($tmpFile);
-
-        // Clear require, default is composer/installers
-        if ('shopware-platform-plugin' === $data['type'] && !isset($data['require'])) {
-            $data['require'] = [];
-        }
-
-        return $data;
     }
 
     private static function rmDir($dir)
@@ -111,7 +129,7 @@ class PluginReader
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
-                if ('.' != $object && '..' != $object) {
+                if ('.' !== $object && '..' !== $object) {
                     if (is_dir($dir . '/' . $object)) {
                         self::rmDir($dir . '/' . $object);
                     } else {

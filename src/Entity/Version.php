@@ -57,6 +57,16 @@ class Version
     private $requireSection = [];
 
     /**
+     * @ORM\Column(type="json_array")
+     */
+    private $autoload = [];
+
+    /**
+     * @ORM\Column(name="autoload_dev", type="json_array")
+     */
+    private $autoloadDev = [];
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      *
      * @var string|null
@@ -140,6 +150,13 @@ class Version
         return $this;
     }
 
+    public function addRequire(string $package, string $versionConstraint): self
+    {
+        $this->requireSection[$package] = $versionConstraint;
+
+        return $this;
+    }
+
     public function getPackage(): ?Package
     {
         return $this->package;
@@ -205,11 +222,33 @@ class Version
         $this->releaseDate = $releaseDate;
     }
 
+    public function getAutoload(): array
+    {
+        return $this->autoload;
+    }
+
+    public function setAutoload(array $autoload): void
+    {
+        $this->autoload = $autoload;
+    }
+
+    public function getAutoloadDev(): array
+    {
+        return $this->autoloadDev;
+    }
+
+    public function setAutoloadDev(array $autoloadDev): void
+    {
+        $this->autoloadDev = $autoloadDev;
+    }
+
     public function toJson(): array
     {
         return [
             'version' => $this->version,
             'type' => $this->type,
+            'autoload' => $this->autoload,
+            'autoload-dev' => $this->autoloadDev,
             'description' => $this->description,
             'require' => $this->requireSection,
             'extra' => $this->extra,

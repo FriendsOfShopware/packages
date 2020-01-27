@@ -24,6 +24,11 @@ class Producer
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $prefix;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Package", mappedBy="producer", orphanRemoval=true)
      */
     private $package;
@@ -48,6 +53,16 @@ class Producer
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    public function setPrefix(string $prefix): void
+    {
+        $this->prefix = $prefix;
     }
 
     /**
