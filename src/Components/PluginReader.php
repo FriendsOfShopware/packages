@@ -86,7 +86,7 @@ class PluginReader
         } elseif (file_exists($extractLocation . '/' . $pluginName . '/composer.json')) {
             $composerJson = json_decode(file_get_contents($extractLocation . '/' . $pluginName . '/composer.json'), true);
 
-            $allowedKeys = ['type', 'description', 'extra', 'homepage', 'authors', 'require'];
+            $allowedKeys = ['type', 'description', 'extra', 'homepage', 'authors', 'require', 'autoload', 'autoload-dev'];
 
             foreach ($allowedKeys as $allowedKey) {
                 if (isset($composerJson[$allowedKey])) {
