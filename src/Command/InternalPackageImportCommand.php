@@ -122,7 +122,7 @@ class InternalPackageImportCommand extends Command
     {
         return json_decode($this->client->request('GET', getenv('SBP_PLUGIN_LIST'), [
             'query' => [
-                'filter' => '[{"property":"approvalStatus","value":"approved","operator":"="},{"property":"activationStatus","value":"activated","operator":"="}]',
+                'filter' => '[{"property":"lifecycleStatus","value":"readyforstore","operator":"="},{"property":"certificationNotSet","value":false,"operator":"="},{"property":"hasNoPluginSuccessor","value":false,"operator":"="}]',
                 'limit' => 100,
                 'offset' => $offset,
                 'orderby' => 'id',

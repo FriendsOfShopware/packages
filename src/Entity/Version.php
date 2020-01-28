@@ -251,6 +251,7 @@ class Version
             'autoload-dev' => $this->autoloadDev,
             'description' => $this->description,
             'require' => $this->requireSection,
+            'authors' => $this->authors,
             'extra' => $this->extra,
             'dist' => [
                 'url' => 'foo',
