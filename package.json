@@ -1,12 +1,4 @@
 {
-    "devDependencies": {
-        "@symfony/webpack-encore": "^0.28.0",
-        "core-js": "^3.0.0",
-        "node-sass": "^4.13.0",
-        "regenerator-runtime": "^0.13.2",
-        "sass-loader": "^7.3.1",
-        "webpack-notifier": "^1.6.0"
-    },
     "license": "mit",
     "private": true,
     "scripts": {
@@ -19,6 +11,14 @@
         "bootstrap": "^4.4.1",
         "clipboard": "^2.0.4",
         "jquery": "^3.4.1",
-        "popper.js": "^1.16.0"
+        "popper.js": "^1.16.1"
+    },
+    "devDependencies": {
+        "@symfony/webpack-encore": "^0.28.2",
+        "core-js": "^3.6.4",
+        "node-sass": "^4.13.1",
+        "regenerator-runtime": "^0.13.3",
+        "sass-loader": "^7.0.3",
+        "webpack-notifier": "^1.8.0"
     }
 }

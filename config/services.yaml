@@ -23,6 +23,11 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    Psr\SimpleCache\CacheInterface:
+        alias: 'Symfony\Component\Cache\Psr16Cache'
+
+    Symfony\Component\Cache\Psr16Cache:
+
     client.builder:
         class: Elasticsearch\ClientBuilder
         factory: ['Elasticsearch\ClientBuilder', 'create']

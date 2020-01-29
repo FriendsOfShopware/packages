@@ -6,10 +6,7 @@ services:
         ports:
             - 80:80
         volumes:
-            - ./config:/var/www/html/config
-            - ./src:/var/www/html/src
-            - ./ssl:/var/www/html/ssl
-            - ./templates:/var/www/html/templates
+            - ./:/var/www/html/
     redis:
         image: redis:5-alpine
     mysql:

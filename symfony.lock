@@ -102,6 +102,9 @@
             ".php_cs.dist"
         ]
     },
+    "guzzlehttp/guzzle": {
+        "version": "6.5.2"
+    },
     "guzzlehttp/promises": {
         "version": "v1.3.1"
     },
@@ -123,29 +126,8 @@
     "jean85/pretty-package-versions": {
         "version": "1.2"
     },
-    "nette/bootstrap": {
-        "version": "v3.0.1"
-    },
-    "nette/di": {
-        "version": "v3.0.1"
-    },
-    "nette/finder": {
-        "version": "v2.5.1"
-    },
-    "nette/neon": {
-        "version": "v3.0.0"
-    },
-    "nette/php-generator": {
-        "version": "v3.2.3"
-    },
-    "nette/robot-loader": {
-        "version": "v3.2.0"
-    },
-    "nette/schema": {
-        "version": "v1.0.1"
-    },
-    "nette/utils": {
-        "version": "v3.0.2"
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.0.1"
     },
     "nikic/php-parser": {
         "version": "v4.2.4"
@@ -168,11 +150,11 @@
     "php-http/client-common": {
         "version": "2.0.0"
     },
-    "php-http/curl-client": {
-        "version": "2.0.0"
-    },
     "php-http/discovery": {
         "version": "1.7.0"
+    },
+    "php-http/guzzle6-adapter": {
+        "version": "v2.0.1"
     },
     "php-http/httplug": {
         "version": "v2.0.0"
@@ -189,9 +171,6 @@
     "phpstan/extension-installer": {
         "version": "1.0.3"
     },
-    "phpstan/phpdoc-parser": {
-        "version": "0.3.5"
-    },
     "phpstan/phpstan": {
         "version": "0.11.19"
     },
@@ -202,6 +181,9 @@
         "version": "1.0.1"
     },
     "psr/container": {
+        "version": "1.0.0"
+    },
+    "psr/event-dispatcher": {
         "version": "1.0.0"
     },
     "psr/http-client": {
@@ -221,9 +203,6 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
-    },
-    "ramsey/uuid": {
-        "version": "3.8.0"
     },
     "react/promise": {
         "version": "v2.7.1"
@@ -261,9 +240,6 @@
             "config/packages/sentry.yaml"
         ]
     },
-    "symfony-bundles/json-request-bundle": {
-        "version": "v2.0.1"
-    },
     "symfony/asset": {
         "version": "v4.3.5"
     },
@@ -288,9 +264,6 @@
             "bin/console",
             "config/bootstrap.php"
         ]
-    },
-    "symfony/debug": {
-        "version": "v4.3.4"
     },
     "symfony/dependency-injection": {
         "version": "v4.3.4"
@@ -379,6 +352,9 @@
     },
     "symfony/orm-pack": {
         "version": "v1.0.6"
+    },
+    "symfony/polyfill-uuid": {
+        "version": "v1.13.1"
     },
     "symfony/process": {
         "version": "v4.3.4"
@@ -507,11 +483,11 @@
     "twig/twig": {
         "version": "v2.12.1"
     },
+    "webimpress/safe-writer": {
+        "version": "2.0.0"
+    },
     "zendframework/zend-code": {
         "version": "3.4.0"
-    },
-    "zendframework/zend-diactoros": {
-        "version": "2.1.5"
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"

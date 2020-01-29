@@ -19,7 +19,7 @@ class ExceptionListener implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        if ($event->getException()->getPrevious() instanceof InsufficientAuthenticationException) {
+        if ($event->getThrowable()->getPrevious() instanceof InsufficientAuthenticationException) {
             $event->setResponse(new RedirectResponse('/login'));
         }
     }
