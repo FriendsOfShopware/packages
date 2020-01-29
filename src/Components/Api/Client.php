@@ -114,7 +114,11 @@ class Client
             ],
         ]);
 
-        $enterprisePlugins = $this->cachedRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses');
+        try {
+            $enterprisePlugins = $this->cachedRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses');
+        } catch (\Exception $e) {
+            $enterprisePlugins = [];
+        }
 
         foreach ($content as &$plugin) {
             $plugin = $this->cachedRequest('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin->id));
