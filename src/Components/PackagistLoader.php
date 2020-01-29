@@ -127,9 +127,10 @@ class PackagistLoader
             }
 
             $version = $databaseItem->toJson();
+            $isOldArchiveStructure = in_array($version['type'], ['shopware-core-plugin', 'shopware-backend-plugin', 'shopware-frontend-plugin']);
             $version['name'] = $packageName;
             $version['dist'] = [
-                'url' => $this->generateLink('plugins/' . $license->plugin->id . '/binaries/' . $binary->id . '/file', $this->client->currentToken()),
+                'url' => $this->generateLink('plugins/' . $license->plugin->id . '/binaries/' . $binary->id . '/file', $this->client->currentToken(), $isOldArchiveStructure),
                 'type' => 'zip',
             ];
 
@@ -139,7 +140,7 @@ class PackagistLoader
         return $versions;
     }
 
-    private function generateLink(string $filePath, AccessToken $token): string
+    private function generateLink(string $filePath, AccessToken $token, bool $isOldArchive): string
     {
         $data = [
             'filePath' => $filePath,
@@ -147,6 +148,10 @@ class PackagistLoader
             'username' => $token->getUsername(),
             'password' => $token->getPassword(),
         ];
+
+        if ($isOldArchive) {
+            $data['needsRepack'] = true;
+        }
 
         return getenv('APP_URL') . '/download?token=' . urlencode($this->encryption->encrypt($data));
     }
