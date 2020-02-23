@@ -94,6 +94,8 @@ class InternalPackageImportCommand extends Command
         }
 
         $progressBar->finish();
+        
+        return 0;
     }
 
     private function login(InputInterface $input): void
