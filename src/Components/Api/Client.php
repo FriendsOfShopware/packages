@@ -79,6 +79,7 @@ class Client
     {
         $this->useToken($token);
 
+        // client shops
         $clientShops = [];
 
         try {
@@ -89,6 +90,27 @@ class Client
             // no partner account
         }
 
+        // wildcard shops
+        $wildcardShops = [];
+
+        try {
+            $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
+            $content = json_decode($content);
+            $content = array_shift($content);
+            $instances = $content->instances;
+
+            $wildcardShops = Shop::mapList($instances);
+            foreach ($wildcardShops as $shop) {
+                $shop->companyId = $content->company->id;
+                $shop->companyName = $content->company->name;
+                $shop->type = $content->type->name;
+                $shop->staging = false;
+                $shop->domain_idn = idn_to_ascii($shop->domain);
+            }
+        } catch (ClientException $e) {
+            // no wildcard shops
+        }
+
         $shopsContent = $this->client->request('GET', self::ENDPOINT . 'shops', [
             'query' => [
                 'userId' => $token->getUserId(),
@@ -97,7 +119,7 @@ class Client
 
         $shops = Shop::mapList(json_decode($shopsContent));
 
-        return array_merge($shops, $clientShops);
+        return array_merge($shops, $clientShops, $wildcardShops);
     }
 
     /**
@@ -106,6 +128,23 @@ class Client
     public function licenses(AccessToken $token): array
     {
         $this->useToken($token);
+
+        if ($token->getShop()->type === 'partner') {
+            $content = $this->cachedRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id);
+
+            $licenses = [];
+            foreach ($content->plugins as $pluginData) {
+                $license = new \stdClass();
+                $license->archived = false;
+                $license->plugin = $pluginData;
+                $license->variantType = new \stdClass();
+                $license->variantType->name = 'buy'; // this is not really true but it's okay for our purposes
+
+                $licenses[] = $license;
+            }
+
+            return $licenses;
+        }
 
         $content = $this->cachedRequest('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
             'query' => [

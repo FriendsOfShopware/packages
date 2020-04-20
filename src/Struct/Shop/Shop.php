@@ -70,6 +70,9 @@ class Shop extends \App\Struct\Struct
     /** @var LatestVerificationStatusChange */
     public $latestVerificationStatusChange;
 
+    /** @var string */
+    public $type;
+
     public static $mappedFields = [
         'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',
         'environment' => 'App\Struct\Shop\Environment',
