@@ -4,6 +4,9 @@ namespace App\Struct\Shop;
 
 class Shop extends \App\Struct\Struct
 {
+
+    const TYPE_PARTNER = 'partner';
+
     /** @var int */
     public $id;
 
@@ -72,6 +75,9 @@ class Shop extends \App\Struct\Struct
 
     /** @var string */
     public $type;
+
+    /** @var int */
+    public $baseId;
 
     public static $mappedFields = [
         'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',

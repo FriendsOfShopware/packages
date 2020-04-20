@@ -4,7 +4,9 @@ namespace App\Components\Api;
 
 use App\Components\Api\Exceptions\AccessDeniedException;
 use App\Components\Api\Exceptions\TokenMissingException;
+use App\Struct\License\Binaries;
 use App\Struct\License\License;
+use App\Struct\License\VariantType;
 use App\Struct\Shop\Shop;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
@@ -73,7 +75,12 @@ class Client
     }
 
     /**
+     * @param AccessToken $token
      * @return Shop[]
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function shops(AccessToken $token): array
     {
@@ -123,22 +130,33 @@ class Client
     }
 
     /**
+     * @param AccessToken $token
      * @return License[]
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      */
     public function licenses(AccessToken $token): array
     {
         $this->useToken($token);
 
-        if ($token->getShop()->type === 'partner') {
+        if ($token->getShop()->type === Shop::TYPE_PARTNER) {
             $content = $this->cachedRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id);
 
             $licenses = [];
             foreach ($content->plugins as $pluginData) {
-                $license = new \stdClass();
+                $license = new License();
                 $license->archived = false;
                 $license->plugin = $pluginData;
-                $license->variantType = new \stdClass();
+                $license->variantType = new VariantType();
                 $license->variantType->name = 'buy'; // this is not really true but it's okay for our purposes
+
+                // for wildcard licenses there is only one available binary
+                // it is always the newest binary for the configured shopware version
+                $license->plugin->binaries = $this->getAvailableWildcardBinary($license);
 
                 $licenses[] = $license;
             }
@@ -177,23 +195,55 @@ class Client
         return $content;
     }
 
-    public function fetchDownloadLink(string $binaryLink): ?string
+    /**
+     * @param string $binaryLink
+     * @return array|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function fetchDownloadJson(string $binaryLink): ?array
     {
         if (!$this->currentToken) {
             throw new TokenMissingException();
         }
 
         try {
+            $query = ['json' => true];
+            $headers = [];
+            if ($this->currentToken->getShop()->type === Shop::TYPE_PARTNER) {
+                $headers = [
+                    'X-Shopware-Token' => $this->currentToken()->getToken(),
+                ];
+            } else {
+                $query['shopId'] = $this->currentToken->getShop()->id;
+            }
+
             $json = $this->client->request('GET', self::ENDPOINT . $binaryLink, [
-                'query' => [
-                    'json' => true,
-                    'shopId' => $this->currentToken->getShop()->id,
-                ],
+                'query' => $query,
+                'headers' => $headers,
             ])->toArray();
         } catch (ClientException $e) {
             return null;
         }
 
+        return $json;
+    }
+
+    /**
+     * @param string $binaryLink
+     * @return string|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function fetchDownloadLink(string $binaryLink): ?string
+    {
+        $json = $this->fetchDownloadJson($binaryLink);
         if (!array_key_exists('url', $json)) {
             return null;
         }
@@ -201,9 +251,45 @@ class Client
         return $json['url'];
     }
 
+    /**
+     * @param string $binaryLink
+     * @return string|null
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    public function fetchDownloadVersion(string $binaryLink): ?string
+    {
+        $json = $this->fetchDownloadJson($binaryLink);
+        if (!array_key_exists('binary', $json) || !is_array($json['binary'])) {
+            return null;
+        }
+
+        return $json['binary']['version'] ?? null;
+    }
+
     public function currentToken(): ?AccessToken
     {
         return $this->currentToken;
+    }
+
+    /**
+     * @param License $license
+     * @param Binaries|null $binary     Not neccassary for wildcard licenses
+     * @return string
+     */
+    public function getBinaryFilePath(License $license, Binaries $binary = null)
+    {
+        $shop = $this->currentToken->getShop();
+        if ($shop->type === Shop::TYPE_PARTNER) {
+            $filePath = "wildcardlicenses/{$shop->baseId}/instances/{$shop->id}/downloads/{$license->plugin->code}/{$shop->shopwareVersion->name}";
+        } else {
+            $filePath = 'plugins/' . $license->plugin->id . '/binaries/' . $binary->id . '/file';
+        }
+
+        return $filePath;
     }
 
     private function getLicensesListPath(AccessToken $token): string
@@ -224,6 +310,36 @@ class Client
         return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses/' . $licenseId;
     }
 
+    /**
+     * @param License $license
+     * @return array
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
+    private function getAvailableWildcardBinary(License $license): array
+    {
+        $version = $this->fetchDownloadVersion($this->getBinaryFilePath($license));
+
+        $binary = new Binaries();
+        $binary->version = $version;
+
+        return [$binary];
+    }
+
+    /**
+     * @param string $method
+     * @param string $uri
+     * @param array $options
+     * @return mixed
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     */
     private function cachedRequest(string $method, string $uri, array $options = [])
     {
         $cacheKey = md5(json_encode($this->currentToken) . $method . $uri . json_encode($options));

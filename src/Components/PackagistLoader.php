@@ -130,7 +130,9 @@ class PackagistLoader
             $isOldArchiveStructure = in_array($version['type'], ['shopware-core-plugin', 'shopware-backend-plugin', 'shopware-frontend-plugin']);
             $version['name'] = $packageName;
             $version['dist'] = [
-                'url' => $this->generateLink('plugins/' . $license->plugin->id . '/binaries/' . $binary->id . '/file', $this->client->currentToken(), $isOldArchiveStructure),
+                'url' => $this->generateLink(
+                    $this->client->getBinaryFilePath($license, $binary), $this->client->currentToken(), $isOldArchiveStructure
+                ),
                 'type' => 'zip',
             ];
 
