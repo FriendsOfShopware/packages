@@ -75,7 +75,6 @@ class Client
     }
 
     /**
-     * @param AccessToken $token
      * @return Shop[]
      */
     public function shops(AccessToken $token): array
@@ -126,7 +125,6 @@ class Client
     }
 
     /**
-     * @param AccessToken $token
      * @return License[]
      */
     public function licenses(AccessToken $token): array
@@ -185,10 +183,6 @@ class Client
         return $content;
     }
 
-    /**
-     * @param string $binaryLink
-     * @return array|null
-     */
     public function fetchDownloadJson(string $binaryLink): ?array
     {
         if (!$this->currentToken) {
@@ -217,10 +211,6 @@ class Client
         return $json;
     }
 
-    /**
-     * @param string $binaryLink
-     * @return string|null
-     */
     public function fetchDownloadLink(string $binaryLink): ?string
     {
         $json = $this->fetchDownloadJson($binaryLink);
@@ -231,10 +221,6 @@ class Client
         return $json['url'];
     }
 
-    /**
-     * @param string $binaryLink
-     * @return string|null
-     */
     public function fetchDownloadVersion(string $binaryLink): ?string
     {
         $json = $this->fetchDownloadJson($binaryLink);
@@ -251,8 +237,9 @@ class Client
     }
 
     /**
-     * @param License $license
-     * @param Binaries|null $binary     Not neccassary for wildcard licenses
+     * @param License       $license
+     * @param Binaries|null $binary  Not neccassary for wildcard licenses
+     *
      * @return string
      */
     public function getBinaryFilePath($license, $binary = null)
@@ -285,10 +272,6 @@ class Client
         return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses/' . $licenseId;
     }
 
-    /**
-     * @param License $license
-     * @return array
-     */
     private function getAvailableWildcardBinary(License $license): array
     {
         $version = $this->fetchDownloadVersion($this->getBinaryFilePath($license));
@@ -300,9 +283,6 @@ class Client
     }
 
     /**
-     * @param string $method
-     * @param string $uri
-     * @param array $options
      * @return mixed
      */
     private function cachedRequest(string $method, string $uri, array $options = [])

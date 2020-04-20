@@ -4,7 +4,6 @@ namespace App\Struct\Shop;
 
 class Shop extends \App\Struct\Struct
 {
-
     const TYPE_PARTNER = 'partner';
 
     /** @var int */

@@ -37,8 +37,7 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
-     * @param Shop $shop
-     * @return array
+     * @param Shop      $shop
      */
     public function load(array $licenses, object $shop): array
     {
@@ -49,8 +48,7 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
-     * @param Shop $shop
-     * @return array
+     * @param Shop      $shop
      */
     private function mapLicensesToComposerPackages(array $licenses, object $shop): array
     {
@@ -90,8 +88,7 @@ class PackagistLoader
 
     /**
      * @param License $license
-     * @param Shop $shop
-     * @return array
+     * @param Shop    $shop
      */
     private function convertBinaries(string $packageName, $license, Package $package, object $shop): array
     {
@@ -134,7 +131,9 @@ class PackagistLoader
             $version['name'] = $packageName;
             $version['dist'] = [
                 'url' => $this->generateLink(
-                    $this->client->getBinaryFilePath($license, $binary), $this->client->currentToken(), $isOldArchiveStructure
+                    $this->client->getBinaryFilePath($license, $binary),
+                    $this->client->currentToken(),
+                    $isOldArchiveStructure
                 ),
                 'type' => 'zip',
             ];
