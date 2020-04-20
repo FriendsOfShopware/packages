@@ -1,7 +1,5 @@
 # Shopware Composer Repository
 
-**WIP**
-
 If you want to contribute, please check before the open issues
 
 ## Installation
@@ -23,3 +21,8 @@ If you want to contribute, please check before the open issues
     * php generate_ssl.php
     * ./bin/console database:migrate
 * Running at localhost
+
+## Self-Hosting
+
+* The plugin informations are currently aggregated using a private endpoint of the Shopware API only accessible for shopware employees
+* You can use following site to get daily dumps of the database to host it itself. https://packages-dump.friendsofshopware.com
