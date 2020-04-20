@@ -104,7 +104,7 @@ class Client
             $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
             $content = json_decode($content);
             $content = array_shift($content);
-            $instances = $content->instances;
+            $instances = $content->instances ?? [];
 
             $wildcardShops = Shop::mapList($instances);
             foreach ($wildcardShops as $shop) {
@@ -280,7 +280,7 @@ class Client
      * @param Binaries|null $binary     Not neccassary for wildcard licenses
      * @return string
      */
-    public function getBinaryFilePath(License $license, Binaries $binary = null)
+    public function getBinaryFilePath($license, $binary = null)
     {
         $shop = $this->currentToken->getShop();
         if ($shop->type === Shop::TYPE_PARTNER) {

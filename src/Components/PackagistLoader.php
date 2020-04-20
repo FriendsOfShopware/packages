@@ -37,7 +37,8 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
-     * @param Shop      $shop
+     * @param Shop $shop
+     * @return array
      */
     public function load(array $licenses, object $shop): array
     {
@@ -48,7 +49,8 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
-     * @param Shop      $shop
+     * @param Shop $shop
+     * @return array
      */
     private function mapLicensesToComposerPackages(array $licenses, object $shop): array
     {
@@ -88,7 +90,8 @@ class PackagistLoader
 
     /**
      * @param License $license
-     * @param Shop    $shop
+     * @param Shop $shop
+     * @return array
      */
     private function convertBinaries(string $packageName, $license, Package $package, object $shop): array
     {
