@@ -84,7 +84,7 @@ class PackageIndexerCommand extends Command
 
         $this->createAlias($indexName);
         $this->cleanup($indexName);
-        
+
         return 0;
     }
 

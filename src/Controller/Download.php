@@ -42,9 +42,21 @@ class Download
             ], Response::HTTP_FORBIDDEN);
         }
 
-        $data = $this->encryption->decrypt($token);
+        try {
+            $data = $this->encryption->decrypt($token);
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'message' => 'Invalid encryption',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
 
-        $token = $this->client->login($data['username'], $data['password']);
+        try {
+            $token = $this->client->login($data['username'], $data['password']);
+        } catch (\Throwable $e) {
+            return new JsonResponse([
+                'message' => 'Invalid token',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
 
         $shops = $this->client->shops($token);
         $foundShop = null;

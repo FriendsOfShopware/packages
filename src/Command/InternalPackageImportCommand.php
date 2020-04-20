@@ -19,7 +19,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpClient\Exception\ServerException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -94,7 +93,7 @@ class InternalPackageImportCommand extends Command
         }
 
         $progressBar->finish();
-        
+
         return 0;
     }
 
@@ -259,13 +258,8 @@ class InternalPackageImportCommand extends Command
                         'unencrypted' => 'true',
                     ],
                 ])->getContent();
-            } catch (ServerException $e) {
-                if (500 === $e->getCode()) {
-                    // Some binaries are broken
-                    continue;
-                }
-
-                throw $e;
+            } catch (\Throwable $e) {
+                continue;
             }
 
             try {

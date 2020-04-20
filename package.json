@@ -9,15 +9,15 @@
     },
     "dependencies": {
         "bootstrap": "^4.4.1",
-        "clipboard": "^2.0.4",
+        "clipboard": "^2.0.6",
         "jquery": "^3.4.1",
         "popper.js": "^1.16.1"
     },
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.28.2",
+        "@symfony/webpack-encore": "^0.28.3",
         "core-js": "^3.6.4",
         "node-sass": "^4.13.1",
-        "regenerator-runtime": "^0.13.3",
+        "regenerator-runtime": "^0.13.5",
         "sass-loader": "^7.0.3",
         "webpack-notifier": "^1.8.0"
     }
