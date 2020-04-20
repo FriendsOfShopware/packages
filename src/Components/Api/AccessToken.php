@@ -79,7 +79,7 @@ class AccessToken implements \JsonSerializable, UserInterface
         $me = new self();
         $me->userId = (int) $response['userId'];
         $me->token = $response['token'];
-        $me->locale = $response['locale'] ?? 'de_DE'; // for sub-accounts the locale is missing in the response for some reason
+        $me->locale = $response['locale'] ?? 'en_GB'; // for sub-accounts the locale is missing in the response for some reason
         $me->username = $response['username'];
         $me->password = $response['password'];
         $me->expire = new \DateTime($response['expire']['date']);

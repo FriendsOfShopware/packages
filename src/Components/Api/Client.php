@@ -94,7 +94,7 @@ class Client
         $wildcardShops = [];
 
         try {
-            $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=15387&type=partner')->getContent();
+            $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
             $content = json_decode($content);
             $content = array_shift($content);
             $instances = $content->instances;
