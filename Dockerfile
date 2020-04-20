@@ -2,7 +2,7 @@ FROM composer as vendor
 
 COPY . /app
 
-RUN composer install -d /app
+RUN composer install --ignore-platform-reqs -d /app
 
 FROM node:alpine as npm
 COPY . /tmp
