@@ -37,7 +37,8 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
-     * @param Shop      $shop
+     * @param Shop $shop
+     * @return array
      */
     public function load(array $licenses, object $shop): array
     {
@@ -48,7 +49,8 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
-     * @param Shop      $shop
+     * @param Shop $shop
+     * @return array
      */
     private function mapLicensesToComposerPackages(array $licenses, object $shop): array
     {
@@ -88,7 +90,8 @@ class PackagistLoader
 
     /**
      * @param License $license
-     * @param Shop    $shop
+     * @param Shop $shop
+     * @return array
      */
     private function convertBinaries(string $packageName, $license, Package $package, object $shop): array
     {
@@ -130,7 +133,9 @@ class PackagistLoader
             $isOldArchiveStructure = in_array($version['type'], ['shopware-core-plugin', 'shopware-backend-plugin', 'shopware-frontend-plugin']);
             $version['name'] = $packageName;
             $version['dist'] = [
-                'url' => $this->generateLink('plugins/' . $license->plugin->id . '/binaries/' . $binary->id . '/file', $this->client->currentToken(), $isOldArchiveStructure),
+                'url' => $this->generateLink(
+                    $this->client->getBinaryFilePath($license, $binary), $this->client->currentToken(), $isOldArchiveStructure
+                ),
                 'type' => 'zip',
             ];
 
