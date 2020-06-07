@@ -10,29 +10,25 @@ use App\Repository\PackageRepository;
 use App\Struct\License\License;
 use App\Struct\Shop\Shop;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class PackagistLoader
 {
-    /**
-     * @var PackageRepository
-     */
-    private $packageRepository;
+    private PackageRepository $packageRepository;
 
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
 
-    /**
-     * @var Encryption
-     */
-    private $encryption;
+    private Encryption $encryption;
 
-    public function __construct(EntityManagerInterface $entityManager, Client $client, Encryption $encryption)
+    private RouterInterface $router;
+
+    public function __construct(EntityManagerInterface $entityManager, Client $client, Encryption $encryption, RouterInterface $router)
     {
         $this->packageRepository = $entityManager->getRepository(Package::class);
         $this->client = $client;
         $this->encryption = $encryption;
+        $this->router = $router;
     }
 
     /**
@@ -42,6 +38,7 @@ class PackagistLoader
     public function load(array $licenses, object $shop): array
     {
         return [
+            'notify-batch' => $this->router->generate('notify', [], RouterInterface::ABSOLUTE_URL),
             'packages' => $this->mapLicensesToComposerPackages($licenses, $shop),
         ];
     }

@@ -11,6 +11,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-intl": "*",
+        "ext-zip": "*",
         "composer/semver": "^1.5",
         "elasticsearch/elasticsearch": "^7.3",
         "ongr/elasticsearch-dsl": "^7.0",

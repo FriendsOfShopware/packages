@@ -58,9 +58,15 @@ class Package
      */
     private $producer;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Download::class, mappedBy="package", orphanRemoval=true)
+     */
+    private $downloads;
+
     public function __construct()
     {
         $this->versions = new ArrayCollection();
+        $this->downloads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -206,5 +212,36 @@ class Package
     public function setReleaseDate(?\DateTimeInterface $releaseDate): void
     {
         $this->releaseDate = $releaseDate;
+    }
+
+    /**
+     * @return Collection|Download[]
+     */
+    public function getDownloads(): Collection
+    {
+        return $this->downloads;
+    }
+
+    public function addDownload(Download $download): self
+    {
+        if (!$this->downloads->contains($download)) {
+            $this->downloads[] = $download;
+            $download->setPackage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDownload(Download $download): self
+    {
+        if ($this->downloads->contains($download)) {
+            $this->downloads->removeElement($download);
+            // set the owning side to null (unless already changed)
+            if ($download->getPackage() === $this) {
+                $download->setPackage(null);
+            }
+        }
+
+        return $this;
     }
 }

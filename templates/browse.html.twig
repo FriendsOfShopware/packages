@@ -12,8 +12,21 @@
 
                 <ul class="list-unstyled list-packages">
                     {% for package in newPackages %}
+                        <li class="mb-2">
+                            <a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.composerName }} <strong>v{{ package.newestVersion }}</strong></a><br>
+                            <small>{{ package.shortDescription }}</small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-12">
+                <h4>Popular Packages</h4>
+
+                <ul class="list-unstyled list-packages">
+                    {% for package in popularPackages %}
                         <li>
-                            <a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.composerName }} <strong>{{ package.newestVersion }}</strong></a>
+                            <a href="{{ url('package', {name: package.name ~ '/'}) }}">{{ package.name }} <strong>({{ package.downloads }} downloads)</strong></a>
                         </li>
                     {% endfor %}
                 </ul>

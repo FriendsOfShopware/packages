@@ -4,6 +4,7 @@ namespace App\Components;
 
 use App\Components\XmlReader\XmlPluginReader;
 use App\Entity\Version;
+use Symfony\Component\Filesystem\Filesystem;
 
 class PluginReader
 {
@@ -120,24 +121,8 @@ class PluginReader
             }
         }
 
-        self::rmDir($extractLocation);
+        $fs = new Filesystem();
+        $fs->remove($extractLocation);
         unlink($tmpFile);
-    }
-
-    private static function rmDir($dir)
-    {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ('.' !== $object && '..' !== $object) {
-                    if (is_dir($dir . '/' . $object)) {
-                        self::rmDir($dir . '/' . $object);
-                    } else {
-                        unlink($dir . '/' . $object);
-                    }
-                }
-            }
-            rmdir($dir);
-        }
     }
 }
