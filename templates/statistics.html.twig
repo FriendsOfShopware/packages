@@ -1,0 +1,92 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Browse - FriendsOfShopware Packages{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-3">
+        <h1>Statistics</h1>
+
+        <div class="row">
+            <div class="col-12">
+                <h4>Packages installed in the last 30 days</h4>
+
+                <canvas id="packagesLast30Days" width="400" height="200"></canvas>
+            </div>
+
+            {% if downloadsByMonths.length > 1 %}
+                <div class="col-12">
+                    <h4>Packages installed per month</h4>
+
+                    <canvas id="packagesPerMonth" width="400" height="200"></canvas>
+                </div>
+            {% endif %}
+
+            <div class="col-12">
+                <h4>Total</h4>
+                <p>
+                    Total packages: {{ totals.packageCount }}<br>
+                    Total versions: {{ totals.versionCount }}<br>
+                    Total downloads: {{ totals.downloadCount }}<br>
+                    (Downloads are tracked since 2020-06-08)
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+    <script>
+        var ctx = document.getElementById('packagesLast30Days');
+        var ctx2 = document.getElementById('packagesPerMonth');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ downloads30Days.keys|raw }},
+                datasets: [{
+                    label: 'Downloads',
+                    data: {{ downloads30Days.values|raw }},
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+        {% if downloadsByMonths.length > 1 %}
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: {{ downloadsByMonths.keys|raw }},
+                    datasets: [{
+                        label: 'Downloads',
+                        data: {{ downloadsByMonths.values|raw }},
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        {% endif %}
+    </script>
+{% endblock %}

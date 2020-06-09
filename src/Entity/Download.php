@@ -33,6 +33,16 @@ class Download
      */
     private $installedAt;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $composerVersion;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $phpVersion;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +80,30 @@ class Download
     public function setInstalledAt(\DateTimeInterface $installedAt): self
     {
         $this->installedAt = $installedAt;
+
+        return $this;
+    }
+
+    public function getComposerVersion(): ?string
+    {
+        return $this->composerVersion;
+    }
+
+    public function setComposerVersion(?string $composerVersion): self
+    {
+        $this->composerVersion = $composerVersion;
+
+        return $this;
+    }
+
+    public function getPhpVersion(): ?string
+    {
+        return $this->phpVersion;
+    }
+
+    public function setPhpVersion(?string $phpVersion): self
+    {
+        $this->phpVersion = $phpVersion;
 
         return $this;
     }

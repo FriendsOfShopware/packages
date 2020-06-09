@@ -53,6 +53,9 @@
                         <li class="nav-item{% if app.request.attributes.get('_route') == 'search' %} active{% endif %}">
                             <a class="nav-link" href="{{ url('search') }}">Search</a>
                         </li>
+                        <li class="nav-item{% if app.request.attributes.get('_route') == 'statistics' %} active{% endif %}">
+                            <a class="nav-link" href="{{ url('statistics') }}">Statistics</a>
+                        </li>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <li class="nav-item{% if app.request.attributes.get('_route') == 'account' %} active{% endif %}">
                                 <a class="nav-link" href="{{ url('account') }}">My packages</a>

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Downloads;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,6 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Notify
 {
+    private const USER_AGENT_REGEX = '/Composer\/(?<composerVersion>\d+\.\d+\.\d+).*; PHP\s(?<phpVersion>\d+\.\d+\.\d+)/m';
+
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -23,6 +24,8 @@ class Notify
     public function notify(Request $request): JsonResponse
     {
         $json = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        [$composerVersion, $phpVersion] = $this->getComposerAndPhpVersionFromRequest($request);
 
         if (!isset($json['downloads'])) {
             // Invalid request
@@ -42,11 +45,30 @@ class Notify
             $downloadObj->setInstalledAt(new \DateTime());
             $downloadObj->setPackage($package);
             $downloadObj->setVersion($download['version']);
+            $downloadObj->setComposerVersion($composerVersion);
+            $downloadObj->setPhpVersion($phpVersion);
             $this->entityManager->persist($downloadObj);
         }
 
         $this->entityManager->flush();
 
         return new JsonResponse();
+    }
+
+    private function getComposerAndPhpVersionFromRequest(Request $request): array
+    {
+        $userAgent = $request->headers->get('User-Agent');
+
+        if (empty($userAgent)) {
+            return [null, null];
+        }
+
+        if (!str_contains($userAgent, 'Composer')) {
+            return [null, null];
+        }
+
+        preg_match_all(self::USER_AGENT_REGEX, $userAgent, $matches, PREG_SET_ORDER, 0);
+
+        return [$matches[0]['composerVersion'], $matches[0]['phpVersion']];
     }
 }
