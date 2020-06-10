@@ -49,7 +49,7 @@ DATE(download.installed_at) as day,
 COUNT(*) as downloads
 FROM download
 INNER JOIN package ON package.id = package_id
-WHERE download.installed_at BETWEEN :from AND :to
+WHERE DATE(download.installed_at) BETWEEN :from AND :to
 GROUP BY DATE(download.installed_at)
 SQL;
         $current = new \DateTimeImmutable();
