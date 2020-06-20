@@ -8,10 +8,11 @@
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
-        "ext-intl": "*",
         "ext-zip": "*",
+        "api-platform/api-pack": "^1.2",
         "composer/semver": "^1.5",
         "elasticsearch/elasticsearch": "^7.3",
         "ongr/elasticsearch-dsl": "^7.0",
@@ -25,12 +26,13 @@
         "symfony/framework-bundle": "5.1.*",
         "symfony/http-client": "5.1.*",
         "symfony/orm-pack": "^1.0",
+        "symfony/polyfill-php80": "v1.17.0",
         "symfony/profiler-pack": "^1.0",
         "symfony/security-bundle": "5.1.*",
         "symfony/twig-pack": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "5.1.*",
-        "symfony/polyfill-php80": "v1.17.0"
+        "webonyx/graphql-php": "^0.13.8"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.15",
