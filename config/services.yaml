@@ -34,7 +34,8 @@ services:
         calls:
             - method: setHosts
               arguments:
-                  - "%env(json:ELASTICSEARCH_HOSTS)%"
+                  -
+                      - '%env(ELASTICSEARCH_URL)%'
 
     Elasticsearch\Client:
         class: Elasticsearch\Client
@@ -42,11 +43,9 @@ services:
 
     Redis:
         class: Redis
-        calls:
-            -   method: connect
-                arguments:
-                    - '%env(REDIS_HOST)%'
-                    - '%env(int:REDIS_PORT)%'
+        factory: ['\Symfony\Component\Cache\Adapter\RedisAdapter', 'createConnection']
+        arguments:
+            - '%env(REDIS_URL)%'
     Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
         arguments:
             - '@Redis'
