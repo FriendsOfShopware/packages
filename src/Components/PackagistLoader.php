@@ -10,7 +10,6 @@ use App\Repository\PackageRepository;
 use App\Struct\License\License;
 use App\Struct\Shop\Shop;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
 class PackagistLoader

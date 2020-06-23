@@ -94,6 +94,10 @@ class InternalPackageImportCommand extends Command
 
         $progressBar->finish();
 
+        $output->writeln('');
+
+        $this->rebuildRequireStructure();
+
         return 0;
     }
 
@@ -155,16 +159,17 @@ class InternalPackageImportCommand extends Command
             $package = new Package();
             $package->setName($plugin->name);
 
-            $producer = $this->producerRepository->findOneBy(['name' => $plugin->producer->name]);
+            $producer = $this->producerRepository->findOneBy(['prefix' => $plugin->producer->prefix]);
 
             if (!$producer) {
                 $producer = new Producer();
                 $producer->setName($plugin->producer->name);
                 $producer->setPrefix($plugin->producer->prefix);
                 $this->entityManager->persist($producer);
-                $this->entityManager->flush();
             }
 
+            $producer->setName($plugin->producer->name);
+            $this->entityManager->flush();
             $package->setProducer($producer);
 
             $this->entityManager->persist($package);
@@ -287,5 +292,44 @@ class InternalPackageImportCommand extends Command
         }
 
         $this->entityManager->flush();
+    }
+
+    private function rebuildRequireStructure(): void
+    {
+        $connection = $this->entityManager->getConnection();
+
+        $sql = <<<SQL
+SELECT
+JSON_UNQUOTE(composer_json->'$.name'),
+CONCAT('store.shopware.com/',LOWER(package.name))
+FROM version
+INNER JOIN package ON(package.id = version.package_id)
+WHERE JSON_UNQUOTE(composer_json->'$.name') IS NOT NULL
+GROUP BY JSON_UNQUOTE(composer_json->'$.name'), package.name
+SQL;
+
+        $zipPackageNameToStoreName = $connection->executeQuery($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+
+        $validVersions = $connection->fetchAll('SELECT id, require_section FROM version
+WHERE JSON_LENGTH(require_section) > 1 AND type = \'shopware-platform-plugin\'');
+
+        foreach ($validVersions as $validVersion) {
+            $validVersion['require_section'] = json_decode($validVersion['require_section'], true);
+            $updatedRequire = [];
+            $gotUpdated = false;
+
+            foreach ($validVersion['require_section'] as $key => $val) {
+                if (isset($zipPackageNameToStoreName[$key])) {
+                    $updatedRequire[$zipPackageNameToStoreName[$key]] = $val;
+                    $gotUpdated = true;
+                } else {
+                    $updatedRequire[$key] = $val;
+                }
+            }
+
+            if ($gotUpdated) {
+                $connection->update('version', ['require_section' => json_encode($updatedRequire)], ['id' => $validVersion['id']]);
+            }
+        }
     }
 }

@@ -119,6 +119,8 @@ class PluginReader
             if (isset($composerJson['autoload-dev'])) {
                 $version->setAutoloadDev($composerJson['autoload-dev']);
             }
+
+            $version->setComposerJson($composerJson);
         }
 
         $fs = new Filesystem();

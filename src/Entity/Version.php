@@ -37,7 +37,7 @@ class Version
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
@@ -52,27 +52,27 @@ class Version
     private $license;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $authors = [];
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $extra = [];
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $requireSection = [];
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $autoload = [];
 
     /**
-     * @ORM\Column(name="autoload_dev", type="json_array")
+     * @ORM\Column(name="autoload_dev", type="json")
      */
     private $autoloadDev = [];
 
@@ -88,6 +88,13 @@ class Version
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $releaseDate;
+
+    /**
+     * @ORM\Column(name="composer_json", type="json", nullable=true)
+     *
+     * @var array|null
+     */
+    private $composerJson;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Package", inversedBy="versions")
@@ -250,6 +257,16 @@ class Version
     public function setAutoloadDev(array $autoloadDev): void
     {
         $this->autoloadDev = $autoloadDev;
+    }
+
+    public function getComposerJson(): ?array
+    {
+        return $this->composerJson;
+    }
+
+    public function setComposerJson(?array $composerJson): void
+    {
+        $this->composerJson = $composerJson;
     }
 
     public function toJson(): array

@@ -4,14 +4,19 @@ If you want to contribute, please check before the open issues
 
 ## Installation
 
+### Requirements
+
+* PHP 7.4
+* MySQL 8
+
 ### Normal
 
 * Clone repository
 * composer install
 * php generate_ssl.php
-* php bin/console server:run or default nginx / apache setup
+* default nginx / apache setup
 * npm install
-* npm run watch
+* npm run build
 * Should be running
 
 ### Docker
