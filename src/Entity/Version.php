@@ -271,7 +271,7 @@ class Version
 
     public function toJson(): array
     {
-        return [
+        $json = [
             'version' => $this->version,
             'type' => $this->type,
             'autoload' => $this->autoload,
@@ -285,5 +285,11 @@ class Version
                 'type' => 'zip',
             ],
         ];
+
+        if ($this->type === 'shopware-platform-plugin') {
+            $json['replace'][$this->getComposerJson()['name']] = $this->version;
+        }
+
+        return $json;
     }
 }
