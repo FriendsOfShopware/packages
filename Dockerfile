@@ -9,7 +9,7 @@ COPY . /tmp
 RUN cd /tmp && npm install && npm run build
 
 
-FROM shyim/shopware-platform-nginx:php74
+FROM shyim/shopware-platform-nginx-production:php74
 
 COPY --chown=1000:1000 . /var/www/html
 COPY --from=vendor --chown=1000:1000 /app/vendor /var/www/html/vendor
