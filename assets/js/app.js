@@ -1,4 +1,4 @@
-require('bootstrap/dist/css/bootstrap.css');
+require('bootstrap/scss/bootstrap.scss');
 require('../css/app.scss');
 require('bootstrap/js/src/collapse');
 require('bootstrap/js/src/dropdown');
