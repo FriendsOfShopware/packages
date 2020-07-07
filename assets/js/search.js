@@ -36,7 +36,6 @@ let doSearch = function (el, searchString) {
     }
 
     if (Object.keys(params).length) {
-        console.log(params);
         history.replaceState(params, 'Search', '?' + formData(params));
     } else {
         history.replaceState(params, 'Search', '');
