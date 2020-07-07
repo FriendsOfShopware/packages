@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: packages
+  namespace: packages-friendsofshopware-com
+  labels:
+    app: packages
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: packages
+  template:
+    metadata:
+      labels:
+        app: packages
+    spec:
+      volumes:
+        - name: secret
+          configMap:
+            name: app-secret
+      containers:
+      - name: packages
+        imagePullPolicy: Always
+        image: friendsofshopware/packages
+        resources:
+          limits:
+            cpu: '2000m'
+            memory: 8Gi
+        envFrom:
+          - configMapRef:
+              name: app-config
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: secret
+            mountPath: "/var/www/html/ssl"
+            readOnly: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: packages
+  namespace: packages-friendsofshopware-com
+spec:
+  selector:
+    app: packages
+  ports:
+  - port: 80
+    targetPort: 80

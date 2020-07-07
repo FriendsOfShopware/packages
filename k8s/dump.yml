@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dump-pv-claim
+  namespace: packages-friendsofshopware-com
+  labels:
+    app: mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-browser
+  namespace: packages-friendsofshopware-com
+  labels:
+    app: file-browser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-browser
+  template:
+    metadata:
+      labels:
+        app: file-browser
+    spec:
+      volumes:
+        - name: files
+          persistentVolumeClaim:
+            claimName: dump-pv-claim
+      containers:
+        - name: file-browser
+          imagePullPolicy: Always
+          image: mohamnag/nginx-file-browser
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: files
+              mountPath: "/opt/www/files"
+              readOnly: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-browser
+  namespace: packages-friendsofshopware-com
+spec:
+  selector:
+    app: file-browser
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: file-browser
+  namespace: packages-friendsofshopware-com
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - packages-dump.friendsofshopware.com
+      secretName: packages-dump-friendsofshopware-com
+  rules:
+    - host: packages-dump.friendsofshopware.com
+      http:
+        paths:
+          - backend:
+              serviceName: file-browser
+              servicePort: 80
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: sql-dump
+  namespace: packages-friendsofshopware-com
+spec:
+  schedule: "50 * * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: files
+              persistentVolumeClaim:
+                claimName: dump-pv-claim
+          containers:
+            - name: dump
+              image: mysql:8.0.19
+              volumeMounts:
+                - name: files
+                  mountPath: "/opt/www/files"
+              envFrom:
+                - configMapRef:
+                    name: mysql-config
+              args:
+                - bash
+                - -c
+                - mysqldump -h mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE > /opt/www/files/latest.sql
+          restartPolicy: Never
