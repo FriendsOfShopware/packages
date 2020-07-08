@@ -67,6 +67,7 @@ class Account extends AbstractController
             'packages' => $packages,
             'token' => (string) $token,
             'shop' => $token->getShop(),
+            'company' => $token->getMemberShip()->company->name,
         ]);
     }
 

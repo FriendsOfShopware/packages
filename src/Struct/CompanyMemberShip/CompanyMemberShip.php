@@ -57,4 +57,9 @@ class CompanyMemberShip extends Struct
 
         return false;
     }
+
+    public function canAccessShop(): bool
+    {
+        return $this->canOneOf(...self::PERMISSION_TO_ACCESS_SHOPS);
+    }
 }
