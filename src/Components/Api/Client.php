@@ -4,6 +4,7 @@ namespace App\Components\Api;
 
 use App\Components\Api\Exceptions\AccessDeniedException;
 use App\Components\Api\Exceptions\TokenMissingException;
+use App\Struct\CompanyMemberShip\CompanyMemberShip;
 use App\Struct\License\Binaries;
 use App\Struct\License\License;
 use App\Struct\License\VariantType;
@@ -56,6 +57,10 @@ class Client
             throw $exception;
         }
 
+        if ($response['userId'] === null) {
+            throw new AccessDeniedException('The shop does not have any company');
+        }
+
         return AccessToken::create($response + ['username' => $username, 'password' => $password]);
     }
 
@@ -72,6 +77,22 @@ class Client
                 'User-Agent' => 'packages.friendsofshopware.de',
             ],
         ]);
+    }
+
+    /**
+     * @return CompanyMemberShip[]
+     */
+    public function memberShips(AccessToken $token): array
+    {
+        $this->useToken($token);
+
+        try {
+            $content = $this->client->request('GET', self::ENDPOINT . 'account/' . $token->getUserAccountId() . '/memberships')->getContent();
+        } catch (\Throwable $e) {
+            return [];
+        }
+
+        return CompanyMemberShip::mapList(json_decode($content));
     }
 
     /**

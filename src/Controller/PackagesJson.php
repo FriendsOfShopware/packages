@@ -50,6 +50,11 @@ class PackagesJson
         }
 
         $token = $this->client->login($credentials['username'], $credentials['password']);
+
+        if (isset($credentials['userId'])) {
+            $token->setUserId($credentials['userId']);
+        }
+
         $shops = $this->client->shops($token);
         $foundShop = null;
 

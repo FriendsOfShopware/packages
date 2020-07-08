@@ -43,6 +43,11 @@ class AccessToken implements \JsonSerializable, UserInterface
      */
     protected $userId;
 
+    /**
+     * @var int
+     */
+    protected $userAccountId;
+
     public function __toString()
     {
         $encryption = new Encryption();
@@ -51,6 +56,7 @@ class AccessToken implements \JsonSerializable, UserInterface
             'username' => $this->username,
             'password' => $this->password,
             'domain' => $this->shop->domain,
+            'userId' => $this->userId
         ]);
     }
 
@@ -74,10 +80,21 @@ class AccessToken implements \JsonSerializable, UserInterface
         return $this->userId;
     }
 
+    public function setUserId(int $id): void
+    {
+        $this->userId = $id;
+    }
+
+    public function getUserAccountId(): int
+    {
+        return $this->userAccountId;
+    }
+
     public static function create(array $response): self
     {
         $me = new self();
         $me->userId = (int) $response['userId'];
+        $me->userAccountId = (int) $response['userAccountId'];
         $me->token = $response['token'];
         $me->locale = $response['locale'] ?? 'en_GB'; // for sub-accounts the locale is missing in the response for some reason
         $me->username = $response['username'];

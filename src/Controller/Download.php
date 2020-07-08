@@ -58,6 +58,10 @@ class Download
             ], Response::HTTP_UNAUTHORIZED);
         }
 
+        if (isset($credentials['userId'])) {
+            $token->setUserId($credentials['userId']);
+        }
+
         $shops = $this->client->shops($token);
         $foundShop = null;
 

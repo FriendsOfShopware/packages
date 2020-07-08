@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block search_bar %}{% endblock %}
+
+{% block title %}Login - FriendsOfShopware Packages{% endblock %}
+
+{% block body %}
+    <section class="clean-block pb-5">
+        <div class="container">
+            <div class="block-heading">
+                <h2 class="text-info">Log In</h2>
+                <p>Please login with your Shopware Account credentials to generate a Shopware-API token for further authentication</p>
+            </div>
+            <form method="post">
+                <div class="mb-3">
+                    <label for="membership">Company</label>
+                    <select name="membership" class="form-control">
+                        {% for membership in memberships %}
+                            <option value="{{ membership.id }}">{{ membership.company.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Select company</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

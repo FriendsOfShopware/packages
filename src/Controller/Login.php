@@ -52,6 +52,11 @@ class Login extends AbstractController
 
             $event = new InteractiveLoginEvent($request, $loginToken);
             $dispatcher->dispatch($event);
+            $memberShips = $this->client->memberShips($accessToken);
+
+            if (count($memberShips) > 1) {
+                return $this->redirectToRoute('company-selection');
+            }
 
             return $this->redirectToRoute('shop-selection');
         } catch (AccessDeniedException $e) {
@@ -59,6 +64,30 @@ class Login extends AbstractController
                 'loginError' => true,
             ]);
         }
+    }
+
+    /**
+     * @Route(path="/login/company-selection", name="company-selection")
+     */
+    public function companySelection(Request $request)
+    {
+        /** @var AccessToken $token */
+        $token = $this->getUser();
+        $memberShips = $this->client->memberShips($token);
+
+        if ($selectedCompany = $request->request->get('membership')) {
+            foreach ($memberShips as $memberShip) {
+                if ($memberShip->id === (int) $selectedCompany) {
+                    $token->setUserId($memberShip->company->id);
+
+                    return $this->redirectToRoute('shop-selection');
+                }
+            }
+        }
+
+        return $this->render('login/company-selection.html.twig', [
+            'memberships' => $memberShips,
+        ]);
     }
 
     /**
