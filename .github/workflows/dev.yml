@@ -1,0 +1,24 @@
+name: Deploy Dev
+on:
+    push:
+        branches: dev
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Build image and push
+              run: |
+                  echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "shyim" --password-stdin
+                  docker build -t friendsofshopware/packages:stage .
+                  docker push friendsofshopware/packages:stage
+
+            - uses: azure/setup-kubectl@v1
+
+            - name: Create config
+              run: mkdir ~/.kube; echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+            - name: Rollout
+              run: kubectl -n packages-stage rollout restart deployments/packages
