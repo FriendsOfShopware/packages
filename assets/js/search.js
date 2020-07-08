@@ -66,12 +66,10 @@ let formData = (obj) => {
     return Object.keys(obj).map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])).join('&');
 }
 let bindToRefresh = () => {
-    const dataFilterName = document.querySelector('[data-filter-name]');
+    const dataFilterName = document.querySelectorAll('[data-filter-name]');
 
-    if(dataFilterName) {
-        dataFilterName.addEventListener("click", function(event) {
-            doSearch(event)
-        });
+    for (let e of dataFilterName) {
+        addEventListener("click", doSearch)
     }
 };
 bindToRefresh();

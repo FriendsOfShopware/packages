@@ -20,7 +20,7 @@
                         {% for entry in searchResult.aggregations.types.aggs.buckets %}
                         <li class="list-group-item d-flex justify-content-between align-items-center{% if entry.key in selectedTypes %} active{% endif %}" data-filter-name="types" data-filter-value="{{ entry.key }}">
                             {{ entry.key }}
-                            <span class="badge badge-primary badge-pill">{{ entry.doc_count }}</span>
+                            <span class="badge bg-secondary">{{ entry.doc_count }}</span>
                         </li>
                         {% endfor %}
                     </ul>
@@ -34,7 +34,7 @@
                         {% for entry in searchResult.aggregations.producers.buckets %}
                             <li class="list-group-item d-flex justify-content-between align-items-center{% if entry.key in selectedProducers %} active{% endif %}" data-filter-name="producers" data-filter-value="{{ entry.key }}">
                                 {{ entry.key }}
-                                <span class="badge badge-primary badge-pill">{{ entry.doc_count }}</span>
+                                <span class="badge bg-secondary">{{ entry.doc_count }}</span>
                             </li>
                         {% endfor %}
                     </ul>
