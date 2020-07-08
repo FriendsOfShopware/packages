@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Components\Api\Client;
 use App\Components\Encryption;
 use App\Components\PackagistLoader;
+use App\Exception\InvalidShopGivenHttpException;
+use App\Exception\InvalidTokenHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class PackagesJson
 {
@@ -27,44 +30,74 @@ class PackagesJson
      */
     private $encryption;
 
-    public function __construct(Client $client, PackagistLoader $packagistLoader, Encryption $encryption)
+    private CacheInterface $cache;
+
+    public function __construct(Client $client, PackagistLoader $packagistLoader, Encryption $encryption, CacheInterface $cache)
     {
         $this->client = $client;
         $this->packagistLoader = $packagistLoader;
         $this->encryption = $encryption;
+        $this->cache = $cache;
     }
 
     /**
      * @Route(path="/packages.json", name="index")
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         if (!$request->headers->has('Token')) {
-            return new JsonResponse(['message' => 'Invalid headers'], Response::HTTP_FORBIDDEN);
+            throw new InvalidTokenHttpException();
         }
 
-        $credentials = $this->encryption->decrypt($request->headers->get('Token'));
+        $tokenValue = $request->headers->get('Token');
 
-        if (empty($credentials)) {
-            return new JsonResponse(['message' => 'Invalid headers'], Response::HTTP_FORBIDDEN);
+        try {
+            $credentials = $this->encryption->decrypt($tokenValue);
+        } catch (\Throwable $e) {
+            throw new InvalidTokenHttpException();
         }
 
-        $token = $this->client->login($credentials['username'], $credentials['password']);
-        $shops = $this->client->shops($token);
-        $foundShop = null;
+        $cacheKey = md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
 
-        foreach ($shops as $shop) {
-            if ($shop->domain === $credentials['domain']) {
-                $foundShop = $shop;
-                break;
+        $token = $this->cache->get(md5($cacheKey), function (ItemInterface $item) use ($tokenValue) {
+            $credentials = $this->encryption->decrypt($tokenValue);
+
+            if (empty($credentials)) {
+                throw new InvalidTokenHttpException();
             }
-        }
 
-        if (!$foundShop) {
-            throw new \RuntimeException('Cannot find shop');
-        }
+            $token = $this->client->login($credentials['username'], $credentials['password']);
+            $item->expiresAt($token->getExpire());
 
-        $token->setShop($foundShop);
+            if (isset($credentials['userId'])) {
+                $token->setUserId($credentials['userId']);
+            }
+
+            foreach ($this->client->memberShips($token) as $memberShip) {
+                if ($memberShip->company->id === $token->getUserId()) {
+                    $token->setMemberShip($memberShip);
+                }
+            }
+
+            $shops = $this->client->shops($token);
+            $foundShop = null;
+
+            foreach ($shops as $shop) {
+                if ($shop->domain === $credentials['domain']) {
+                    $foundShop = $shop;
+                    break;
+                }
+            }
+
+            if (!$foundShop) {
+                throw new InvalidShopGivenHttpException($credentials['domain']);
+            }
+
+            $token->setShop($foundShop);
+
+            return $token;
+        });
+
         $this->client->useToken($token);
 
         return new JsonResponse($this->packagistLoader->load($this->client->licenses($token), $token->getShop()));

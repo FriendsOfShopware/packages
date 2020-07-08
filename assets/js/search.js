@@ -14,7 +14,7 @@ let doSearch = function (el, searchString) {
         el.target.classList.toggle('active');
     }
 
-    const activeFilter = document.querySelectorAll("[data-filter-name].active");
+    const activeFilter = document.querySelectorAll('[data-filter-name].active');
 
     activeFilter.forEach(function(me) {
 
@@ -58,9 +58,9 @@ let doSearch = function (el, searchString) {
     request.send();
 };
 
-searchField.addEventListener("input", function(event) {
-    doSearch(event)
-});
+if (searchField) {
+    searchField.addEventListener('input', doSearch);
+}
 
 let formData = (obj) => {
     return Object.keys(obj).map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])).join('&');
@@ -69,7 +69,7 @@ let bindToRefresh = () => {
     const dataFilterName = document.querySelectorAll('[data-filter-name]');
 
     for (let e of dataFilterName) {
-        addEventListener("click", doSearch)
+        addEventListener('click', doSearch)
     }
 };
 bindToRefresh();

@@ -147,6 +147,7 @@ class PackagistLoader
             'domain' => $token->getShop()->domain,
             'username' => $token->getUsername(),
             'password' => $token->getPassword(),
+            'userId' => $token->getUserId(),
         ];
 
         if ($isOldArchive) {

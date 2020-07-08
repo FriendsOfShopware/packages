@@ -144,6 +144,7 @@ class Storage
             'domain' => $token->getShop()->domain,
             'username' => $token->getUsername(),
             'password' => $token->getPassword(),
+            'userId' => $token->getUserId(),
         ];
 
         return getenv('APP_URL') . '/download?token=' . urlencode($this->encryption->encrypt($data));

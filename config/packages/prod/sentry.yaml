@@ -4,3 +4,6 @@ sentry:
         environment: '%kernel.environment%'
         excluded_exceptions:
             - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+            - App\Exception\InvalidTokenHttpException
+            - App\Exception\AccessDeniedToDownloadPluginHttpException
+            - App\Exception\InvalidShopGivenHttpException

@@ -3,45 +3,29 @@
 namespace App\Components\Api;
 
 use App\Components\Encryption;
+use App\Struct\CompanyMemberShip\CompanyMemberShip;
 use App\Struct\Shop\Shop;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AccessToken implements \JsonSerializable, UserInterface
 {
-    /**
-     * @var \DateTime
-     */
-    protected $expire;
+    protected \DateTime $expire;
 
-    /**
-     * @var string
-     */
-    protected $username;
+    protected string $username;
 
-    /**
-     * @var string
-     */
-    protected $password;
+    protected string $password;
 
-    /**
-     * @var Shop|null
-     */
-    protected $shop;
+    protected ?Shop $shop;
 
-    /**
-     * @var string
-     */
-    protected $locale;
+    protected string $locale;
 
-    /**
-     * @var string
-     */
-    protected $token;
+    protected string $token;
 
-    /**
-     * @var int
-     */
-    protected $userId;
+    protected int $userId;
+
+    protected int $userAccountId;
+
+    protected CompanyMemberShip $memberShip;
 
     public function __toString()
     {
@@ -51,6 +35,7 @@ class AccessToken implements \JsonSerializable, UserInterface
             'username' => $this->username,
             'password' => $this->password,
             'domain' => $this->shop->domain,
+            'userId' => $this->userId,
         ]);
     }
 
@@ -74,10 +59,21 @@ class AccessToken implements \JsonSerializable, UserInterface
         return $this->userId;
     }
 
+    public function setUserId(int $id): void
+    {
+        $this->userId = $id;
+    }
+
+    public function getUserAccountId(): int
+    {
+        return $this->userAccountId;
+    }
+
     public static function create(array $response): self
     {
         $me = new self();
         $me->userId = (int) $response['userId'];
+        $me->userAccountId = (int) $response['userAccountId'];
         $me->token = $response['token'];
         $me->locale = $response['locale'] ?? 'en_GB'; // for sub-accounts the locale is missing in the response for some reason
         $me->username = $response['username'];
@@ -124,5 +120,15 @@ class AccessToken implements \JsonSerializable, UserInterface
 
     public function eraseCredentials()
     {
+    }
+
+    public function setMemberShip(CompanyMemberShip $memberShip): void
+    {
+        $this->memberShip = $memberShip;
+    }
+
+    public function getMemberShip(): CompanyMemberShip
+    {
+        return $this->memberShip;
     }
 }
