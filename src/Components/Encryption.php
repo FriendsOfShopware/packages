@@ -5,29 +5,27 @@ namespace App\Components;
 class Encryption
 {
     /**
-     * @var string
+     * @var resource
      */
     private $publicKey;
 
     /**
-     * @var string
+     * @var resource
      */
     private $privateKey;
 
     public function __construct()
     {
         $path = dirname(__DIR__, 2) . '/ssl/';
-        $this->publicKey = file_get_contents($path . 'public.pem');
-        $this->privateKey = file_get_contents($path . 'private.pem');
+        $this->publicKey = openssl_pkey_get_public(file_get_contents($path . 'public.pem'));
+        $this->privateKey = openssl_pkey_get_private(file_get_contents($path . 'private.pem'));
     }
 
     public function encrypt(array $data): string
     {
         $str = json_encode($data);
 
-        $key = openssl_pkey_get_public($this->publicKey);
-
-        openssl_public_encrypt($str, $encryptedData, $key);
+        openssl_public_encrypt($str, $encryptedData, $this->publicKey);
 
         return base64_encode($encryptedData);
     }
@@ -36,9 +34,7 @@ class Encryption
     {
         $data = base64_decode($data);
 
-        $key = openssl_pkey_get_private($this->privateKey);
-
-        openssl_private_decrypt($data, $decryptedData, $key);
+        openssl_private_decrypt($data, $decryptedData, $this->privateKey);
 
         return json_decode($decryptedData, true);
     }

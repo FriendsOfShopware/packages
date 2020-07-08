@@ -65,6 +65,28 @@ class PackageRepository extends ServiceEntityRepository
         return $package;
     }
 
+    /**
+     * @return Package[]
+     */
+    public function findPackagesForLicenses(array $names): array
+    {
+        $qb = $this->createQueryBuilder('package');
+        $qb->innerJoin('package.versions', 'versions')
+            ->addSelect('versions');
+
+        $qb->where('package.name IN (:names)')
+            ->setParameter('names', $names);
+
+        $result = [];
+
+        /** @var Package $package */
+        foreach ($qb->getQuery()->getResult() as $package) {
+            $result[$package->getComposerName()] = $package;
+        }
+
+        return $result;
+    }
+
     public function findPackagesByNames(array $names): array
     {
         $qb = $this->createQueryBuilder('package');

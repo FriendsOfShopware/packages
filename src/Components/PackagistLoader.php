@@ -50,6 +50,12 @@ class PackagistLoader
     {
         $response = [];
 
+        $pluginNames = array_map(function ($license) {
+            return $license->plugin->name;
+        }, $licenses);
+
+        $databasePlugins = $this->packageRepository->findPackagesForLicenses($pluginNames);
+
         foreach ($licenses as $license) {
             // Don't list archived plugins
             if ($license->archived || !isset($license->plugin)) {
@@ -66,7 +72,7 @@ class PackagistLoader
 
             $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
 
-            $package = $this->packageRepository->findOne($packageName);
+            $package = $databasePlugins[$packageName];
 
             if (null === $package) {
                 continue;

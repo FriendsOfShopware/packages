@@ -68,7 +68,7 @@ class Login extends AbstractController
     }
 
     /**
-     * @Route(path="/login/company-selection", name="company-selection")
+     * @Route(path="/account/company-selection", name="company-selection")
      */
     public function companySelection(Request $request)
     {
@@ -93,7 +93,7 @@ class Login extends AbstractController
     }
 
     /**
-     * @Route(path="/login/shop-selection", name="shop-selection")
+     * @Route(path="/account/shop-selection", name="shop-selection")
      */
     public function shopSelection(Request $request)
     {

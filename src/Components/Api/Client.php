@@ -9,10 +9,11 @@ use App\Struct\License\Binaries;
 use App\Struct\License\License;
 use App\Struct\License\VariantType;
 use App\Struct\Shop\Shop;
-use Psr\SimpleCache\CacheInterface;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Client
@@ -160,56 +161,62 @@ class Client
     {
         $this->useToken($token);
 
-        if ($token->getShop()->type === Shop::TYPE_PARTNER) {
-            $content = $this->cachedRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id);
+        $cacheKey = md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
 
-            $licenses = [];
-            foreach ($content->plugins as $pluginData) {
-                $license = new License();
-                $license->archived = false;
-                $license->plugin = $pluginData;
-                $license->variantType = new VariantType();
-                $license->variantType->name = 'buy'; // this is not really true but it's okay for our purposes
+        return $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($token) {
+            $item->expiresAfter(3600);
 
-                // for wildcard licenses there is only one available binary
-                // it is always the newest binary for the configured shopware version
-                $license->plugin->binaries = $this->getAvailableWildcardBinary($license);
+            if ($token->getShop()->type === Shop::TYPE_PARTNER) {
+                $content = json_decode($this->client->request('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
 
-                $licenses[] = $license;
+                $licenses = [];
+                foreach ($content->plugins as $pluginData) {
+                    $license = new License();
+                    $license->archived = false;
+                    $license->plugin = $pluginData;
+                    $license->variantType = new VariantType();
+                    $license->variantType->name = 'buy'; // this is not really true but it's okay for our purposes
+
+                    // for wildcard licenses there is only one available binary
+                    // it is always the newest binary for the configured shopware version
+                    $license->plugin->binaries = $this->getAvailableWildcardBinary($license);
+
+                    $licenses[] = $license;
+                }
+
+                return $licenses;
             }
 
-            return $licenses;
-        }
+            $content = json_decode($this->client->request('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
+                'query' => [
+                    'variantTypes' => 'buy,free,rent,support,test',
+                    'limit' => 1000,
+                ],
+            ])->getContent());
 
-        $content = $this->cachedRequest('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
-            'query' => [
-                'variantTypes' => 'buy,free,rent,support,test',
-                'limit' => 1000,
-            ],
-        ]);
+            try {
+                $enterprisePlugins = json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
+            } catch (\Exception $e) {
+                $enterprisePlugins = [];
+            }
 
-        try {
-            $enterprisePlugins = $this->cachedRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses');
-        } catch (\Exception $e) {
-            $enterprisePlugins = [];
-        }
+            foreach ($content as &$plugin) {
+                $plugin = json_decode($this->client->request('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin->id))->getContent());
+            }
+            unset($plugin);
 
-        foreach ($content as &$plugin) {
-            $plugin = $this->cachedRequest('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin->id));
-        }
-        unset($plugin);
+            foreach ($enterprisePlugins as $enterprisePlugin) {
+                $enterpriseExtension = json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses/' . $enterprisePlugin->id)->getContent());
+                $enterpriseExtension->licenseModule->archived = false;
+                $enterpriseExtension->licenseModule->variantType = new \stdClass();
+                $enterpriseExtension->licenseModule->variantType->name = 'buy';
+                $enterpriseExtension->licenseModule->plugin->isPremiumPlugin = false;
+                $enterpriseExtension->licenseModule->plugin->isAdvancedFeature = true;
+                $content[] = $enterpriseExtension->licenseModule;
+            }
 
-        foreach ($enterprisePlugins as $enterprisePlugin) {
-            $enterpriseExtension = $this->cachedRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses/' . $enterprisePlugin->id);
-            $enterpriseExtension->licenseModule->archived = false;
-            $enterpriseExtension->licenseModule->variantType = new \stdClass();
-            $enterpriseExtension->licenseModule->variantType->name = 'buy';
-            $enterpriseExtension->licenseModule->plugin->isPremiumPlugin = false;
-            $enterpriseExtension->licenseModule->plugin->isAdvancedFeature = true;
-            $content[] = $enterpriseExtension->licenseModule;
-        }
-
-        return $content;
+            return $content;
+        });
     }
 
     public function fetchDownloadJson(string $binaryLink): ?array
@@ -309,22 +316,5 @@ class Client
         $binary->version = $version;
 
         return [$binary];
-    }
-
-    /**
-     * @return mixed
-     */
-    private function cachedRequest(string $method, string $uri, array $options = [])
-    {
-        $cacheKey = md5(json_encode($this->currentToken) . $method . $uri . json_encode($options));
-
-        if ($this->cache->has($cacheKey)) {
-            return $this->cache->get($cacheKey);
-        }
-
-        $response = json_decode($this->client->request($method, $uri, $options)->getContent());
-        $this->cache->set($cacheKey, $response, 3600);
-
-        return $response;
     }
 }
