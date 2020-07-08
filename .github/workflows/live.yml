@@ -1,7 +1,7 @@
 name: Deploy Live
 on:
-    push:
-        branches: live
+    release:
+        types: [published]
 
 jobs:
     build:
