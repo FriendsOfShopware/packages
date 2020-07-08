@@ -12,6 +12,9 @@
                 <p>Please login with your Shopware Account credentials to generate a Shopware-API token for further authentication</p>
             </div>
             <form method="post">
+                {% if insufficientPermission %}
+                    <div class="alert alert-danger">Insufficient permission to access shops</div>
+                {% endif %}
                 <div class="mb-3">
                     <label for="membership">Company</label>
                     <select name="membership" class="form-control">

@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use App\Components\Api\Client;
 use App\Components\Encryption;
+use App\Exception\AccessDeniedToDownloadPluginHttpException;
+use App\Exception\InvalidShopGivenHttpException;
+use App\Exception\InvalidTokenHttpException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class Download
 {
@@ -23,10 +27,13 @@ class Download
      */
     private $client;
 
-    public function __construct(Encryption $encryption, Client $client)
+    private CacheInterface $cache;
+
+    public function __construct(Encryption $encryption, Client $client, CacheInterface $cache)
     {
         $this->encryption = $encryption;
         $this->client = $client;
+        $this->cache = $cache;
     }
 
     /**
@@ -34,54 +41,64 @@ class Download
      */
     public function download(Request $request): Response
     {
-        $token = $request->query->get('token');
+        $tokenValue = $request->query->get('token');
 
-        if (empty($token)) {
-            return new JsonResponse([
-                'Invalid token',
-            ], Response::HTTP_FORBIDDEN);
+        if (empty($tokenValue)) {
+            throw new InvalidTokenHttpException();
         }
 
         try {
-            $data = $this->encryption->decrypt($token);
+            $credentials = $this->encryption->decrypt($tokenValue);
         } catch (\Throwable $e) {
-            return new JsonResponse([
-                'message' => 'Invalid encryption',
-            ], Response::HTTP_UNAUTHORIZED);
+            throw new InvalidTokenHttpException();
         }
 
-        try {
-            $token = $this->client->login($data['username'], $data['password']);
-        } catch (\Throwable $e) {
-            return new JsonResponse([
-                'message' => 'Invalid token',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-        if (isset($credentials['userId'])) {
-            $token->setUserId($credentials['userId']);
-        }
-
-        $shops = $this->client->shops($token);
-        $foundShop = null;
-
-        foreach ($shops as $shop) {
-            if ($shop->domain === $data['domain']) {
-                $foundShop = $shop;
-                break;
+        $token = $this->cache->get($tokenValue, function (ItemInterface $item) use ($tokenValue, $credentials) {
+            if (empty($credentials)) {
+                throw new InvalidTokenHttpException();
             }
-        }
 
-        if (!$foundShop) {
-            throw new \RuntimeException('Cannot find shop');
-        }
+            $token = $this->client->login($credentials['username'], $credentials['password']);
+            $item->expiresAt($token->getExpire());
 
-        $token->setShop($foundShop);
+            if (isset($credentials['userId'])) {
+                $token->setUserId($credentials['userId']);
+            }
+
+            foreach ($this->client->memberShips($token) as $memberShip) {
+                if ($memberShip->company->id === $token->getUserId()) {
+                    $token->setMemberShip($memberShip);
+                }
+            }
+
+            $shops = $this->client->shops($token);
+            $foundShop = null;
+
+            foreach ($shops as $shop) {
+                if ($shop->domain === $credentials['domain']) {
+                    $foundShop = $shop;
+                    break;
+                }
+            }
+
+            if (!$foundShop) {
+                throw new InvalidShopGivenHttpException($credentials['domain']);
+            }
+
+            $token->setShop($foundShop);
+
+            return $token;
+        });
+
         $this->client->useToken($token);
 
-        $downloadLink = $this->client->fetchDownloadLink($data['filePath']);
+        $downloadLink = $this->client->fetchDownloadLink($credentials['filePath']);
 
-        if (isset($data['needsRepack'])) {
+        if ($downloadLink === null) {
+            throw new AccessDeniedToDownloadPluginHttpException();
+        }
+
+        if (isset($credentials['needsRepack'])) {
             return $this->repackZip($downloadLink);
         }
 

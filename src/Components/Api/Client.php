@@ -105,42 +105,50 @@ class Client
         // client shops
         $clientShops = [];
 
-        try {
-            $content = $this->client->request('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
+        if ($token->getMemberShip()->can(CompanyMemberShip::PARTNER_SHOPS_PERMISSION)) {
+            try {
+                $content = $this->client->request('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
 
-            $clientShops = Shop::mapList(json_decode($content));
-        } catch (ClientException $e) {
-            // no partner account
+                $clientShops = Shop::mapList(json_decode($content));
+            } catch (ClientException $e) {
+                // We need more requests to determine that the user is an partner. Let the api check it for us.
+            }
         }
 
         // wildcard shops
         $wildcardShops = [];
 
-        try {
-            $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
-            $content = json_decode($content);
-            $content = array_shift($content);
-            $instances = $content->instances ?? [];
+        if ($token->getMemberShip()->can(CompanyMemberShip::WILDCARD_SHOP_PERMISSION)) {
+            try {
+                $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
+                $content = json_decode($content);
+                $content = array_shift($content);
+                $instances = $content->instances ?? [];
 
-            $wildcardShops = Shop::mapList($instances);
-            foreach ($wildcardShops as $shop) {
-                $shop->companyId = $content->company->id;
-                $shop->companyName = $content->company->name;
-                $shop->type = $content->type->name;
-                $shop->staging = false;
-                $shop->domain_idn = idn_to_ascii($shop->domain);
+                $wildcardShops = Shop::mapList($instances);
+                foreach ($wildcardShops as $shop) {
+                    $shop->companyId = $content->company->id;
+                    $shop->companyName = $content->company->name;
+                    $shop->type = $content->type->name;
+                    $shop->staging = false;
+                    $shop->domain_idn = idn_to_ascii($shop->domain);
+                }
+            } catch (ClientException $e) {
+                // We need more requests to determine that the user is an partner. Let the api check it for us.
             }
-        } catch (ClientException $e) {
-            // no wildcard shops
         }
 
-        $shopsContent = $this->client->request('GET', self::ENDPOINT . 'shops', [
-            'query' => [
-                'userId' => $token->getUserId(),
-            ],
-        ])->getContent();
+        $shops = [];
 
-        $shops = Shop::mapList(json_decode($shopsContent));
+        if ($token->getMemberShip()->can(CompanyMemberShip::COMPANY_SHOPS_PERMISSION)) {
+            $shopsContent = $this->client->request('GET', self::ENDPOINT . 'shops', [
+                'query' => [
+                    'userId' => $token->getUserId(),
+                ],
+            ])->getContent();
+
+            $shops = Shop::mapList(json_decode($shopsContent));
+        }
 
         return array_merge($shops, $clientShops, $wildcardShops);
     }

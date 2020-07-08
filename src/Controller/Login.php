@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Components\Api\AccessToken;
 use App\Components\Api\Exceptions\AccessDeniedException;
+use App\Struct\CompanyMemberShip\CompanyMemberShip;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,11 +75,18 @@ class Login extends AbstractController
         /** @var AccessToken $token */
         $token = $this->getUser();
         $memberShips = $this->client->memberShips($token);
+        $insufficientPermission = false;
 
         if ($selectedCompany = $request->request->get('membership')) {
             foreach ($memberShips as $memberShip) {
                 if ($memberShip->id === (int) $selectedCompany) {
+                    if (!$memberShip->canOneOf(...CompanyMemberShip::PERMISSION_TO_ACCESS_SHOPS)) {
+                        $insufficientPermission = true;
+                        break;
+                    }
+
                     $token->setUserId($memberShip->company->id);
+                    $token->setMemberShip($memberShip);
 
                     return $this->redirectToRoute('shop-selection');
                 }
@@ -87,6 +95,7 @@ class Login extends AbstractController
 
         return $this->render('login/company-selection.html.twig', [
             'memberships' => $memberShips,
+            'insufficientPermission' => $insufficientPermission,
         ]);
     }
 
