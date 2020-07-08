@@ -176,7 +176,7 @@ class InternalPackageImportCommand extends Command
         }
 
         $package->setReleaseDate(new \DateTime($plugin->creationDate));
-        $package->setStoreLink('https://store.shopware.com/search?sSearch=' . $plugin->code);
+        $package->setStoreLink('https://store.shopware.com/en/search?sSearch=' . $plugin->code);
 
         foreach ($plugin->infos as $info) {
             if ('en_GB' === $info->locale->name) {
