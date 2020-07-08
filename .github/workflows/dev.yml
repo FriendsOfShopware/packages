@@ -1,7 +1,6 @@
 name: Deploy Dev
 on:
     push:
-        branches: dev
 
 jobs:
     build:
