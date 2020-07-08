@@ -8,13 +8,13 @@
     <section class="clean-block pb-5">
         <div class="container">
             <div class="block-heading">
-                <h2 class="text-info">Log In</h2>
-                <p>Please login with your Shopware Account credentials to generate a Shopware-API token for further authentication</p>
+                <h2 class="text-info">Shop selection</h2>
+                <p>Please select the shop.</p>
             </div>
             <form method="post">
                 <div class="mb-3">
                     <label for="shop">Shop</label>
-                    <select name="shop" class="form-control">
+                    <select name="shop" id="shop" class="form-control">
                         {% for shop in shops %}
                             <option value="{{ shop.domain }}">{{ shop.domain }}</option>
                         {% endfor %}

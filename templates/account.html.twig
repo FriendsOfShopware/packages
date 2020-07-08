@@ -2,11 +2,21 @@
 
 {% block body %}
     <div class="container mt-3">
-        <h1>My packages</h1>
+        <h1>
+            My packages
+            <button type="button" class="btn bg-warning mb-2" data-toggle="modal" data-target="#setup">
+                Setup Repository in Project
+            </button>
+        </h1>
 
-        <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#setup">
-            Setup Repository in Project
-        </button>
+        <div class="card mb-2">
+            <div class="card-body">
+                <p class="card-text">
+                    <b>Company:</b> {{ company }} (<a href="{{ url('company-selection') }}">change</a>)<br>
+                    <b>Domain:</b> {{ shop.domain }}
+                </p>
+            </div>
+        </div>
 
         {% for package in packages %}
             <div class="card mb-2">
