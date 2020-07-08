@@ -10,7 +10,8 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" aria-label="Composer Command" id="composerCmd" readonly value="composer require {{ package.composerName }}">
+                    <input type="text" class="form-control" aria-label="Composer Command" id="composerCmd" readonly
+                           value="composer require {{ package.composerName }}">
                     <div class="input-group-append">
                         <button class="btn btn-copy btn-primary" data-clipboard-target="#composerCmd">Copy</button>
                     </div>
@@ -20,17 +21,18 @@
                     <div class="card-body">
                         <h5 class="cart-title">Requirements:</h5>
                         <p>
-                            <ul>
-                                {% for key, val in version.requireSection %}
-                                    {% set url = "https://packagist.org/packages/" ~ key %}
+                        <ul>
+                            {% for key, val in version.requireSection %}
+                                {% set url = "https://packagist.org/packages/" ~ key %}
 
-                                    {% if 'store.shopware.com' in key %}
-                                        {% set url = url('package', {name: key ~ '/'}) %}
-                                    {% endif %}
+                                {% if 'store.shopware.com' in key %}
+                                    {% set url = url('package', {name: key ~ '/'}) %}
+                                {% endif %}
 
-                                    <li><a href="{{ url }}" rel="noopener noreferrer" target="_blank">{{ key }}</a>: {{ val }}</li>
-                                {% endfor %}
-                            </ul>
+                                <li><a href="{{ url }}" rel="noopener noreferrer"
+                                       target="_blank">{{ key }}</a>: {{ val }}</li>
+                            {% endfor %}
+                        </ul>
                         </p>
                     </div>
                 </div>
@@ -50,24 +52,28 @@
                         <h5 class="card-title">Version: {{ version.version }}</h5>
                         <p class="card-text">
                             Maintainers: {{ package.producer.name }}<br>
-                            Version: {{ version.version }}<br>
-                            License: {{ version.license }}<br>
+                            Released: {{ version.releaseDate|date("F j, Y") }}<br>
                             Type: {{ version.type }}<br>
                         </p>
                         {% if version.homepage %}
-                            <a href="{{ version.homepage }}" class="btn btn-primary" rel="noopener noreferrer" target="_blank">Homepage</a>
+                            <a href="{{ version.homepage }}" class="btn btn-primary" rel="noopener noreferrer"
+                               target="_blank">Homepage</a>
                         {% endif %}
                         {% if package.storeLink %}
-                            <a href="{{ package.storeLink }}" class="btn btn-primary" rel="noopener noreferrer" target="_blank">Store page</a>
+                            <a href="{{ package.storeLink }}" class="btn btn-primary" rel="noopener noreferrer"
+                               target="_blank">Store page</a>
                         {% endif %}
 
                         <div class="dropdown mt-3">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Feed
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="{{ url('feed_package', {format: 'rss', packageName: package.composerName}) }}">RSS</a>
-                                <a class="dropdown-item" href="{{ url('feed_package', {format: 'atom', packageName: package.composerName}) }}">Atom</a>
+                                <a class="dropdown-item"
+                                   href="{{ url('feed_package', {format: 'rss', packageName: package.composerName}) }}">RSS</a>
+                                <a class="dropdown-item"
+                                   href="{{ url('feed_package', {format: 'atom', packageName: package.composerName}) }}">Atom</a>
                             </div>
                         </div>
                     </div>
@@ -79,7 +85,7 @@
                         <ul class="list-unstyled">
                             {% for versionLoop in package.versions %}
                                 <li>
-                                    <a href="?version={{ versionLoop.version }}">{{ versionLoop.version }}</a>
+                                    <a href="?version={{ versionLoop.version }}">{{ versionLoop.version }}</a> {{ versionLoop.releaseDate|date("F j, Y") }}
                                 </li>
                             {% endfor %}
                         </ul>
