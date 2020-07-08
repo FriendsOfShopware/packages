@@ -53,7 +53,9 @@ class Download
             throw new InvalidTokenHttpException();
         }
 
-        $token = $this->cache->get($tokenValue, function (ItemInterface $item) use ($tokenValue, $credentials) {
+        $cacheKey = md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
+
+        $token = $this->cache->get(md5($cacheKey), function (ItemInterface $item) use ($credentials) {
             if (empty($credentials)) {
                 throw new InvalidTokenHttpException();
             }

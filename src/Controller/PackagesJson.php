@@ -51,7 +51,15 @@ class PackagesJson
 
         $tokenValue = $request->headers->get('Token');
 
-        $token = $this->cache->get($tokenValue, function (ItemInterface $item) use ($tokenValue) {
+        try {
+            $credentials = $this->encryption->decrypt($tokenValue);
+        } catch (\Throwable $e) {
+            throw new InvalidTokenHttpException();
+        }
+
+        $cacheKey = md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
+
+        $token = $this->cache->get(md5($cacheKey), function (ItemInterface $item) use ($tokenValue) {
             $credentials = $this->encryption->decrypt($tokenValue);
 
             if (empty($credentials)) {
