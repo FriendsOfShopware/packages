@@ -11,4 +11,14 @@ class Permission extends Struct
     public string $context;
 
     public string $name;
+
+    public static function create(string $permission): self
+    {
+        $me = new self();
+        $me->name = $permission;
+        $me->context = $permission;
+        $me->id = 1;
+
+        return $me;
+    }
 }

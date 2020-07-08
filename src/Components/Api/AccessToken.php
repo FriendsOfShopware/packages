@@ -3,7 +3,10 @@
 namespace App\Components\Api;
 
 use App\Components\Encryption;
+use App\Struct\CompanyMemberShip\Company;
 use App\Struct\CompanyMemberShip\CompanyMemberShip;
+use App\Struct\CompanyMemberShip\Permission;
+use App\Struct\CompanyMemberShip\Role;
 use App\Struct\Shop\Shop;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -79,6 +82,15 @@ class AccessToken implements \JsonSerializable, UserInterface
         $me->username = $response['username'];
         $me->password = $response['password'];
         $me->expire = new \DateTime($response['expire']['date']);
+
+        // Remove this when shopwareId is completely removed from the system
+        $memberShip = new CompanyMemberShip();
+        $memberShip->company = new Company();
+        $memberShip->company->name = $response['username'];
+        $role = new Role();
+        $role->permissions = [Permission::create(CompanyMemberShip::COMPANY_SHOPS_PERMISSION), Permission::create(CompanyMemberShip::PARTNER_SHOPS_PERMISSION), Permission::create(CompanyMemberShip::WILDCARD_SHOP_PERMISSION)];
+        $memberShip->roles = [$role];
+        $me->memberShip = $memberShip;
 
         return $me;
     }
