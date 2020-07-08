@@ -4,6 +4,8 @@ require('bootstrap/js/src/collapse');
 require('bootstrap/js/src/dropdown');
 require('bootstrap/js/src/modal');
 require('./search');
+require('../css/loading.css');
+require('./loading');
 
 import ClipboardJS from 'clipboard';
 
