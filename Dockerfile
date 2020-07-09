@@ -36,6 +36,9 @@ RUN npm run build
 
 FROM shyim/shopware-platform-nginx-production:php74
 
+ARG GIT_TAG=unspecified
+ENV VERSION=$GIT_TAG
+
 ENV APP_ENV=prod REDIS_URL=redis://redis:6379
 
 COPY --chown=1000:1000 . /var/www/html

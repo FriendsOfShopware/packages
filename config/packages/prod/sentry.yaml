@@ -2,8 +2,11 @@ sentry:
     dsn: '%env(SENTRY_DSN)%'
     options:
         environment: '%kernel.environment%'
+        release: '%env(VERSION)%'
         excluded_exceptions:
             - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+            - Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException
+            - Symfony\Component\Security\Core\Exception\AccessDeniedException
             - App\Exception\InvalidTokenHttpException
             - App\Exception\AccessDeniedToDownloadPluginHttpException
             - App\Exception\InvalidShopGivenHttpException
