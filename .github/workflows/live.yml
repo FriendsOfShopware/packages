@@ -9,10 +9,14 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
+            -   name: Get the version
+                id: get_version
+                run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
             - name: Build image and push
               run: |
                   echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "shyim" --password-stdin
-                  docker build -t friendsofshopware/packages .
+                  docker build -t friendsofshopware/packages --build-arg GIT_TAG=${{ steps.get_version.outputs.VERSION }} .
                   docker push friendsofshopware/packages
 
             - uses: azure/setup-kubectl@v1

@@ -1,6 +1,7 @@
 name: Deploy Dev
 on:
     push:
+        branch: live
 
 jobs:
     build:
@@ -11,7 +12,7 @@ jobs:
             - name: Build image and push
               run: |
                   echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "shyim" --password-stdin
-                  docker build -t friendsofshopware/packages:stage .
+                  docker build -t friendsofshopware/packages:stage  --build-arg GIT_TAG=$GITHUB_SHA .
                   docker push friendsofshopware/packages:stage
 
             - uses: azure/setup-kubectl@v1
