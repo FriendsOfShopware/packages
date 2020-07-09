@@ -187,16 +187,20 @@ class Client
                 return $licenses;
             }
 
-            $content = json_decode($this->client->request('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
-                'query' => [
-                    'variantTypes' => 'buy,free,rent,support,test',
-                    'limit' => 1000,
-                ],
-            ])->getContent());
+            try {
+                $content = json_decode($this->client->request('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
+                    'query' => [
+                        'variantTypes' => 'buy,free,rent,support,test',
+                        'limit' => 1000,
+                    ],
+                ])->getContent());
+            } catch (ClientException $e) {
+                $content = [];
+            }
 
             try {
                 $enterprisePlugins = json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
-            } catch (\Exception $e) {
+            } catch (ClientException $e) {
                 $enterprisePlugins = [];
             }
 

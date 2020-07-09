@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Components\Api\AccessToken;
 use App\Components\Api\Exceptions\AccessDeniedException;
-use App\Struct\CompanyMemberShip\CompanyMemberShip;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
