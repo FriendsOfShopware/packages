@@ -32,10 +32,8 @@ class UserProvider implements UserProviderInterface
      * Whether this provider supports the given user class.
      *
      * @param string $class
-     *
-     * @return bool
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return AccessToken::class === $class;
     }

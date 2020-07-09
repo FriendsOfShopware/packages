@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationException;
 
 class ErrorSubscriber implements EventSubscriberInterface
 {
@@ -26,7 +27,7 @@ class ErrorSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($event->getThrowable() instanceof AccessDeniedException || $event->getThrowable() instanceof AccessDeniedHttpException) {
+        if ($event->getThrowable() instanceof AccessDeniedException || $event->getThrowable() instanceof AccessDeniedHttpException || $event->getThrowable() instanceof InsufficientAuthenticationException) {
             $event->setResponse(new RedirectResponse('/account'));
         }
 
