@@ -5,6 +5,7 @@ namespace App\Struct;
 abstract class Struct implements \JsonSerializable
 {
     public static $mappedFields = [];
+    public static $arrayFields = [];
 
     /**
      * @return static
@@ -19,7 +20,7 @@ abstract class Struct implements \JsonSerializable
                 continue;
             }
             if (isset(static::$mappedFields[$key])) {
-                if (is_array($value) && is_object($value[0])) {
+                if ((is_array($value) && is_object($value[0]))) {
                     $data = [];
                     foreach ($value as $item) {
                         $data[] = static::$mappedFields[$key]::map($item);
@@ -31,7 +32,11 @@ abstract class Struct implements \JsonSerializable
                         continue;
                     }
 
-                    $newObject->$key = static::$mappedFields[$key]::map($value);
+                    if (in_array($key, static::$arrayFields, true)) {
+                        $newObject->$key = [static::$mappedFields[$key]::map($value)];
+                    } else {
+                        $newObject->$key = static::$mappedFields[$key]::map($value);
+                    }
                 }
                 continue;
             }

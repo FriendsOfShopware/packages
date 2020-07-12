@@ -2,72 +2,22 @@
 
 namespace App\Struct\License;
 
-/**
- * @property int          $id
- * @property BookingShop  $bookingShop
- * @property BookingShop  $licenseShop
- * @property VariantType  $variantType
- * @property string       $orderNumber
- * @property int          $price
- * @property string       $creationDate
- * @property bool         $payed
- * @property bool         $archived
- * @property int          $shopwareMajorVersion
- * @property Subscription $subscription
- * @property null         $expirationDate
- * @property Plugin       $plugin
- * @property null         $charging
- * @property bool         $disbursed
- * @property int          $quantity
- * @property string       $description
- * @property string       $licenseKey
- * @property bool         $licenseMigrated
- */
+use App\Struct\Struct;
+
 class License extends Struct
 {
-    public $id = null;
+    public int $id;
 
-    public $bookingShop = null;
+    public string $name;
 
-    public $licenseShop = null;
+    public string $code;
 
-    public $variantType = null;
+    /** @var Binaries[] */
+    public array $versions;
 
-    public $orderNumber = null;
-
-    public $price = null;
-
-    public $creationDate = null;
-
-    public $payed = null;
-
-    public $archived = null;
-
-    public $shopwareMajorVersion = null;
-
-    public $subscription = null;
-
-    public $expirationDate = null;
-
-    public $plugin = null;
-
-    public $charging = null;
-
-    public $disbursed = null;
-
-    public $quantity = null;
-
-    public $description = null;
-
-    public $licenseKey = null;
-
-    public $licenseMigrated = null;
-
-    protected static $mappedFields = [
-        'bookingShop' => 'App\\Struct\\License\\BookingShop',
-        'licenseShop' => 'App\\Struct\\License\\BookingShop',
-        'variantType' => 'App\\Struct\\License\\VariantType',
-        'subscription' => 'App\\Struct\\License\\Subscription',
-        'plugin' => 'App\\Struct\\License\\Plugin',
+    public static $mappedFields = [
+        'versions' => Binaries::class,
     ];
+
+    public static $arrayFields = ['versions'];
 }

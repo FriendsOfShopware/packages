@@ -51,26 +51,13 @@ class PackagistLoader
         $response = [];
 
         $pluginNames = array_map(function ($license) {
-            return $license->plugin->name;
+            return $license->name;
         }, $licenses);
 
         $databasePlugins = $this->packageRepository->findPackagesForLicenses($pluginNames);
 
         foreach ($licenses as $license) {
-            // Don't list archived plugins
-            if ($license->archived || !isset($license->plugin)) {
-                continue;
-            }
-
-            // Don't list expired test plugins
-            if (
-                'test' === $license->variantType->name &&
-                !empty($license->expirationDate) &&
-                time() >= strtotime($license->expirationDate)) {
-                continue;
-            }
-
-            $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
+            $packageName = 'store.shopware.com/' . strtolower($license->name);
 
             $package = $databasePlugins[$packageName];
 
@@ -78,8 +65,8 @@ class PackagistLoader
                 continue;
             }
 
-            if (!is_array($license->plugin->binaries)) {
-                $license->plugin->binaries = [$license->plugin->binaries];
+            if (!is_array($license->versions)) {
+                $license->versions = [$license->versions];
             }
 
             $response[$packageName] = $this->convertBinaries($packageName, $license, $package, $shop);
@@ -96,7 +83,7 @@ class PackagistLoader
     {
         $versions = [];
 
-        foreach ($license->plugin->binaries as $binary) {
+        foreach ($license->versions as $binary) {
             if (empty($binary->version)) {
                 continue;
             }
@@ -113,18 +100,6 @@ class PackagistLoader
 
             if (null === $databaseItem) {
                 // We don't have this version. Should be fixed with next update
-                continue;
-            }
-
-            $subscriptionLeft = isset($license->subscription) && strtotime($binary->creationDate) >= strtotime($license->subscription->expirationDate);
-
-            // If shop has a active subscription all premium / advanced features are unlocked
-            if (($license->plugin->isPremiumPlugin || $license->plugin->isAdvancedFeature) && $shop->hasActiveSubscription()) {
-                $subscriptionLeft = false;
-            }
-
-            if ($subscriptionLeft) {
-                // Subscription left
                 continue;
             }
 
