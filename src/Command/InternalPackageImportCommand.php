@@ -127,7 +127,6 @@ class InternalPackageImportCommand extends Command
     {
         return json_decode($this->client->request('GET', getenv('SBP_PLUGIN_LIST'), [
             'query' => [
-                'filter' => '[{"property":"lifecycleStatus","value":"readyforstore","operator":"="},{"property":"certificationNotSet","value":false,"operator":"="},{"property":"hasNoPluginSuccessor","value":false,"operator":"="}]',
                 'limit' => 100,
                 'offset' => $offset,
                 'orderby' => 'id',
@@ -156,6 +155,11 @@ class InternalPackageImportCommand extends Command
         ]);
 
         if (!$package) {
+            // New packages needs to be activated first
+            if ($plugin->activationStatus->name !== 'activationStatus') {
+                return;
+            }
+
             $package = new Package();
             $package->setName($plugin->name);
 
@@ -220,6 +224,7 @@ class InternalPackageImportCommand extends Command
 
             if ($foundVersion) {
                 $foundVersion->setReleaseDate(new \DateTime($binary->creationDate));
+                $foundVersion->setBinaryId($binary->id);
 
                 foreach ($binary->changelogs as $changelog) {
                     if ('en_GB' === $changelog->locale->name) {
@@ -239,6 +244,7 @@ class InternalPackageImportCommand extends Command
             }
 
             $version = new Version();
+            $version->setBinaryId($binary->id);
             $version->setVersion($binary->version);
             $version->setType('shopware-plugin');
             $version->setExtra([

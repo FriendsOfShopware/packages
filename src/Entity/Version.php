@@ -27,6 +27,11 @@ class Version
     private $id;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private int $binaryId;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $version;
@@ -267,6 +272,16 @@ class Version
     public function setComposerJson(?array $composerJson): void
     {
         $this->composerJson = $composerJson;
+    }
+
+    public function getBinaryId(): int
+    {
+        return $this->binaryId;
+    }
+
+    public function setBinaryId(int $binaryId): void
+    {
+        $this->binaryId = $binaryId;
     }
 
     public function toJson(): array
