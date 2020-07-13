@@ -4,6 +4,7 @@ namespace App\Components\Api;
 
 use App\Components\Api\Exceptions\AccessDeniedException;
 use App\Components\Api\Exceptions\TokenMissingException;
+use App\Entity\Version;
 use App\Struct\CompanyMemberShip\CompanyMemberShip;
 use App\Struct\License\Binaries;
 use App\Struct\License\License;
@@ -177,10 +178,6 @@ class Client
                     $license->variantType = new VariantType();
                     $license->variantType->name = 'buy'; // this is not really true but it's okay for our purposes
 
-                    // for wildcard licenses there is only one available binary
-                    // it is always the newest binary for the configured shopware version
-                    $license->plugin->binaries = $this->getAvailableWildcardBinary($license);
-
                     $licenses[] = $license;
                 }
 
@@ -204,19 +201,17 @@ class Client
                 $enterprisePlugins = [];
             }
 
-            foreach ($content as &$plugin) {
-                $plugin = json_decode($this->client->request('GET', self::ENDPOINT . $this->getPluginInfoPath($token, $plugin->id))->getContent());
-            }
-            unset($plugin);
-
             foreach ($enterprisePlugins as $enterprisePlugin) {
-                $enterpriseExtension = json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses/' . $enterprisePlugin->id)->getContent());
-                $enterpriseExtension->licenseModule->archived = false;
-                $enterpriseExtension->licenseModule->variantType = new \stdClass();
-                $enterpriseExtension->licenseModule->variantType->name = 'buy';
-                $enterpriseExtension->licenseModule->plugin->isPremiumPlugin = false;
-                $enterpriseExtension->licenseModule->plugin->isAdvancedFeature = true;
-                $content[] = $enterpriseExtension->licenseModule;
+                if (!isset($enterprisePlugin->licenseModule->plugin)) {
+                    continue;
+                }
+
+                $enterprisePlugin->licenseModule->archived = false;
+                $enterprisePlugin->licenseModule->variantType = new \stdClass();
+                $enterprisePlugin->licenseModule->variantType->name = 'buy';
+                $enterprisePlugin->licenseModule->plugin->isPremiumPlugin = false;
+                $enterprisePlugin->licenseModule->plugin->isAdvancedFeature = true;
+                $content[] = $enterprisePlugin->licenseModule;
             }
 
             return $content;
@@ -282,13 +277,13 @@ class Client
      *
      * @return string
      */
-    public function getBinaryFilePath($license, $binary = null)
+    public function getBinaryFilePath($license, Version $binary = null)
     {
         $shop = $this->currentToken->getShop();
         if ($shop->type === Shop::TYPE_PARTNER) {
             $filePath = "wildcardlicenses/{$shop->baseId}/instances/{$shop->id}/downloads/{$license->plugin->code}/{$shop->shopwareVersion->name}";
         } else {
-            $filePath = 'plugins/' . $license->plugin->id . '/binaries/' . $binary->id . '/file';
+            $filePath = 'plugins/' . $license->plugin->id . '/binaries/' . $binary->getBinaryId() . '/file';
         }
 
         return $filePath;
@@ -301,24 +296,5 @@ class Client
         }
 
         return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
-    }
-
-    private function getPluginInfoPath(AccessToken $token, int $licenseId): string
-    {
-        if ($token->getShop()->ownerId === $token->getUserId()) {
-            return 'shops/' . $token->getShop()->id . '/pluginlicenses/' . $licenseId;
-        }
-
-        return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses/' . $licenseId;
-    }
-
-    private function getAvailableWildcardBinary(License $license): array
-    {
-        $version = $this->fetchDownloadVersion($this->getBinaryFilePath($license));
-
-        $binary = new Binaries();
-        $binary->version = $version;
-
-        return [$binary];
     }
 }

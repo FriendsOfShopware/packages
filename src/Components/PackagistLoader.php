@@ -5,7 +5,6 @@ namespace App\Components;
 use App\Components\Api\AccessToken;
 use App\Components\Api\Client;
 use App\Entity\Package;
-use App\Entity\Version;
 use App\Repository\PackageRepository;
 use App\Struct\License\License;
 use App\Struct\Shop\Shop;
@@ -44,9 +43,8 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
-     * @param Shop      $shop
      */
-    private function mapLicensesToComposerPackages(array $licenses, object $shop): array
+    private function mapLicensesToComposerPackages(array $licenses, Shop $shop): array
     {
         $response = [];
 
@@ -78,10 +76,6 @@ class PackagistLoader
                 continue;
             }
 
-            if (!is_array($license->plugin->binaries)) {
-                $license->plugin->binaries = [$license->plugin->binaries];
-            }
-
             $response[$packageName] = $this->convertBinaries($packageName, $license, $package, $shop);
         }
 
@@ -90,33 +84,13 @@ class PackagistLoader
 
     /**
      * @param License $license
-     * @param Shop    $shop
      */
-    private function convertBinaries(string $packageName, $license, Package $package, object $shop): array
+    private function convertBinaries(string $packageName, $license, Package $package, Shop $shop): array
     {
         $versions = [];
 
-        foreach ($license->plugin->binaries as $binary) {
-            if (empty($binary->version)) {
-                continue;
-            }
-
-            $databaseItem = null;
-
-            /** @var Version $item */
-            foreach ($package->getVersions()->toArray() as $item) {
-                if ($item->getVersion() === $binary->version) {
-                    $databaseItem = $item;
-                    break;
-                }
-            }
-
-            if (null === $databaseItem) {
-                // We don't have this version. Should be fixed with next update
-                continue;
-            }
-
-            $subscriptionLeft = isset($license->subscription) && strtotime($binary->creationDate) >= strtotime($license->subscription->expirationDate);
+        foreach (array_reverse($package->getVersions()->toArray()) as $binary) {
+            $subscriptionLeft = isset($license->subscription) && strtotime($binary->getReleaseDate()->getTimestamp()) >= strtotime($license->subscription->expirationDate);
 
             // If shop has a active subscription all premium / advanced features are unlocked
             if (($license->plugin->isPremiumPlugin || $license->plugin->isAdvancedFeature) && $shop->hasActiveSubscription()) {
@@ -128,7 +102,7 @@ class PackagistLoader
                 continue;
             }
 
-            $version = $databaseItem->toJson();
+            $version = $binary->toJson();
             $isOldArchiveStructure = in_array($version['type'], ['shopware-core-plugin', 'shopware-backend-plugin', 'shopware-frontend-plugin']);
             $version['name'] = $packageName;
             $version['dist'] = [
@@ -140,7 +114,12 @@ class PackagistLoader
                 'type' => 'zip',
             ];
 
-            $versions[$binary->version] = $version;
+            $versions[$binary->getVersion()] = $version;
+
+            // Wildcard have only one version (latest)
+            if ($shop->type === Shop::TYPE_PARTNER) {
+                break;
+            }
         }
 
         return $versions;
