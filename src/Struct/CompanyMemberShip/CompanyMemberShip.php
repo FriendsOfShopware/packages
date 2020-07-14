@@ -32,17 +32,17 @@ class CompanyMemberShip extends Struct
     public function can(string ...$name): bool
     {
         $required = count($name);
-        $found = 0;
+        $found = [];
 
         foreach ($this->roles as $role) {
             foreach ($role->permissions as $permission) {
                 if (in_array($permission->name, $name, true)) {
-                    ++$found;
+                    $found[$permission->name] = true;
                 }
             }
         }
 
-        return $found === $required;
+        return count($found) === $required;
     }
 
     public function canOneOf(string ...$name): bool

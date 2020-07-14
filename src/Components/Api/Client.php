@@ -143,13 +143,17 @@ class Client
         $shops = [];
 
         if ($token->getMemberShip()->can(CompanyMemberShip::COMPANY_SHOPS_PERMISSION)) {
-            $shopsContent = $this->client->request('GET', self::ENDPOINT . 'shops', [
-                'query' => [
-                    'userId' => $token->getUserId(),
-                ],
-            ])->getContent();
+            try {
+                $shopsContent = $this->client->request('GET', self::ENDPOINT . 'shops', [
+                    'query' => [
+                        'userId' => $token->getUserId(),
+                    ],
+                ])->getContent();
 
-            $shops = Shop::mapList(json_decode($shopsContent));
+                $shops = Shop::mapList(json_decode($shopsContent));
+            } catch (ClientException $e) {
+                // Partner without own domains
+            }
         }
 
         return array_merge($shops, $clientShops, $wildcardShops);
