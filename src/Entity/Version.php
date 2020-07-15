@@ -24,7 +24,7 @@ class Version
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="integer")
@@ -34,78 +34,73 @@ class Version
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $version;
+    private string $version;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $type;
+    private string $type;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private ?string $description = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $homepage;
+    private ?string $homepage = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $license;
+    private ?string $license = null;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $authors = [];
+    private array $authors = [];
 
     /**
      * @ORM\Column(type="json")
      */
-    private $extra = [];
+    private array $extra = [];
 
     /**
      * @ORM\Column(type="json")
      */
-    private $requireSection = [];
+    private array $requireSection = [];
 
     /**
      * @ORM\Column(type="json")
      */
-    private $autoload = [];
+    private array $autoload = [];
 
     /**
      * @ORM\Column(name="autoload_dev", type="json")
      */
-    private $autoloadDev = [];
+    private array $autoloadDev = [];
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string|null
      */
-    private $changelog;
+    private ?string $changelog = null;
 
     /**
-     * @var \DateTimeInterface|null
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $releaseDate;
+    private ?\DateTimeInterface $releaseDate = null;
 
     /**
      * @ORM\Column(name="composer_json", type="json", nullable=true)
-     *
-     * @var array|null
      */
-    private $composerJson;
+    private ?array $composerJson = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Package", inversedBy="versions")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $package;
+    private Package $package;
 
     public function getId(): ?int
     {

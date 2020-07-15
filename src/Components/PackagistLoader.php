@@ -48,9 +48,7 @@ class PackagistLoader
     {
         $response = [];
 
-        $pluginNames = array_map(function ($license) {
-            return $license->plugin->name;
-        }, $licenses);
+        $pluginNames = array_map(fn ($license) => $license->plugin->name, $licenses);
 
         $databasePlugins = $this->packageRepository->findPackagesForLicenses($pluginNames);
 

@@ -4,26 +4,20 @@ namespace App\Struct\Shop;
 
 class ShopwareVersion extends \App\Struct\Struct
 {
-    /** @var int */
-    public $id;
+    public int $id;
 
-    /** @var string */
-    public $name;
+    public string $name;
 
-    /** @var int */
-    public $parent;
+    public int $parent;
 
-    /** @var bool */
-    public $selectable;
+    public bool $selectable;
 
-    /** @var string */
-    public $major;
+    public string $major;
 
     /** @var null */
     public $releaseDate;
 
-    /** @var bool */
-    public $public;
+    public bool $public;
 
     public static $mappedFields = [];
 }

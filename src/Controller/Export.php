@@ -20,7 +20,7 @@ class Export
 
         if (!$cache->has('export')) {
             $export = $repository->findJoinedAll();
-            $cache->set('export', $export, 3600);
+            $cache->set('export', $export, 3_600);
 
             return new JsonResponse($export);
         }

@@ -15,26 +15,16 @@ use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Client
 {
     public const ENDPOINT = 'https://api.shopware.com/';
 
-    /**
-     * @var HttpClientInterface
-     */
-    protected $client;
+    protected \Symfony\Contracts\HttpClient\HttpClientInterface $client;
 
-    /**
-     * @var AccessToken|null
-     */
-    protected $currentToken;
+    protected ?AccessToken $currentToken = null;
 
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
+    private CacheInterface $cache;
 
     public function __construct(CacheInterface $cache)
     {
@@ -169,7 +159,7 @@ class Client
         $cacheKey = md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
 
         return $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($token) {
-            $item->expiresAfter(3600);
+            $item->expiresAfter(3_600);
 
             if ($token->getShop()->type === Shop::TYPE_PARTNER) {
                 $content = json_decode($this->client->request('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
@@ -192,7 +182,7 @@ class Client
                 $content = json_decode($this->client->request('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
                     'query' => [
                         'variantTypes' => 'buy,free,rent,support,test',
-                        'limit' => 1000,
+                        'limit' => 1_000,
                     ],
                 ])->getContent());
             } catch (ClientException $e) {

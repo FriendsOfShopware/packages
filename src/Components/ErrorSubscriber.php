@@ -29,6 +29,7 @@ class ErrorSubscriber implements EventSubscriberInterface
 
         if ($event->getThrowable() instanceof AccessDeniedException || $event->getThrowable() instanceof AccessDeniedHttpException || $event->getThrowable() instanceof InsufficientAuthenticationException) {
             $event->setResponse(new RedirectResponse('/account'));
+
             return;
         }
 

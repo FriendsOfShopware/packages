@@ -7,6 +7,7 @@ use App\Components\Encryption;
 use App\Exception\AccessDeniedToDownloadPluginHttpException;
 use App\Exception\InvalidShopGivenHttpException;
 use App\Exception\InvalidTokenHttpException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,18 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Throwable;
+use ZipArchive;
 
 class Download
 {
-    /**
-     * @var Encryption
-     */
-    private $encryption;
+    private Encryption $encryption;
 
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
 
     private CacheInterface $cache;
 
@@ -49,7 +46,7 @@ class Download
 
         try {
             $credentials = $this->encryption->decrypt($tokenValue);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidTokenHttpException();
         }
 
@@ -125,10 +122,10 @@ class Download
 
         $extractLocation = sys_get_temp_dir() . '/' . uniqid('location', true);
         if (!mkdir($extractLocation) && !is_dir($extractLocation)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $extractLocation));
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $extractLocation));
         }
 
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         $zip->open($tmpFile);
 
         for ($i = 0; $i < $zip->numFiles; ++$i) {

@@ -4,20 +4,15 @@ namespace App\Struct\Shop;
 
 class LatestVerificationStatusChange extends \App\Struct\Struct
 {
-    /** @var int */
-    public $id;
+    public int $id;
 
-    /** @var int */
-    public $shopId;
+    public int $shopId;
 
-    /** @var string */
-    public $statusCreationDate;
+    public string $statusCreationDate;
 
-    /** @var PreviousStatusChange */
-    public $previousStatusChange;
+    public PreviousStatusChange $previousStatusChange;
 
-    /** @var ShopDomainVerificationStatus */
-    public $shopDomainVerificationStatus;
+    public ShopDomainVerificationStatus $shopDomainVerificationStatus;
 
     public static $mappedFields = [
         'previousStatusChange' => 'App\Struct\Shop\PreviousStatusChange',

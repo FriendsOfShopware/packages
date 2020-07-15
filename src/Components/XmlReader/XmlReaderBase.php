@@ -22,10 +22,8 @@ abstract class XmlReaderBase implements XmlReaderInterface
 
     /**
      * Map of language shortcuts to locale.
-     *
-     * @var array
      */
-    protected static $languageMapping = [
+    protected static array $languageMapping = [
         'de' => 'de_DE',
         'en' => 'en_GB',
     ];

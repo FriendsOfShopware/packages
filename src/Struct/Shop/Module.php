@@ -4,35 +4,25 @@ namespace App\Struct\Shop;
 
 class Module extends \App\Struct\Struct
 {
-    /** @var int */
-    public $id;
+    public int $id;
 
-    /** @var string */
-    public $name;
+    public string $name;
 
-    /** @var string */
-    public $description;
+    public string $description;
 
-    /** @var int */
-    public $price;
+    public int $price;
 
-    /** @var int */
-    public $priceMonthlyPayment;
+    public int $priceMonthlyPayment;
 
-    /** @var int */
-    public $price24;
+    public int $price24;
 
-    /** @var int */
-    public $price24MonthlyPayment;
+    public int $price24MonthlyPayment;
 
-    /** @var int */
-    public $upgradeOrder;
+    public int $upgradeOrder;
 
-    /** @var int */
-    public $durationInMonths;
+    public int $durationInMonths;
 
-    /** @var string */
-    public $bookingKey;
+    public string $bookingKey;
 
     public static $mappedFields = [];
 }

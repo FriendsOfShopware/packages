@@ -1,0 +1,9 @@
+parameters:
+    sets:
+#        - code-quality
+        - php74
+    paths:
+        - 'src'
+    autoload_paths:
+        - '/project/vendor/autoload.php'
+        - '/project/src/Migrations'

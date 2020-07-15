@@ -4,32 +4,23 @@ namespace App\Struct\Shop;
 
 class SubscriptionModules extends \App\Struct\Struct
 {
-    /** @var int */
-    public $id;
+    public int $id;
 
-    /** @var Module */
-    public $module;
+    public Module $module;
 
-    /** @var Status */
-    public $status;
+    public Status $status;
 
-    /** @var string */
-    public $expirationDate;
+    public string $expirationDate;
 
-    /** @var string */
-    public $creationDate;
+    public string $creationDate;
 
-    /** @var bool */
-    public $monthlyPayment;
+    public bool $monthlyPayment;
 
-    /** @var int */
-    public $durationInMonths;
+    public int $durationInMonths;
 
-    /** @var DurationOptions */
-    public $durationOptions;
+    public DurationOptions $durationOptions;
 
-    /** @var bool */
-    public $automaticExtension;
+    public bool $automaticExtension;
 
     public static $mappedFields = [
         'module' => 'App\Struct\Shop\Module',

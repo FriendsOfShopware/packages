@@ -19,15 +19,9 @@ class PackageIndexerCommand extends Command
 
     protected static $defaultName = 'search:package:index';
 
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(Client $client, EntityManagerInterface $entityManager)
     {
@@ -60,9 +54,7 @@ class PackageIndexerCommand extends Command
             $items = [];
 
             foreach ($packages as $package) {
-                $unifiedTypes = array_values(array_unique(array_map(static function (Version $version) {
-                    return $version->getType();
-                }, $package->getVersions()->toArray())));
+                $unifiedTypes = array_values(array_unique(array_map(static fn (Version $version) => $version->getType(), $package->getVersions()->toArray())));
 
                 $items[] = [
                     'id' => $package->getId(),

@@ -26,22 +26,22 @@ class Producer
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $prefix;
+    private string $prefix;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Package", mappedBy="producer", orphanRemoval=true)
      */
-    private $package;
+    private Collection $package;
 
     public function __construct()
     {
