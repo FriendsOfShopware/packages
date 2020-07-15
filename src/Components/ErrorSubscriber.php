@@ -29,13 +29,17 @@ class ErrorSubscriber implements EventSubscriberInterface
 
         if ($event->getThrowable() instanceof AccessDeniedException || $event->getThrowable() instanceof AccessDeniedHttpException || $event->getThrowable() instanceof InsufficientAuthenticationException) {
             $event->setResponse(new RedirectResponse('/account'));
+            return;
         }
 
         if ($event->getThrowable() instanceof HttpException) {
+            $userAgent = $event->getRequest()->headers->get('User-Agent', '');
+            $key = str_contains($userAgent, 'Composer') ? 'warning' : 'message';
+
             $event->setResponse(
                 new JsonResponse(
                     [
-                       'message' => $event->getThrowable()->getMessage(),
+                        $key => $event->getThrowable()->getMessage(),
                     ],
                     $event->getThrowable()->getStatusCode()
                 )
