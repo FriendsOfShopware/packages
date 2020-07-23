@@ -41,6 +41,7 @@ ENV VERSION=$GIT_TAG
 
 ENV APP_ENV=prod REDIS_URL=redis://redis:6379
 
+COPY k8s/stats-vhost.conf /etc/nginx/sites-enabled/
 COPY --chown=1000:1000 . /var/www/html
 COPY --from=vendor --chown=1000:1000 /app/vendor /var/www/html/vendor
 COPY --from=npm --chown=1000:1000 /app/public /var/www/html/public
