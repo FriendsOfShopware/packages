@@ -18,7 +18,7 @@ class AccessToken implements \JsonSerializable, UserInterface
 
     protected string $password;
 
-    protected ?Shop $shop;
+    protected ?Shop $shop = null;
 
     protected string $locale;
 
