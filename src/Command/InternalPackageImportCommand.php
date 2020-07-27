@@ -156,7 +156,7 @@ class InternalPackageImportCommand extends Command
 
         if (!$package) {
             // New packages needs to be activated first
-            if ($plugin->activationStatus->name !== 'activationStatus') {
+            if ($plugin->activationStatus->name !== 'activated') {
                 return;
             }
 
