@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Command\PackageIndexerCommand;
-use Elasticsearch\Client;
+use MeiliSearch\Client;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\NestedAggregation;
 use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
 use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
@@ -32,64 +32,37 @@ class Search extends AbstractController
      */
     public function ajaxSearch(Request $request, Client $client): Response
     {
-        $search = $this->buildQuery($request)->toArray();
+        $index = $client->getIndex(PackageIndexerCommand::INDEX_NAME);
 
-        $searchResult = $client->search([
-            'index' => PackageIndexerCommand::INDEX_NAME,
-            'body' => $search,
-        ]);
+        $term = mb_strtolower($request->query->get('term'));
+        $options = [
+            'facetsDistribution' => [
+                'types',
+                'producerName'
+            ]
+        ];
+
+        $selectedTypes = array_filter(explode('|', $request->query->get('types', '')));
+        $selectedProducers = array_filter(explode('|', $request->query->get('producers', '')));
+
+        if (!empty($selectedTypes)) {
+            foreach ($selectedTypes as $selectedType) {
+                $options['facetFilters'][] = 'types:' . $selectedType;
+            }
+        }
+
+        if (!empty($selectedProducers)) {
+            foreach ($selectedProducers as $selectedProducer) {
+                $options['facetFilters'][] = 'producerName:' . $selectedProducer;
+            }
+        }
+
+        $searchResult = $index->search($term, $options);
 
         return $this->render('ajax/search.html.twig', [
             'searchResult' => $searchResult,
-            'selectedTypes' => explode('|', $request->query->get('types', '')),
-            'selectedProducers' => explode('|', $request->query->get('producers', '')),
+            'selectedTypes' => $selectedTypes,
+            'selectedProducers' => $selectedProducers,
         ]);
-    }
-
-    private function buildQuery(Request $request): \ONGR\ElasticsearchDSL\Search
-    {
-        $search = new \ONGR\ElasticsearchDSL\Search();
-
-        $producerAggregation = new TermsAggregation('producers');
-        $producerAggregation->setField('producerName.raw');
-        $producerAggregation->addParameter('size', 20);
-        $search->addAggregation($producerAggregation);
-        $search->setSize(100);
-
-        $typeAggregation = new TermsAggregation('aggs');
-        $typeAggregation->setField('types.name');
-
-        $nestedAggregation = new NestedAggregation('types', 'types');
-        $nestedAggregation->addAggregation($typeAggregation);
-
-        $search->addAggregation($nestedAggregation);
-
-        if ($request->query->has('types')) {
-            $types = explode('|', $request->query->get('types'));
-
-            foreach ($types as $type) {
-                $search->addQuery(new NestedQuery('types', new TermQuery('types.name', $type)));
-            }
-        }
-
-        if ($request->query->has('producers')) {
-            $producers = explode('|', $request->query->get('producers'));
-
-            foreach ($producers as $producer) {
-                $search->addQuery(new TermQuery('producerName.raw', $producer));
-            }
-        }
-
-        if ($request->query->has('term')) {
-            $term = mb_strtolower($request->query->get('term'));
-            $boolQuery = new BoolQuery();
-            $boolQuery->addParameter('minimum_should_match', 1);
-            $boolQuery->add(new FuzzyQuery('name', $term), BoolQuery::SHOULD);
-            $boolQuery->add(new MatchPhraseQuery('name', $term), BoolQuery::SHOULD);
-            $boolQuery->add(new WildcardQuery('name', '*' . $term . '*'), BoolQuery::SHOULD);
-            $search->addQuery($boolQuery);
-        }
-
-        return $search;
     }
 }

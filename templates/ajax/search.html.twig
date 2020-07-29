@@ -1,13 +1,13 @@
 <div class="container search-page">
     <div class="row">
         <div class="col-md-8 order-1 order-md-0">
-            {% for hit in searchResult.hits.hits %}
+            {% for hit in searchResult.hits %}
                 <div class="card mb-2">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ url('package', {name: hit._source.name ~ '/' }) }}">{{ hit._source.name }}</a>
+                            <a href="{{ url('package', {name: hit.name ~ '/' }) }}">{{ hit.name }}</a>
                         </h5>
-                        <p class="card-text">{{ hit._source.shortDescription|striptags|slice(0, 100) }}</p>
+                        <p class="card-text">{{ hit.shortDescription|striptags|slice(0, 100) }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -16,14 +16,18 @@
             <div class="card mb-2">
                 <div class="card-body">
                     <h5 class="cart-title">Package type:</h5>
-                    <ul class="list-group">
-                        {% for entry in searchResult.aggregations.types.aggs.buckets %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center{% if entry.key in selectedTypes %} active{% endif %}" data-filter-name="types" data-filter-value="{{ entry.key }}">
-                            {{ entry.key }}
-                            <span class="badge bg-secondary">{{ entry.doc_count }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                    {% if searchResult.facetsDistribution is defined %}
+                        <ul class="list-group">
+                            {% for key, val in searchResult.facetsDistribution.types %}
+                                {% if val > 0 %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center{% if key in selectedTypes %} active{% endif %}" data-filter-name="types" data-filter-value="{{ key }}">
+                                        {{ key }}
+                                        <span class="badge bg-secondary">{{ val }}</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
 
@@ -31,12 +35,16 @@
                 <div class="card-body">
                     <h5 class="cart-title">Producer:</h5>
                     <ul class="list-group">
-                        {% for entry in searchResult.aggregations.producers.buckets %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center{% if entry.key in selectedProducers %} active{% endif %}" data-filter-name="producers" data-filter-value="{{ entry.key }}">
-                                {{ entry.key }}
-                                <span class="badge bg-secondary">{{ entry.doc_count }}</span>
-                            </li>
-                        {% endfor %}
+                        {% if searchResult.facetsDistribution is defined %}
+                            {% for key, val in searchResult.facetsDistribution.producerName %}
+                                {% if val > 0 %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center{% if key in selectedProducers %} active{% endif %}" data-filter-name="producers" data-filter-value="{{ key }}">
+                                    {{ key}}
+                                    <span class="badge bg-secondary">{{ val }}</span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </ul>
                 </div>
             </div>
