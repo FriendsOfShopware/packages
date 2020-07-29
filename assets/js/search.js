@@ -69,7 +69,7 @@ let bindToRefresh = () => {
     const dataFilterName = document.querySelectorAll('[data-filter-name]');
 
     for (let e of dataFilterName) {
-        addEventListener('click', doSearch)
+        e.addEventListener('click', doSearch)
     }
 };
 bindToRefresh();
