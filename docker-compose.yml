@@ -1,5 +1,11 @@
 version: '3.7'
 services:
+    cli:
+        image: shyim/shopware-cli:php74
+        env_file: .env.docker
+        tty: true
+        volumes:
+            - ./:/var/www/html/
     web:
         image: shyim/shopware-platform-nginx:php74
         env_file: .env.docker
@@ -17,9 +23,11 @@ services:
             MYSQL_PASSWORD: packages
             MYSQL_DATABASE: packages
         command: ["mysqld", "--default-authentication-plugin=mysql_native_password"]
-    elasticsearch:
-        image: elasticsearch:7.5.1
-        command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
+    search:
+        image: getmeili/meilisearch:latest
+        command: ['./meilisearch']
+        ports:
+            - 7700:7700
     adminer:
         image: adminer
         ports:

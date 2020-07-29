@@ -28,18 +28,9 @@ services:
 
     Symfony\Component\Cache\Psr16Cache:
 
-    client.builder:
-        class: Elasticsearch\ClientBuilder
-        factory: ['Elasticsearch\ClientBuilder', 'create']
-        calls:
-            - method: setHosts
-              arguments:
-                  -
-                      - '%env(ELASTICSEARCH_URL)%'
-
-    Elasticsearch\Client:
-        class: Elasticsearch\Client
-        factory: ['@client.builder', 'build']
+    MeiliSearch\Client:
+        autowire: false
+        arguments: ['%env(MELLISEARCH_URL)%' ]
 
     Redis:
         class: Redis
