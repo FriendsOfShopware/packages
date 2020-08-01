@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int    $id
  * @property string $name
@@ -26,7 +28,4 @@ class CompatibleSoftwareVersions extends Struct
     public $releaseDate = null;
 
     public $public = null;
-
-    protected static $mappedFields = [
-    ];
 }

@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int     $id
  * @property Company $company
@@ -15,7 +17,7 @@ class BookingShop extends Struct
 
     public $domain = null;
 
-    protected static $mappedFields = [
+    public static $mappedFields = [
         'company' => 'App\\Struct\\License\\Company',
     ];
 }

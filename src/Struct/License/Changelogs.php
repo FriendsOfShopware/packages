@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int         $id
  * @property VariantType $locale
@@ -15,7 +17,7 @@ class Changelogs extends Struct
 
     public $text = null;
 
-    protected static $mappedFields = [
+    public static $mappedFields = [
         'locale' => 'App\\Struct\\License\\VariantType',
     ];
 }

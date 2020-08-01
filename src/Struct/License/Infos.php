@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int         $id
  * @property VariantType $locale
@@ -14,8 +16,4 @@ class Infos extends Struct
     public $locale = null;
 
     public $name = null;
-
-    protected static $mappedFields = [
-        'locale' => 'App\\Struct\\License\\VariantType',
-    ];
 }

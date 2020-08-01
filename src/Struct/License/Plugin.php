@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int                 $id
  * @property string              $name
@@ -60,7 +62,9 @@ class Plugin extends Struct
 
     public $binaries = null;
 
-    protected static $mappedFields = [
+    public string $creationDate;
+
+    public static $mappedFields = [
         'infos' => 'App\\Struct\\License\\Infos',
         'storeAvailabilities' => 'App\\Struct\\License\\StoreAvailabilities',
         'activationStatus' => 'App\\Struct\\License\\StoreAvailabilities',

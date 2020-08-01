@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int    $id
  * @property string $localPath
@@ -20,7 +22,4 @@ class Archives extends Struct
     public $shopwareMajorVersion = null;
 
     public $ioncubeEncrypted = null;
-
-    protected static $mappedFields = [
-    ];
 }

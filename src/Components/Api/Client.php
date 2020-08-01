@@ -200,12 +200,17 @@ class Client
                     continue;
                 }
 
-                $enterprisePlugin->licenseModule->archived = false;
-                $enterprisePlugin->licenseModule->variantType = new \stdClass();
-                $enterprisePlugin->licenseModule->variantType->name = 'buy';
-                $enterprisePlugin->licenseModule->plugin->isPremiumPlugin = false;
-                $enterprisePlugin->licenseModule->plugin->isAdvancedFeature = true;
-                $content[] = $enterprisePlugin->licenseModule;
+                /**
+                 * @var \stdClass $licenseModule
+                 */
+                $licenseModule = $enterprisePlugin->licenseModule;
+
+                $licenseModule->archived = false;
+                $licenseModule->variantType = new \stdClass();
+                $licenseModule->variantType->name = 'buy';
+                $licenseModule->plugin->isPremiumPlugin = false;
+                $licenseModule->plugin->isAdvancedFeature = true;
+                $content[] = $licenseModule;
             }
 
             return $content;
@@ -267,7 +272,6 @@ class Client
 
     /**
      * @param License       $license
-     * @param Binaries|null $binary  Not neccassary for wildcard licenses
      *
      * @return string
      */

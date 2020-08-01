@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int    $id
  * @property string $name
@@ -18,6 +20,6 @@ class Producer extends Struct
 
     public $companyId = null;
 
-    protected static $mappedFields = [
+    public static $mappedFields = [
     ];
 }

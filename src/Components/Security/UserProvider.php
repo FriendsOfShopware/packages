@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface
 {
-    public function loadUserByUsername($username)
+    public function loadUserByUsername(string $username)
     {
         throw new \RuntimeException('Invalid call');
     }

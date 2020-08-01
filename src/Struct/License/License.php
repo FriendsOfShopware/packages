@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int          $id
  * @property BookingShop  $bookingShop
@@ -63,7 +65,7 @@ class License extends Struct
 
     public $licenseMigrated = null;
 
-    protected static $mappedFields = [
+    public static $mappedFields = [
         'bookingShop' => 'App\\Struct\\License\\BookingShop',
         'licenseShop' => 'App\\Struct\\License\\BookingShop',
         'variantType' => 'App\\Struct\\License\\VariantType',

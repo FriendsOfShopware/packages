@@ -1,5 +1,5 @@
 parameters:
-    level: 5
+    level: 6
     inferPrivatePropertyTypeFromConstructor: true
     reportUnmatchedIgnoredErrors: false
 
@@ -12,4 +12,7 @@ parameters:
         - %currentWorkingDirectory%/src/Migrations
 
     ignoreErrors:
-        - '#apcu_#'
+        # Struct constructor
+        - '#Unsafe usage of new static#'
+        # Typed Colletion Issue with Doctrine
+        - '#Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable#'

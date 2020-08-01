@@ -82,27 +82,4 @@ class Producer
     {
         return $this->package;
     }
-
-    public function addPackage(Package $package): self
-    {
-        if (!$this->package->contains($package)) {
-            $this->package[] = $package;
-            $package->setProducer($this);
-        }
-
-        return $this;
-    }
-
-    public function removePackage(Package $package): self
-    {
-        if ($this->package->contains($package)) {
-            $this->package->removeElement($package);
-            // set the owning side to null (unless already changed)
-            if ($package->getProducer() === $this) {
-                $package->setProducer(null);
-            }
-        }
-
-        return $this;
-    }
 }

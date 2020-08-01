@@ -68,11 +68,11 @@ class PackagistLoader
 
             $packageName = 'store.shopware.com/' . \strtolower($license->plugin->name);
 
-            $package = $databasePlugins[$packageName];
-
-            if (null === $package) {
+            if (!isset($databasePlugins[$packageName])) {
                 continue;
             }
+
+            $package = $databasePlugins[$packageName];
 
             $response[$packageName] = $this->convertBinaries($packageName, $license, $package, $shop);
         }

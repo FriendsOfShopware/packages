@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int    $id
  * @property string $name
@@ -14,7 +16,4 @@ class StoreAvailabilities extends Struct
     public $name = null;
 
     public $description = null;
-
-    protected static $mappedFields = [
-    ];
 }

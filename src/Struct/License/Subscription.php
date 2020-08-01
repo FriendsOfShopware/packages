@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int    $id
  * @property string $creationDate
@@ -14,7 +16,4 @@ class Subscription extends Struct
     public $creationDate = null;
 
     public $expirationDate = null;
-
-    protected static $mappedFields = [
-    ];
 }

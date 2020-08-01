@@ -2,6 +2,8 @@
 
 namespace App\Struct\License;
 
+use App\Struct\Struct;
+
 /**
  * @property int                          $id
  * @property string                       $name
@@ -45,7 +47,7 @@ class Binaries extends Struct
 
     public $licenseCheckRequired = null;
 
-    protected static $mappedFields = [
+    public static $mappedFields = [
         'status' => 'App\\Struct\\License\\Status',
         'compatibleSoftwareVersions' => 'App\\Struct\\License\\CompatibleSoftwareVersions',
         'changelogs' => 'App\\Struct\\License\\Changelogs',

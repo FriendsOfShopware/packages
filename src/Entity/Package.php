@@ -228,27 +228,4 @@ class Package
     {
         return $this->downloads;
     }
-
-    public function addDownload(Download $download): self
-    {
-        if (!$this->downloads->contains($download)) {
-            $this->downloads[] = $download;
-            $download->setPackage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDownload(Download $download): self
-    {
-        if ($this->downloads->contains($download)) {
-            $this->downloads->removeElement($download);
-            // set the owning side to null (unless already changed)
-            if ($download->getPackage() === $this) {
-                $download->setPackage(null);
-            }
-        }
-
-        return $this;
-    }
 }
