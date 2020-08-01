@@ -44,7 +44,7 @@ class Account extends AbstractController
         $licenses = $this->client->licenses($token);
 
         $data = $this->packagistLoader->load($licenses, $token->getShop());
-        $packageNames = array_map(static fn (string $name) => str_replace('store.shopware.com/', '', $name), array_keys($data['packages']));
+        $packageNames = \array_map(static fn (string $name) => \str_replace('store.shopware.com/', '', $name), \array_keys($data['packages']));
 
         /** @var PackageRepository $repository */
         $repository = $this->entityManager->getRepository(Package::class);

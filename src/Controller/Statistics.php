@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -77,9 +79,9 @@ SQL;
     private function formatForChartJs(array $data): array
     {
         return [
-            'keys' => json_encode(array_keys($data)),
-            'values' => json_encode(array_map('intval', array_values($data))),
-            'length' => count($data),
+            'keys' => \json_encode(\array_keys($data)),
+            'values' => \json_encode(\array_map('intval', \array_values($data))),
+            'length' => \count($data),
         ];
     }
 }

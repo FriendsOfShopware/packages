@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Struct\CompanyMemberShip;
 
@@ -31,25 +33,25 @@ class CompanyMemberShip extends Struct
 
     public function can(string ...$name): bool
     {
-        $required = count($name);
+        $required = \count($name);
         $found = [];
 
         foreach ($this->roles as $role) {
             foreach ($role->permissions as $permission) {
-                if (in_array($permission->name, $name, true)) {
+                if (\in_array($permission->name, $name, true)) {
                     $found[$permission->name] = true;
                 }
             }
         }
 
-        return count($found) === $required;
+        return \count($found) === $required;
     }
 
     public function canOneOf(string ...$name): bool
     {
         foreach ($this->roles as $role) {
             foreach ($role->permissions as $permission) {
-                if (in_array($permission->name, $name, true)) {
+                if (\in_array($permission->name, $name, true)) {
                     return true;
                 }
             }

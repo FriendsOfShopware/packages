@@ -50,9 +50,9 @@ class Download
             throw new InvalidTokenHttpException();
         }
 
-        $cacheKey = md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
+        $cacheKey = \md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
 
-        $token = $this->cache->get(md5($cacheKey), function (ItemInterface $item) use ($credentials) {
+        $token = $this->cache->get(\md5($cacheKey), function (ItemInterface $item) use ($credentials) {
             if (empty($credentials)) {
                 throw new InvalidTokenHttpException();
             }
@@ -117,12 +117,12 @@ class Download
 
         curl_close($downloadCurl);
 
-        $tmpFile = tempnam(sys_get_temp_dir(), 'plugin');
-        file_put_contents($tmpFile, $zipContent);
+        $tmpFile = \tempnam(\sys_get_temp_dir(), 'plugin');
+        \file_put_contents($tmpFile, $zipContent);
 
-        $extractLocation = sys_get_temp_dir() . '/' . uniqid('location', true);
-        if (!mkdir($extractLocation) && !is_dir($extractLocation)) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', $extractLocation));
+        $extractLocation = \sys_get_temp_dir() . '/' . \uniqid('location', true);
+        if (!\mkdir($extractLocation) && !\is_dir($extractLocation)) {
+            throw new RuntimeException(\sprintf('Directory "%s" was not created', $extractLocation));
         }
 
         $zip = new ZipArchive();
@@ -131,16 +131,16 @@ class Download
         for ($i = 0; $i < $zip->numFiles; ++$i) {
             $filename = $zip->getNameIndex($i);
 
-            if (strpos($filename, 'Backend/') === 0) {
-                $filename = substr($filename, 8);
+            if (\strpos($filename, 'Backend/') === 0) {
+                $filename = \substr($filename, 8);
             }
 
-            if (strpos($filename, 'Core/') === 0) {
-                $filename = substr($filename, 5);
+            if (\strpos($filename, 'Core/') === 0) {
+                $filename = \substr($filename, 5);
             }
 
-            if (strpos($filename, 'Frontend/') === 0) {
-                $filename = substr($filename, 9);
+            if (\strpos($filename, 'Frontend/') === 0) {
+                $filename = \substr($filename, 9);
             }
 
             if ($filename === '') {

@@ -10,7 +10,9 @@ class PreviousStatusChange extends \App\Struct\Struct
 
     public string $statusCreationDate;
 
-    /** @var null */
+    /**
+     * @var null
+     */
     public $previousStatusChange;
 
     public ShopDomainVerificationStatus $shopDomainVerificationStatus;

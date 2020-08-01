@@ -108,7 +108,7 @@ class Storage
         $version->setType($packageVersion->type);
         $version->setLicense($packageVersion->license);
         $version->setHomepage($packageVersion->homepage);
-        $version->setDescription(substr($packageVersion->description, 0, 255));
+        $version->setDescription(\substr($packageVersion->description, 0, 255));
         $version->setExtra($packageVersion->extra);
         $version->setRequireSection($packageVersion->require);
         $version->setAuthors($packageVersion->authors);
@@ -130,7 +130,7 @@ class Storage
             'userId' => $token->getUserId(),
         ];
 
-        return getenv('APP_URL') . '/download?token=' . urlencode($this->encryption->encrypt($data));
+        return \getenv('APP_URL') . '/download?token=' . \urlencode($this->encryption->encrypt($data));
     }
 
     private function getPackage(string $pluginName, string $producerName): Package

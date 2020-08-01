@@ -44,7 +44,7 @@ class PackageRepository extends ServiceEntityRepository
             ->addSelect('producer');
 
         $qb->where('package.name = :name')
-            ->setParameter('name', rtrim(str_replace('store.shopware.com/', '', $name), '/'));
+            ->setParameter('name', \rtrim(\str_replace('store.shopware.com/', '', $name), '/'));
 
         /** @var Package|null $package */
         $package = $qb->getQuery()->getOneOrNullResult();
@@ -56,9 +56,9 @@ class PackageRepository extends ServiceEntityRepository
         $this->getEntityManager()->detach($package);
 
         $versions = $package->getVersions()->toArray();
-        uasort($versions, static fn (Version $a, Version $b) => version_compare($a->getVersion(), $b->getVersion()));
+        \uasort($versions, static fn (Version $a, Version $b) => \version_compare($a->getVersion(), $b->getVersion()));
 
-        $package->setVersions(new ArrayCollection(array_reverse($versions)));
+        $package->setVersions(new ArrayCollection(\array_reverse($versions)));
 
         return $package;
     }

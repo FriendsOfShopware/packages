@@ -95,7 +95,7 @@ class Package
 
     public function getComposerName(): string
     {
-        return 'store.shopware.com/' . strtolower($this->name);
+        return 'store.shopware.com/' . \strtolower($this->name);
     }
 
     public function getNewestVersion(): string
@@ -104,7 +104,7 @@ class Package
 
         /** @var Version $version */
         foreach ($this->versions as $version) {
-            if (version_compare($version->getVersion(), $currentVersion, '>')) {
+            if (\version_compare($version->getVersion(), $currentVersion, '>')) {
                 $currentVersion = $version->getVersion();
             }
         }
@@ -171,16 +171,16 @@ class Package
             return null;
         }
 
-        $text = strip_tags($this->description, '<h2><h3><h4><h5><h6><p><b><strong><li><ol><ul><br><i><a><style>');
-        $text = preg_replace('/style=\\"[^\\"]*\\"/', '', $text);
-        $text = preg_replace('/class=\\"[^\\"]*\\"/', '', $text);
+        $text = \strip_tags($this->description, '<h2><h3><h4><h5><h6><p><b><strong><li><ol><ul><br><i><a><style>');
+        $text = \preg_replace('/style=\\"[^\\"]*\\"/', '', $text);
+        $text = \preg_replace('/class=\\"[^\\"]*\\"/', '', $text);
 
         $followList = [
-            getenv('APP_URL'),
+            \getenv('APP_URL'),
         ];
 
-        return preg_replace(
-            '%(<a\s*(?!.*\brel=)[^>]*)(href="https?://)((?!(?:(?:www\.)?' . implode('|(?:www\.)?', $followList) . '))[^"]+)"((?!.*\brel=)[^>]*)(?:[^>]*)>%',
+        return \preg_replace(
+            '%(<a\s*(?!.*\brel=)[^>]*)(href="https?://)((?!(?:(?:www\.)?' . \implode('|(?:www\.)?', $followList) . '))[^"]+)"((?!.*\brel=)[^>]*)(?:[^>]*)>%',
             '$1$2$3"$4 rel="noopener noreferrer">',
             $text
         );

@@ -4,14 +4,6 @@ namespace App\Controller;
 
 use App\Command\PackageIndexerCommand;
 use MeiliSearch\Client;
-use ONGR\ElasticsearchDSL\Aggregation\Bucketing\NestedAggregation;
-use ONGR\ElasticsearchDSL\Aggregation\Bucketing\TermsAggregation;
-use ONGR\ElasticsearchDSL\Query\Compound\BoolQuery;
-use ONGR\ElasticsearchDSL\Query\FullText\MatchPhraseQuery;
-use ONGR\ElasticsearchDSL\Query\Joining\NestedQuery;
-use ONGR\ElasticsearchDSL\Query\TermLevel\FuzzyQuery;
-use ONGR\ElasticsearchDSL\Query\TermLevel\TermQuery;
-use ONGR\ElasticsearchDSL\Query\TermLevel\WildcardQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,16 +26,16 @@ class Search extends AbstractController
     {
         $index = $client->getIndex(PackageIndexerCommand::INDEX_NAME);
 
-        $term = mb_strtolower($request->query->get('term'));
+        $term = \mb_strtolower($request->query->get('term'));
         $options = [
             'facetsDistribution' => [
                 'types',
-                'producerName'
-            ]
+                'producerName',
+            ],
         ];
 
-        $selectedTypes = array_filter(explode('|', $request->query->get('types', '')));
-        $selectedProducers = array_filter(explode('|', $request->query->get('producers', '')));
+        $selectedTypes = \array_filter(\explode('|', $request->query->get('types', '')));
+        $selectedProducers = \array_filter(\explode('|', $request->query->get('producers', '')));
 
         if (!empty($selectedTypes)) {
             foreach ($selectedTypes as $selectedType) {

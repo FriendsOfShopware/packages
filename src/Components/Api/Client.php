@@ -84,7 +84,7 @@ class Client
             return [];
         }
 
-        return CompanyMemberShip::mapList(json_decode($content));
+        return CompanyMemberShip::mapList(\json_decode($content));
     }
 
     /**
@@ -101,7 +101,7 @@ class Client
             try {
                 $content = $this->client->request('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
 
-                $clientShops = Shop::mapList(json_decode($content));
+                $clientShops = Shop::mapList(\json_decode($content));
             } catch (ClientException $e) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.
             }
@@ -113,8 +113,8 @@ class Client
         if ($token->getMemberShip()->can(CompanyMemberShip::WILDCARD_SHOP_PERMISSION)) {
             try {
                 $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
-                $content = json_decode($content);
-                $content = array_shift($content);
+                $content = \json_decode($content);
+                $content = \array_shift($content);
                 $instances = $content->instances ?? [];
 
                 $wildcardShops = Shop::mapList($instances);
@@ -140,13 +140,13 @@ class Client
                     ],
                 ])->getContent();
 
-                $shops = Shop::mapList(json_decode($shopsContent));
+                $shops = Shop::mapList(\json_decode($shopsContent));
             } catch (ClientException $e) {
                 // Partner without own domains
             }
         }
 
-        return array_merge($shops, $clientShops, $wildcardShops);
+        return \array_merge($shops, $clientShops, $wildcardShops);
     }
 
     /**
@@ -156,13 +156,13 @@ class Client
     {
         $this->useToken($token);
 
-        $cacheKey = md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
+        $cacheKey = \md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
 
         return $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($token) {
             $item->expiresAfter(3_600);
 
             if ($token->getShop()->type === Shop::TYPE_PARTNER) {
-                $content = json_decode($this->client->request('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
+                $content = \json_decode($this->client->request('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
 
                 $licenses = [];
                 foreach ($content->plugins as $pluginData) {
@@ -179,7 +179,7 @@ class Client
             }
 
             try {
-                $content = json_decode($this->client->request('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
+                $content = \json_decode($this->client->request('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
                     'query' => [
                         'variantTypes' => 'buy,free,rent,support,test',
                         'limit' => 1_000,
@@ -190,7 +190,7 @@ class Client
             }
 
             try {
-                $enterprisePlugins = json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
+                $enterprisePlugins = \json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
             } catch (ClientException $e) {
                 $enterprisePlugins = [];
             }
@@ -243,7 +243,7 @@ class Client
     public function fetchDownloadLink(string $binaryLink): ?string
     {
         $json = $this->fetchDownloadJson($binaryLink);
-        if (!array_key_exists('url', $json)) {
+        if (!\array_key_exists('url', $json)) {
             return null;
         }
 
@@ -253,7 +253,7 @@ class Client
     public function fetchDownloadVersion(string $binaryLink): ?string
     {
         $json = $this->fetchDownloadJson($binaryLink);
-        if (!array_key_exists('binary', $json) || !is_array($json['binary'])) {
+        if (!\array_key_exists('binary', $json) || !\is_array($json['binary'])) {
             return null;
         }
 

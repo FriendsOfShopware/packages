@@ -48,7 +48,7 @@ class PackagistLoader
     {
         $response = [];
 
-        $pluginNames = array_map(fn ($license) => $license->plugin->name, $licenses);
+        $pluginNames = \array_map(static fn ($license) => $license->plugin->name, $licenses);
 
         $databasePlugins = $this->packageRepository->findPackagesForLicenses($pluginNames);
 
@@ -62,11 +62,11 @@ class PackagistLoader
             if (
                 'test' === $license->variantType->name &&
                 !empty($license->expirationDate) &&
-                time() >= strtotime($license->expirationDate)) {
+                \time() >= \strtotime($license->expirationDate)) {
                 continue;
             }
 
-            $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
+            $packageName = 'store.shopware.com/' . \strtolower($license->plugin->name);
 
             $package = $databasePlugins[$packageName];
 
@@ -87,8 +87,8 @@ class PackagistLoader
     {
         $versions = [];
 
-        foreach (array_reverse($package->getVersions()->toArray()) as $binary) {
-            $subscriptionLeft = isset($license->subscription) && strtotime($binary->getReleaseDate()->getTimestamp()) >= strtotime($license->subscription->expirationDate);
+        foreach (\array_reverse($package->getVersions()->toArray()) as $binary) {
+            $subscriptionLeft = isset($license->subscription) && \strtotime($binary->getReleaseDate()->getTimestamp()) >= \strtotime($license->subscription->expirationDate);
 
             // If shop has a active subscription all premium / advanced features are unlocked
             if (($license->plugin->isPremiumPlugin || $license->plugin->isAdvancedFeature) && $shop->hasActiveSubscription()) {
@@ -101,7 +101,7 @@ class PackagistLoader
             }
 
             $version = $binary->toJson();
-            $isOldArchiveStructure = in_array($version['type'], ['shopware-core-plugin', 'shopware-backend-plugin', 'shopware-frontend-plugin']);
+            $isOldArchiveStructure = \in_array($version['type'], ['shopware-core-plugin', 'shopware-backend-plugin', 'shopware-frontend-plugin']);
             $version['name'] = $packageName;
             $version['dist'] = [
                 'url' => $this->generateLink(
@@ -137,6 +137,6 @@ class PackagistLoader
             $data['needsRepack'] = true;
         }
 
-        return getenv('APP_URL') . '/download?token=' . urlencode($this->encryption->encrypt($data));
+        return \getenv('APP_URL') . '/download?token=' . \urlencode($this->encryption->encrypt($data));
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Exception;
 
@@ -9,6 +11,6 @@ class InvalidShopGivenHttpException extends HttpException
 {
     public function __construct(string $domain, \Throwable $previous = null, array $headers = [], ?int $code = 0)
     {
-        parent::__construct(Response::HTTP_INTERNAL_SERVER_ERROR, sprintf('Cannot find domain "%s" in your Account', $domain), $previous, $headers, $code);
+        parent::__construct(Response::HTTP_INTERNAL_SERVER_ERROR, \sprintf('Cannot find domain "%s" in your Account', $domain), $previous, $headers, $code);
     }
 }

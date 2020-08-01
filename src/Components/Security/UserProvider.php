@@ -21,7 +21,7 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (time() >= $user->getExpire()->getTimestamp()) {
+        if (\time() >= $user->getExpire()->getTimestamp()) {
             throw new UsernameNotFoundException('AccessToken expired');
         }
 

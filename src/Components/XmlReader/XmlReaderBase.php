@@ -41,7 +41,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
         try {
             $dom = XmlUtils::loadFile($xmlFile, $this->xsdFile);
         } catch (\Exception $e) {
-            throw new InvalidArgumentException(sprintf('Unable to parse file "%s" with message %s.', $xmlFile, $e->getMessage()), $e->getCode(), $e);
+            throw new InvalidArgumentException(\sprintf('Unable to parse file "%s" with message %s.', $xmlFile, $e->getMessage()), $e->getCode(), $e);
         }
 
         return $this->parseFile($dom);
@@ -62,8 +62,8 @@ abstract class XmlReaderBase implements XmlReaderInterface
         foreach ($list as $item) {
             $language = $item->getAttribute('lang') ?: self::DEFAULT_LANG;
             // XSD Requires en-GB, Zend uses en_GB
-            $language = str_replace('-', '_', $language);
-            $translations[$language] = trim($item->nodeValue);
+            $language = \str_replace('-', '_', $language);
+            $translations[$language] = \trim($item->nodeValue);
         }
 
         return $translations;
@@ -98,7 +98,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
     public static function getFirstChildren(DOMNode $list, $name)
     {
         $children = self::getChildren($list, $name);
-        if (0 === count($children)) {
+        if (0 === \count($children)) {
             return null;
         }
 
@@ -161,7 +161,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
         $children = $element->getElementsByTagName($name);
         if (0 === $children->length) {
             if ($throwException) {
-                throw new InvalidArgumentException(sprintf('Element with %s not found', $name));
+                throw new InvalidArgumentException(\sprintf('Element with %s not found', $name));
             }
 
             return null;

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -23,7 +25,7 @@ class Notify
      */
     public function notify(Request $request): JsonResponse
     {
-        $json = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $json = \json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
 
         [$composerVersion, $phpVersion] = $this->getComposerAndPhpVersionFromRequest($request);
 
@@ -36,7 +38,7 @@ class Notify
 
         foreach ($json['downloads'] as $download) {
             /** @var \App\Entity\Package|null $package */
-            $package = $packageRepository->findOneBy(['name' => str_replace('store.shopware.com/', '', $download['name'])]);
+            $package = $packageRepository->findOneBy(['name' => \str_replace('store.shopware.com/', '', $download['name'])]);
             if ($package === null) {
                 continue;
             }
@@ -67,7 +69,7 @@ class Notify
             return [null, null];
         }
 
-        preg_match_all(self::USER_AGENT_REGEX, $userAgent, $matches, PREG_SET_ORDER, 0);
+        \preg_match_all(self::USER_AGENT_REGEX, $userAgent, $matches, \PREG_SET_ORDER, 0);
 
         return [$matches[0]['composerVersion'], $matches[0]['phpVersion']];
     }

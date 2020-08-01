@@ -14,7 +14,9 @@ class ShopwareVersion extends \App\Struct\Struct
 
     public string $major;
 
-    /** @var null */
+    /**
+     * @var null
+     */
     public $releaseDate;
 
     public bool $public;

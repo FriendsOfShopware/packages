@@ -48,9 +48,9 @@ class PackagesJson
             throw new InvalidTokenHttpException();
         }
 
-        $cacheKey = md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
+        $cacheKey = \md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
 
-        $token = $this->cache->get(md5($cacheKey), function (ItemInterface $item) use ($tokenValue) {
+        $token = $this->cache->get(\md5($cacheKey), function (ItemInterface $item) use ($tokenValue) {
             $credentials = $this->encryption->decrypt($tokenValue);
 
             if (empty($credentials)) {

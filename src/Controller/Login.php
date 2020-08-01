@@ -52,7 +52,7 @@ class Login extends AbstractController
             $dispatcher->dispatch($event);
             $memberShips = $this->client->memberShips($accessToken);
 
-            if (count($memberShips) > 1) {
+            if (\count($memberShips) > 1) {
                 return $this->redirectToRoute('company-selection');
             }
 

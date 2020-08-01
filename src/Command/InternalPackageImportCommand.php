@@ -71,7 +71,7 @@ class InternalPackageImportCommand extends Command
 
             $this->entityManager->flush();
             $this->entityManager->clear();
-            $current += count($plugins);
+            $current += \count($plugins);
             $plugins = $this->loadPlugins($current);
             $this->login($input);
         }
@@ -89,7 +89,7 @@ class InternalPackageImportCommand extends Command
     {
         $client = HttpClient::create();
 
-        $response = $client->request('POST', getenv('SBP_LOGIN'), [
+        $response = $client->request('POST', \getenv('SBP_LOGIN'), [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
@@ -109,7 +109,7 @@ class InternalPackageImportCommand extends Command
 
     private function loadPlugins(int $offset): array
     {
-        return json_decode($this->client->request('GET', getenv('SBP_PLUGIN_LIST'), [
+        return \json_decode($this->client->request('GET', \getenv('SBP_PLUGIN_LIST'), [
             'query' => [
                 'limit' => 100,
                 'offset' => $offset,
@@ -176,7 +176,7 @@ class InternalPackageImportCommand extends Command
 
         $this->entityManager->flush();
 
-        if (!is_iterable($plugin->binaries)) {
+        if (!\is_iterable($plugin->binaries)) {
             return;
         }
 
@@ -263,7 +263,7 @@ class InternalPackageImportCommand extends Command
                 continue;
             }
 
-            $version->setDescription(mb_substr($version->getDescription(), 0, 255));
+            $version->setDescription(\mb_substr($version->getDescription(), 0, 255));
             $version->setPackage($package);
             $version->setReleaseDate(new \DateTime($binary->creationDate));
             $package->addVersion($version);
@@ -304,7 +304,7 @@ SQL;
 WHERE JSON_LENGTH(require_section) > 1 AND type = \'shopware-platform-plugin\'');
 
         foreach ($validVersions as $validVersion) {
-            $validVersion['require_section'] = json_decode($validVersion['require_section'], true);
+            $validVersion['require_section'] = \json_decode($validVersion['require_section'], true);
             $updatedRequire = [];
             $gotUpdated = false;
 
@@ -318,7 +318,7 @@ WHERE JSON_LENGTH(require_section) > 1 AND type = \'shopware-platform-plugin\'')
             }
 
             if ($gotUpdated) {
-                $connection->update('version', ['require_section' => json_encode($updatedRequire)], ['id' => $validVersion['id']]);
+                $connection->update('version', ['require_section' => \json_encode($updatedRequire)], ['id' => $validVersion['id']]);
             }
         }
     }

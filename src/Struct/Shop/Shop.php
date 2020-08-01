@@ -22,7 +22,9 @@ class Shop extends \App\Struct\Struct
 
     public bool $isPartnerShop;
 
-    /** @var null */
+    /**
+     * @var null
+     */
     public $subaccount;
 
     /** @var SubscriptionModules[] */
@@ -66,7 +68,7 @@ class Shop extends \App\Struct\Struct
     public function hasActiveSubscription(): bool
     {
         foreach ($this->subscriptionModules as $subscription) {
-            if (strtotime($subscription->expirationDate) >= time()) {
+            if (\strtotime($subscription->expirationDate) >= \time()) {
                 return true;
             }
         }

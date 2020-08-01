@@ -30,7 +30,7 @@ class Package extends AbstractController
         $package = $repository->findOne($name);
 
         if (!$package) {
-            throw new NotFoundHttpException(sprintf('Cannot find package by name %s', $name));
+            throw new NotFoundHttpException(\sprintf('Cannot find package by name %s', $name));
         }
 
         $selectedVersion = $request->query->get('version', $package->getNewestVersion());

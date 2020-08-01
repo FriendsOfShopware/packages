@@ -4,7 +4,9 @@ namespace App\Struct\Shop;
 
 class Status extends \App\Struct\Struct
 {
-    /** @var null */
+    /**
+     * @var null
+     */
     public $id;
 
     public string $name;
