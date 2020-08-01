@@ -16,15 +16,9 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class Feed extends AbstractController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private RouterInterface $router;
 
     public function __construct(EntityManagerInterface $entityManager, RouterInterface $router)
     {
@@ -61,14 +55,12 @@ class Feed extends AbstractController
             'description' => 'Latest releases on Packages of ' . $packageName,
             'link' => $packageLink,
             'date' => $latestVersion->getReleaseDate(),
-            'items' => array_map(static function (Version $version) use ($packageName, $packageLink) {
-                return [
-                    'title' => sprintf('%s (%s)', $packageName, $version->getVersion()),
-                    'link' => $packageLink . '?version=' . $version->getVersion(),
-                    'description' => strip_tags($version->getChangelog(), '<br>'),
-                    'date' => $version->getReleaseDate(),
-                ];
-            }, $package->getVersions()->toArray()),
+            'items' => array_map(static fn (Version $version) => [
+                'title' => sprintf('%s (%s)', $packageName, $version->getVersion()),
+                'link' => $packageLink . '?version=' . $version->getVersion(),
+                'description' => strip_tags($version->getChangelog(), '<br>'),
+                'date' => $version->getReleaseDate(),
+            ], $package->getVersions()->toArray()),
         ];
 
         if ('rss' === $format) {
@@ -81,7 +73,7 @@ class Feed extends AbstractController
             ]);
         }
 
-        $response->setSharedMaxAge(3600);
+        $response->setSharedMaxAge(3_600);
         $response->headers->set('Content-Type', 'text/xml; charset=UTF-8');
 
         return $response;

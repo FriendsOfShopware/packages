@@ -25,45 +25,45 @@ class Download
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Package::class, inversedBy="downloads")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $package;
+    private Package $package;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $version;
+    private string $version;
 
     /**
      * @ORM\Column(type="datetime", name="installed_at")
      */
-    private $installedAt;
+    private \DateTimeInterface $installedAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $composerVersion;
+    private ?string $composerVersion = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $phpVersion;
+    private ?string $phpVersion = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPackage(): ?Package
+    public function getPackage(): Package
     {
         return $this->package;
     }
 
-    public function setPackage(?Package $package): self
+    public function setPackage(Package $package): self
     {
         $this->package = $package;
 

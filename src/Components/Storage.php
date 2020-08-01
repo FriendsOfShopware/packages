@@ -6,8 +6,6 @@ use App\Components\Api\AccessToken;
 use App\Entity\Package;
 use App\Entity\Producer;
 use App\Entity\Version;
-use App\Repository\PackageRepository;
-use App\Repository\ProducerRepository;
 use App\Struct\ComposerPackageVersion;
 use App\Struct\License\Binaries;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,42 +13,27 @@ use Psr\SimpleCache\CacheInterface;
 
 class Storage
 {
-    /**
-     * @var Encryption
-     */
-    private $encryption;
+    private Encryption $encryption;
 
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
+    private CacheInterface $cache;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var PackageRepository
-     */
-    private $packageRepository;
+    private \Doctrine\Persistence\ObjectRepository $packageRepository;
 
-    /**
-     * @var ProducerRepository
-     */
-    private $producerRepository;
+    private \Doctrine\Persistence\ObjectRepository $producerRepository;
 
     /**
      * @var array<string, Package>
      */
-    private $packageCache;
+    private array $packageCache;
 
     /**
      * @var array<string, Producer>
      */
-    private $producerCache;
+    private array $producerCache;
 
-    private $haveWritten = false;
+    private bool $haveWritten = false;
 
     public function __construct(CacheInterface $cache, EntityManagerInterface $entityManager)
     {

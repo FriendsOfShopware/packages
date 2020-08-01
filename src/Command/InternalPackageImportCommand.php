@@ -7,12 +7,11 @@ use App\Components\PluginReader;
 use App\Entity\Package;
 use App\Entity\Producer;
 use App\Entity\Version;
-use App\Repository\PackageRepository;
-use App\Repository\ProducerRepository;
 use App\Struct\License\Binaries;
 use App\Struct\License\Plugin;
 use Composer\Semver\VersionParser;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -26,30 +25,15 @@ class InternalPackageImportCommand extends Command
 {
     protected static $defaultName = 'internal:package:import';
 
-    /**
-     * @var HttpClientInterface
-     */
-    private $client;
+    private HttpClientInterface $client;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /**
-     * @var PackageRepository
-     */
-    private $packageRepository;
+    private ObjectRepository $packageRepository;
 
-    /**
-     * @var ProducerRepository
-     */
-    private $producerRepository;
+    private ObjectRepository $producerRepository;
 
-    /**
-     * @var VersionParser
-     */
-    private $versionParser;
+    private VersionParser $versionParser;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -146,7 +130,7 @@ class InternalPackageImportCommand extends Command
         }
 
         // Invalid broken plugin
-        if ($plugin->id === 2394) {
+        if ($plugin->id === 2_394) {
             return;
         }
 

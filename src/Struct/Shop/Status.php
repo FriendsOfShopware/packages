@@ -7,11 +7,9 @@ class Status extends \App\Struct\Struct
     /** @var null */
     public $id;
 
-    /** @var string */
-    public $name;
+    public string $name;
 
-    /** @var string */
-    public $description;
+    public string $description;
 
     public static $mappedFields = [];
 }

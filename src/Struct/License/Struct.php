@@ -50,8 +50,6 @@ class Struct
             return [];
         }
 
-        return array_map(function ($item) {
-            return static::map($item);
-        }, $data);
+        return array_map(fn ($item) => static::map($item), $data);
     }
 }

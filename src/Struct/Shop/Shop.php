@@ -6,77 +6,55 @@ class Shop extends \App\Struct\Struct
 {
     const TYPE_PARTNER = 'partner';
 
-    /** @var int */
-    public $id;
+    public int $id;
 
-    /** @var string */
-    public $domain;
+    public string $domain;
 
-    /** @var int */
-    public $companyId;
+    public int $companyId;
 
-    /** @var string */
-    public $companyName;
+    public string $companyName;
 
-    /** @var int */
-    public $ownerId;
+    public int $ownerId;
 
-    /** @var int */
-    public $dispo;
+    public int $dispo;
 
-    /** @var int */
-    public $balance;
+    public int $balance;
 
-    /** @var bool */
-    public $isPartnerShop;
+    public bool $isPartnerShop;
 
     /** @var null */
     public $subaccount;
 
     /** @var SubscriptionModules[] */
-    public $subscriptionModules;
+    public array $subscriptionModules;
 
-    /** @var bool */
-    public $isCommercial;
+    public bool $isCommercial;
 
-    /** @var string */
-    public $documentComment;
+    public string $documentComment;
 
-    /** @var bool */
-    public $activated;
+    public bool $activated;
 
-    /** @var string */
-    public $accountId;
+    public string $accountId;
 
-    /** @var int */
-    public $shopNumber;
+    public int $shopNumber;
 
-    /** @var bool */
-    public $staging;
+    public bool $staging;
 
-    /** @var bool */
-    public $instance;
+    public bool $instance;
 
-    /** @var Environment */
-    public $environment;
+    public Environment $environment;
 
-    /** @var string */
-    public $creationDate;
+    public string $creationDate;
 
-    /** @var ShopwareVersion */
-    public $shopwareVersion;
+    public ShopwareVersion $shopwareVersion;
 
-    /** @var string */
-    public $domain_idn;
+    public string $domain_idn;
 
-    /** @var LatestVerificationStatusChange */
-    public $latestVerificationStatusChange;
+    public LatestVerificationStatusChange $latestVerificationStatusChange;
 
-    /** @var string */
-    public $type;
+    public string $type;
 
-    /** @var int */
-    public $baseId;
+    public int $baseId;
 
     public static $mappedFields = [
         'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',

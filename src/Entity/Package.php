@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,52 +27,48 @@ class Package
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private ?string $description = null;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $shortDescription;
+    private ?string $shortDescription = null;
 
     /**
-     * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $storeLink;
+    private ?string $storeLink = null;
 
     /**
-     * @var \DateTimeInterface|null
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $releaseDate;
+    private ?DateTimeInterface $releaseDate = null;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Version", mappedBy="package", orphanRemoval=true, cascade={"persist"})
      */
-    private $versions;
+    private Collection $versions;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Producer", inversedBy="package")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $producer;
+    private Producer $producer;
 
     /**
      * @ORM\OneToMany(targetEntity=Download::class, mappedBy="package", orphanRemoval=true)
      */
-    private $downloads;
+    private Collection $downloads;
 
     public function __construct()
     {
@@ -151,12 +148,12 @@ class Package
         return $this;
     }
 
-    public function getProducer(): ?Producer
+    public function getProducer(): Producer
     {
         return $this->producer;
     }
 
-    public function setProducer(?Producer $producer): self
+    public function setProducer(Producer $producer): self
     {
         $this->producer = $producer;
 
@@ -214,12 +211,12 @@ class Package
         $this->storeLink = $storeLink;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getReleaseDate(): ?DateTimeInterface
     {
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(?\DateTimeInterface $releaseDate): void
+    public function setReleaseDate(?DateTimeInterface $releaseDate): void
     {
         $this->releaseDate = $releaseDate;
     }

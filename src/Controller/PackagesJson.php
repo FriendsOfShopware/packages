@@ -15,20 +15,11 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class PackagesJson
 {
-    /**
-     * @var Client
-     */
-    private $client;
+    private Client $client;
 
-    /**
-     * @var PackagistLoader
-     */
-    private $packagistLoader;
+    private PackagistLoader $packagistLoader;
 
-    /**
-     * @var Encryption
-     */
-    private $encryption;
+    private Encryption $encryption;
 
     private CacheInterface $cache;
 

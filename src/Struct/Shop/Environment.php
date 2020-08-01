@@ -4,14 +4,11 @@ namespace App\Struct\Shop;
 
 class Environment extends \App\Struct\Struct
 {
-    /** @var string */
-    public $id;
+    public string $id;
 
-    /** @var string */
-    public $name;
+    public string $name;
 
-    /** @var string */
-    public $description;
+    public string $description;
 
     public static $mappedFields = [];
 }

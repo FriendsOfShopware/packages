@@ -4,53 +4,23 @@ namespace App\Struct;
 
 class ComposerPackageVersion extends Struct
 {
-    /**
-     * @var string
-     */
-    public $name;
+    public string $name;
 
-    /**
-     * @var string
-     */
-    public $description = '';
+    public string $description = '';
 
-    /**
-     * @var string
-     */
-    public $license = 'proprietary';
+    public string $license = 'proprietary';
 
-    /**
-     * @var string
-     */
-    public $homepage;
+    public string $homepage;
 
-    /**
-     * @var string
-     */
-    public $version;
+    public string $version;
 
-    /**
-     * @var array
-     */
-    public $dist;
+    public array $dist;
 
-    /**
-     * @var string
-     */
-    public $type;
+    public string $type;
 
-    /**
-     * @var array
-     */
-    public $extra;
+    public array $extra;
 
-    /**
-     * @var array
-     */
-    public $require;
+    public array $require;
 
-    /**
-     * @var array
-     */
-    public $authors;
+    public array $authors;
 }

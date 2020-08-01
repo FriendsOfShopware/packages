@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Components\Api\AccessToken;
+use App\Components\Api\Client;
 use App\Components\Api\Exceptions\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -14,12 +15,9 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class Login extends AbstractController
 {
-    /**
-     * @var \App\Components\Api\Client
-     */
-    private $client;
+    private Client $client;
 
-    public function __construct(\App\Components\Api\Client $client)
+    public function __construct(Client $client)
     {
         $this->client = $client;
     }
