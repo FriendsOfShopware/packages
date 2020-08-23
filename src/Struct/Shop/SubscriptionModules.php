@@ -18,13 +18,10 @@ class SubscriptionModules extends \App\Struct\Struct
 
     public int $durationInMonths;
 
-    public DurationOptions $durationOptions;
-
     public bool $automaticExtension;
 
     public static $mappedFields = [
         'module' => 'App\Struct\Shop\Module',
-        'status' => 'App\Struct\Shop\Status',
-        'durationOptions' => 'App\Struct\Shop\DurationOptions',
+        'status' => 'App\Struct\Shop\Status'
     ];
 }
