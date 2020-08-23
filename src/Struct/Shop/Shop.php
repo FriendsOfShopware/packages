@@ -52,8 +52,6 @@ class Shop extends \App\Struct\Struct
 
     public string $domain_idn;
 
-    public LatestVerificationStatusChange $latestVerificationStatusChange;
-
     public string $type;
 
     public int $baseId;
@@ -61,8 +59,7 @@ class Shop extends \App\Struct\Struct
     public static $mappedFields = [
         'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',
         'environment' => 'App\Struct\Shop\Environment',
-        'shopwareVersion' => 'App\Struct\Shop\ShopwareVersion',
-        'latestVerificationStatusChange' => 'App\Struct\Shop\LatestVerificationStatusChange',
+        'shopwareVersion' => 'App\Struct\Shop\ShopwareVersion'
     ];
 
     public function hasActiveSubscription(): bool
