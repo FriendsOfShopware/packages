@@ -460,6 +460,9 @@
     "symfony/serializer": {
         "version": "v4.3.6"
     },
+    "symfony/serializer-pack": {
+        "version": "v1.0.3"
+    },
     "symfony/service-contracts": {
         "version": "v1.1.6"
     },
