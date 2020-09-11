@@ -36,7 +36,7 @@ class Shop extends \App\Struct\Struct
 
     public bool $activated;
 
-    public string $accountId;
+    public ?string $accountId;
 
     public int $shopNumber;
 
