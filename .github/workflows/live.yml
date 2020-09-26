@@ -18,11 +18,3 @@ jobs:
                   echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "shyim" --password-stdin
                   docker build -t friendsofshopware/packages --build-arg GIT_TAG=${{ steps.get_version.outputs.VERSION }} .
                   docker push friendsofshopware/packages
-
-            - uses: azure/setup-kubectl@v1
-
-            - name: Create config
-              run: mkdir ~/.kube; echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-
-            - name: Rollout
-              run: kubectl -n packages-friendsofshopware-com rollout restart deployments/packages
