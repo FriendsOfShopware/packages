@@ -12,14 +12,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class Login extends AbstractController
 {
     private Client $client;
 
-    public function __construct(Client $client)
+    private CacheInterface $cache;
+
+    public function __construct(Client $client, CacheInterface $cache)
     {
         $this->client = $client;
+        $this->cache = $cache;
     }
 
     /**
@@ -102,6 +106,7 @@ class Login extends AbstractController
             foreach ($shops as $shop) {
                 if ($shop->domain === $selectedShop) {
                     $token->setShop($shop);
+                    $this->cache->delete($this->client->getLicenseCacheKey($token));
 
                     return $this->redirectToRoute('account');
                 }

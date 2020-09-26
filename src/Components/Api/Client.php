@@ -156,10 +156,10 @@ class Client
     {
         $this->useToken($token);
 
-        $cacheKey = \md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
+        $cacheKey = $this->getLicenseCacheKey($token);
 
         return $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($token) {
-            $item->expiresAfter(3_600);
+            $item->expiresAfter(300);
 
             if ($token->getShop()->type === Shop::TYPE_PARTNER) {
                 $content = \json_decode($this->client->request('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
@@ -285,6 +285,11 @@ class Client
         }
 
         return $filePath;
+    }
+
+    public function getLicenseCacheKey(AccessToken $token): string
+    {
+        return \md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
     }
 
     private function getLicensesListPath(AccessToken $token): string
