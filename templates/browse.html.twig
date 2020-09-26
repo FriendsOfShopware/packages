@@ -13,8 +13,9 @@
                 <ul class="list-unstyled list-packages">
                     {% for package in newPackages %}
                         <li class="mb-2">
-                            <a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.composerName }} <strong>v{{ package.newestVersion }}</strong></a><br>
-                            <small>{{ package.shortDescription }}</small>
+                            <a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.name }} <strong>v{{ package.currentVersion.version }}</strong></a><br>
+                            <small>Composer: {{ package.composerName }}<br>
+                                {{ package.shortDescription }}</small>
                         </li>
                     {% endfor %}
                 </ul>
