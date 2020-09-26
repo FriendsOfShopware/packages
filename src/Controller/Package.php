@@ -33,7 +33,7 @@ class Package extends AbstractController
             throw new NotFoundHttpException(\sprintf('Cannot find package by name %s', $name));
         }
 
-        $selectedVersion = $request->query->get('version', $package->getNewestVersion());
+        $selectedVersion = $request->query->get('version', $package->getCurrentVersion()->getVersion());
         $foundVersion = $version = $package->getVersions()->current();
 
         if ($selectedVersion) {

@@ -98,14 +98,15 @@ class Package
         return 'store.shopware.com/' . \strtolower($this->name);
     }
 
-    public function getNewestVersion(): string
+    public function getCurrentVersion(): Version
     {
-        $currentVersion = '0.0.0';
+        $currentVersion = new Version();
+        $currentVersion->setVersion('0.0.0');
 
         /** @var Version $version */
         foreach ($this->versions as $version) {
-            if (\version_compare($version->getVersion(), $currentVersion, '>')) {
-                $currentVersion = $version->getVersion();
+            if (\version_compare($version->getVersion(), $currentVersion->getVersion(), '>')) {
+                $currentVersion = $version;
             }
         }
 
