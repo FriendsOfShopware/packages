@@ -10,6 +10,7 @@ use App\Struct\License\Binaries;
 use App\Struct\License\License;
 use App\Struct\License\VariantType;
 use App\Struct\Shop\Shop;
+use App\Struct\Shop\SubscriptionModules;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
@@ -124,6 +125,7 @@ class Client
                     $shop->type = $content->type->name;
                     $shop->staging = false;
                     $shop->domain_idn = idn_to_ascii($shop->domain);
+                    $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => date('Y-m-d H:i:s', strtotime('+1 year'))])];
                 }
             } catch (ClientException $e) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.

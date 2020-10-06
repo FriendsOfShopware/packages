@@ -53,6 +53,38 @@ abstract class Struct implements \JsonSerializable
         return \array_map(static fn ($item) => static::map($item), $data);
     }
 
+    public static function make(array $data)
+    {
+        $newObject = new static();
+
+        foreach ($data as $key => $value) {
+            if (empty($value)) {
+                $newObject->$key = $value;
+                continue;
+            }
+
+            if (isset(static::$mappedFields[$key])) {
+                if (is_array($value) && isset($value[0])) {
+                    $data = [];
+
+                    foreach ($value as $item) {
+                        $data[] = static::$mappedFields[$key]::make($item);
+                    }
+
+                    $newObject->$key = $data;
+                } else {
+                    $newObject->$key = static::$mappedFields[$key]::make($value);
+                }
+
+                continue;
+            }
+
+            $newObject->$key = $value;
+        }
+
+        return $newObject;
+    }
+
     public function jsonSerialize()
     {
         return \get_object_vars($this);
