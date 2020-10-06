@@ -9,7 +9,7 @@ use App\Struct\Struct;
  * @property string              $name
  * @property string              $code
  * @property string              $iconUrl
- * @property Infos               $infos
+ * @property Infos[]             $infos
  * @property StoreAvailabilities $storeAvailabilities
  * @property StoreAvailabilities $activationStatus
  * @property ApprovalStatus      $approvalStatus

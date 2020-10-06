@@ -35,6 +35,11 @@ class Package
     private string $name;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $label;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private ?string $description = null;
@@ -228,5 +233,15 @@ class Package
     public function getDownloads(): Collection
     {
         return $this->downloads;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(?string $label): void
+    {
+        $this->label = $label;
     }
 }

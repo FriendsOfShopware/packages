@@ -47,8 +47,6 @@ class InternalPackageImportCommand extends Command
     public function configure(): void
     {
         $this
-            ->addArgument('username', InputArgument::REQUIRED)
-            ->addArgument('password', InputArgument::REQUIRED)
             ->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, 'Offset', 0);
     }
 
@@ -94,8 +92,8 @@ class InternalPackageImportCommand extends Command
                 'Content-Type' => 'application/json',
             ],
             'json' => [
-                'name' => $input->getArgument('username'),
-                'password' => $input->getArgument('password'),
+                'name' => $_SERVER['SBP_USER'],
+                'password' => $_SERVER['SBP_PASSWORD'],
             ],
         ])->toArray();
 
@@ -163,6 +161,7 @@ class InternalPackageImportCommand extends Command
             $this->entityManager->persist($package);
         }
 
+        $package->setLabel($this->getLabel($plugin));
         $package->setReleaseDate(new \DateTime($plugin->creationDate));
         $package->setStoreLink('https://store.shopware.com/en/search?sSearch=' . $plugin->code);
 
@@ -282,6 +281,26 @@ class InternalPackageImportCommand extends Command
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param Plugin $plugin
+     */
+    private function getLabel(object $plugin): ?string
+    {
+        foreach ($plugin->infos as $info) {
+            if ($info->locale->name === 'en_GB') {
+                return $info->name;
+            }
+        }
+
+        foreach ($plugin->infos as $info) {
+            if (!empty($info->name)) {
+                return $info->name;
+            }
+        }
+
+        return null;
     }
 
     private function rebuildRequireStructure(): void
