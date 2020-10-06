@@ -19,6 +19,13 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class Client
 {
+    private const ERROR_MAPPING = [
+        'UsersException-3' => 'Invalid User. Please contact shopware AG',
+        'UsersException-4' => 'Wrong credentials',
+        'UsersException-16' => 'Email is actual unverified for the account. Please contact shopware AG',
+        'UsersException-18' => 'User is locked. Please contact shopware AG',
+    ];
+
     public const ENDPOINT = 'https://api.shopware.com/';
 
     protected \Symfony\Contracts\HttpClient\HttpClientInterface $client;
@@ -43,11 +50,9 @@ class Client
                 ],
             ])->toArray();
         } catch (ClientException $exception) {
-            if (Response::HTTP_FORBIDDEN === $exception->getCode()) {
-                throw new AccessDeniedException('Access denied');
-            }
+            $error = $exception->getResponse()->toArray(false);
 
-            throw $exception;
+            throw new AccessDeniedException(self::ERROR_MAPPING[$error['code']] ?? $error['code']);
         }
 
         if ($response['userId'] === null) {

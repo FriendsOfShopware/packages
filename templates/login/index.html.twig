@@ -14,7 +14,7 @@
             <form method="post">
                 {% if loginError is defined %}
                     <div class="alert alert-danger" role="alert">
-                        Authentication error
+                        {{ loginError.message }}
                     </div>
                 {% endif %}
 

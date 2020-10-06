@@ -63,7 +63,7 @@ class Login extends AbstractController
             return $this->redirectToRoute('shop-selection');
         } catch (AccessDeniedException $e) {
             return $this->render('login/index.html.twig', [
-                'loginError' => true,
+                'loginError' => $e,
             ]);
         }
     }
