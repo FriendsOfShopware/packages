@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Error - FriendsOfShopware Packages{% endblock %}
+
+{% block body %}
+    <div class="container mt-3">
+        <h1>Oops.</h1>
+        <h2>We didn't expected an failure here.</h2>
+
+        <p>Please create an Github Issue at <a href="https://github.com/FriendsOfShopware/packages/issues/new" target="_blank">packages</a> and fill out the Dialog.</p>
+    </div>
+
+    {% if lastEventId is not empty %}
+        <script src='https://js.sentry-cdn.com/75f761116e2e4871abbcb373555d94b2.min.js' crossorigin="anonymous"></script>
+        <script>
+            Sentry.init();
+            Sentry.showReportDialog({
+                eventId: "{{ lastEventId }}",
+            });
+        </script>
+    {% endif %}
+{% endblock %}
