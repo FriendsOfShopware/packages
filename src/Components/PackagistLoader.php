@@ -5,6 +5,7 @@ namespace App\Components;
 use App\Components\Api\AccessToken;
 use App\Components\Api\Client;
 use App\Entity\Package;
+use App\Entity\Version;
 use App\Repository\PackageRepository;
 use App\Struct\License\License;
 use App\Struct\Shop\Shop;
@@ -87,8 +88,9 @@ class PackagistLoader
     {
         $versions = [];
 
+        /** @var Version $binary */
         foreach (\array_reverse($package->getVersions()->toArray()) as $binary) {
-            $subscriptionLeft = isset($license->subscription) && \strtotime($binary->getReleaseDate()->getTimestamp()) >= \strtotime($license->subscription->expirationDate);
+            $subscriptionLeft = isset($license->subscription) && $binary->getReleaseDate()->getTimestamp() >= \strtotime($license->subscription->expirationDate);
 
             // If shop has a active subscription all premium / advanced features are unlocked
             if (($license->plugin->isPremiumPlugin || $license->plugin->isAdvancedFeature) && $shop->hasActiveSubscription()) {
