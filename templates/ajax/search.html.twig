@@ -2,14 +2,7 @@
     <div class="row">
         <div class="col-md-8 order-1 order-md-0">
             {% for hit in searchResult.hits %}
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{{ url('package', {name: hit.name ~ '/' }) }}">{{ hit.name }}</a>
-                        </h5>
-                        <p class="card-text">{{ hit.shortDescription|striptags|slice(0, 100) }}</p>
-                    </div>
-                </div>
+                {% include "includes/package-card.html.twig" with {'package': hit} %}
             {% endfor %}
         </div>
         <div class="col-md-4 order-0 order-md-1">
