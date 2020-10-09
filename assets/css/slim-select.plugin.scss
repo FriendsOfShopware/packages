@@ -1,0 +1,20 @@
+.ss-main {
+    .ss-single-selected {
+        border: unset;
+        border-radius: unset;
+        background-color: unset;
+    }
+
+    .ss-arrow {
+        display: none;
+    }
+
+    .ss-option-selected::after {
+        content: "✔";
+        color: green;
+    }
+
+    .ss-content {
+        width: calc(100% - 24px)
+    }
+}
