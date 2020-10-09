@@ -85,12 +85,19 @@ class Client
         $this->useToken($token);
 
         try {
-            $content = $this->client->request('GET', self::ENDPOINT . 'account/' . $token->getUserAccountId() . '/memberships')->getContent();
+            $content = \json_decode(
+                $this->client->request('GET', self::ENDPOINT . 'account/' . $token->getUserAccountId() . '/memberships')->getContent(),
+                false
+            );
         } catch (\Throwable $e) {
             return [];
         }
 
-        return CompanyMemberShip::mapList(\json_decode($content));
+        usort($content, static function ($a, $b) {
+            return $a->company->name <=> $b->company->name;
+        });
+
+        return CompanyMemberShip::mapList($content);
     }
 
     /**
@@ -107,7 +114,7 @@ class Client
             try {
                 $content = $this->client->request('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
 
-                $clientShops = Shop::mapList(\json_decode($content));
+                $clientShops = Shop::mapList(\json_decode($content, false));
             } catch (ClientException $e) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.
             }
@@ -153,7 +160,13 @@ class Client
             }
         }
 
-        return \array_merge($shops, $clientShops, $wildcardShops);
+        $allShops = \array_merge($shops, $clientShops, $wildcardShops);
+
+        usort($allShops, static function ($a, $b) {
+            return $a->domain <=> $b->domain;
+        });
+
+        return $allShops;
     }
 
     /**
