@@ -13,4 +13,8 @@
         content: "✔";
         color: green;
     }
+
+    .ss-content {
+        width: calc(100% - 24px)
+    }
 }
