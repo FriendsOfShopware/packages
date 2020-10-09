@@ -296,7 +296,7 @@ class Version
             ],
         ];
 
-        if ($this->type === 'shopware-platform-plugin') {
+        if ($this->type === 'shopware-platform-plugin' && $this->getComposerJson()) {
             $json['replace'][$this->getComposerJson()['name']] = 'self.version';
         }
 
