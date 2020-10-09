@@ -58,7 +58,9 @@ class PackageIndexerCommand extends Command
 
                 $items[] = [
                     'id' => $package->getId(),
-                    'name' => $package->getComposerName(),
+                    'name' => $package->getName(),
+                    'composerName' => $package->getComposerName(),
+                    'label' => $package->getLabel(),
                     'shortDescription' => $package->getShortDescription() ?? $package->getSafeDescription() ?? $package->getName(),
                     'types' => $unifiedTypes,
                     'producerName' => $package->getProducer()->getName(),
