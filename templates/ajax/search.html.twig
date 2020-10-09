@@ -2,15 +2,7 @@
     <div class="row">
         <div class="col-md-8 order-1 order-md-0">
             {% for hit in searchResult.hits %}
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{{ url('package', {name: hit.composerName ~ '/' }) }}">{{ hit.label }}</a>
-                        </h5>
-                        <p class="card-text"><small>Name: {{ hit.name }} | Composer: {{ hit.composerName }}</small><br>
-                                {{ hit.shortDescription }}</p>
-                    </div>
-                </div>
+                {% include "package-card.html.twig" with {'package': hit} %}
             {% endfor %}
         </div>
         <div class="col-md-4 order-0 order-md-1">
