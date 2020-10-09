@@ -5,9 +5,10 @@
                 <div class="card mb-2">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ url('package', {name: hit.name ~ '/' }) }}">{{ hit.name }}</a>
+                            <a href="{{ url('package', {name: hit.composerName ~ '/' }) }}">{{ hit.label }}</a>
                         </h5>
-                        <p class="card-text">{{ hit.shortDescription|striptags|slice(0, 100) }}</p>
+                        <p class="card-text"><small>Name: {{ hit.name }} | Composer: {{ hit.composerName }}</small><br>
+                                {{ hit.shortDescription }}</p>
                     </div>
                 </div>
             {% endfor %}

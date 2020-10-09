@@ -22,9 +22,9 @@
             <div class="card mb-2">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.name }}</a>
+                        <a href="{{ url('package', {name: package.composerName ~ '/'}) }}">{{ package.label }}</a>
                     </h5>
-                    <p class="card-text">Composer: {{ package.composerName }}
+                    <p class="card-text"><small>Name: {{ package.name }} | Composer: {{ package.composerName }}</small>
                         {% if package.shortDescription %}<br>{{ package.shortDescription }}{% endif %}</p>
                 </div>
             </div>
