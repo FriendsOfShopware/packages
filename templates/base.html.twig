@@ -76,9 +76,9 @@
         <div class="search-wrapper">
             <div class="container">
                 <input type="text" id="searchField" class="form-control" placeholder="Search packages..." value="{{ app.request.query.get('term') }}" autofocus/>
-                <div class="helpText">
+                <label for="searchField" class="helpText">
                     It aggregates Shopware plugins as installable Composer packages
-                </div>
+                </label>
             </div>
         </div>
         {% endblock %}
@@ -95,7 +95,7 @@
         <footer class="text-muted">
             <div class="container">
                 <p>FriendsOfShopware Packages is not associated with the shopware AG. If you have problems please submit your issues <a href="https://github.com/FriendsOfShopware/packages/issues">here</a>.</p>
-                <p>Version: <a href="https://github.com/FriendsOfShopware/packages/releases/tag/{{ app.request.server.get('VERSION', 'dev') }}" rel="noopener" target="_blank">{{ app.request.server.get('VERSION', 'dev') }}</a></p>
+                <p>Version: <a href="https://github.com/FriendsOfShopware/packages/releases/tag/{{ app.request.server.get('VERSION', 'dev') }}" title="Github Release" rel="noopener" target="_blank">{{ app.request.server.get('VERSION', 'dev') }}</a></p>
             </div>
         </footer>
 
