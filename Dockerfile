@@ -34,14 +34,12 @@ COPY config /app/config
 COPY webpack.config.js /app/
 RUN npm run build
 
-FROM shyim/shopware-platform-nginx-production:php74
+FROM ghcr.io/shyim/shopware-docker/6/nginx:php74
 
 ARG GIT_TAG=unspecified
-ENV VERSION=$GIT_TAG
+ENV APP_ENV=prod REDIS_URL=redis://redis:6379 VERSION=$GIT_TAG FPM_PM_MAX_CHILDREN=10 PHP_MAX_EXECUTION_TIME=60
 
-ENV APP_ENV=prod REDIS_URL=redis://redis:6379
-
-COPY k8s/stats-vhost.conf /etc/nginx/sites-enabled/
+COPY config/docker/www.conf /etc/nginx/sites-enabled/
 COPY --chown=1000:1000 . /var/www/html
 COPY --from=vendor --chown=1000:1000 /app/vendor /var/www/html/vendor
 COPY --from=npm --chown=1000:1000 /app/public /var/www/html/public
