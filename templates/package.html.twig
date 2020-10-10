@@ -1,11 +1,11 @@
 {% extends "base.html.twig" %}
 
-{% block title %}{{ package.name }} - FriendsOfShopware Packages{% endblock %}
+{% block title %}{{ package.label }} - FriendsOfShopware Packages{% endblock %}
 {% block description %}{% if package.shortDescription %}{{ package.shortDescription }}{% else %}Install easily {{ package.name }} using Composer{% endif %}{% endblock %}
 
 {% block body %}
     <div class="container package-detail mt-3">
-        <h1>{{ package.name }}</h1>
+        <h1>{{ package.label }}</h1>
 
         <div class="row">
             <div class="col-md-8">
@@ -51,6 +51,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Version: {{ version.version }}</h5>
                         <p class="card-text">
+                            Name: {{ package.name }}<br>
                             Maintainers: {{ package.producer.name }}<br>
                             Released: {{ version.releaseDate|date("F j, Y") }}<br>
                             Type: {{ version.type }}<br>
