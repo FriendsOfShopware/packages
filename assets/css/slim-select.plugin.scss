@@ -18,3 +18,19 @@
         width: calc(100% - 24px)
     }
 }
+
+.ss-content {
+    background-color: var(--fos-background);
+
+    .ss-option {
+        &.ss-disabled, &.ss-option-selected {
+            background-color: var(--fos-p) !important;
+        }
+    }
+
+    .ss-search input {
+        background-color: #202225;
+        color: #72767d;
+        border: 1px solid #000000;
+    }
+}

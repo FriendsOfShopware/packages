@@ -1,17 +1,31 @@
-$blue: #007bff;
+:root {
+    --fos-p: #007bff;
+    --fos-background: #fff;
+}
+
+.btn-primary {
+    background-color: var(--fos-p);
+    border-color: var(--fos-p);
+}
+
+.alert-info {
+    background-color: var(--fos-p);
+    border-color: var(--fos-p);
+    color: #fff;
+}
 
 h1 {
-  border-bottom: 1px solid $blue;
+  border-bottom: 1px solid var(--fos-p);
   margin: -5px 0 15px;
   padding: 0 0 15px;
 }
 
 .text-info {
-    color: $blue !important;
+    color: var(--fos-p) !important;
 }
 
 .search-wrapper {
-  background: $blue;
+  background: var(--fos-p);
   padding: 20px;
 
   .helpText {
@@ -33,8 +47,6 @@ footer {
 }
 
 .clean-block {
-    background-color: #f6f6f6;
-
     .block-heading {
         margin-bottom: 40px;
         text-align: center;
@@ -48,8 +60,8 @@ footer {
     }
 
     form {
-        border-top: 2px solid $blue;
-        background-color: #fff;
+        border-top: 2px solid var(--fos-p);
+        background-color: var(--fos-background);
         max-width: 500px;
         margin: auto;
         padding: 40px;
@@ -59,4 +71,39 @@ footer {
 
 a {
     text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --fos-p: #3742fa;
+        --fos-background: #171717;
+    }
+
+    .navbar {
+        background-color: #2f3136 !important;
+        .navbar-nav .nav-link, .navbar-brand {
+            color: #fff;
+        }
+    }
+    body {
+        background: #2F3136;
+        color: #fff;
+    }
+
+    .form-control, .form-control:focus {
+        background-color: #202225;
+        color: #72767d;
+        border: 1px solid #000000;
+    }
+
+    .card {
+        background: #171717;
+        .card-header {
+            background: rgba(0, 0, 0, 0.23);
+        }
+    }
+
+    .modal-content {
+        background-color: var(--fos-background);
+    }
 }
