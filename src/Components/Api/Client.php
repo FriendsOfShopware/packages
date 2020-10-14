@@ -6,7 +6,6 @@ use App\Components\Api\Exceptions\AccessDeniedException;
 use App\Components\Api\Exceptions\TokenMissingException;
 use App\Entity\Version;
 use App\Struct\CompanyMemberShip\CompanyMemberShip;
-use App\Struct\License\Binaries;
 use App\Struct\License\License;
 use App\Struct\License\VariantType;
 use App\Struct\Shop\Shop;
@@ -14,8 +13,8 @@ use App\Struct\Shop\SubscriptionModules;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Cache\CacheInterface;
+use Throwable;
 
 class Client
 {
@@ -237,6 +236,15 @@ class Client
         });
     }
 
+    public function getPartnerAllocation(): ?array
+    {
+        try {
+            return $this->client->request('GET', self::ENDPOINT . 'companies/' . $this->currentToken()->getMemberShip()->company->id . '/allocations')->toArray();
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
     public function fetchDownloadJson(string $binaryLink): ?array
     {
         if (!$this->currentToken) {
@@ -318,6 +326,11 @@ class Client
             return 'shops/' . $token->getShop()->id . '/pluginlicenses';
         }
 
-        return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
+        $partnerAllocation = $this->getPartnerAllocation();
+        if ($partnerAllocation === null || !isset($partnerAllocation['partnerId'])) {
+            return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
+        }
+
+        return 'partners/' . $partnerAllocation['partnerId'] . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
     }
 }
