@@ -12,25 +12,25 @@
 
         <div class="row">
             <div class="col-12">
-                <h4>Packages installed in the last 30 days</h4>
+                <h2>Packages installed in the last 30 days</h2>
 
                 <canvas id="packagesLast30Days" width="400" height="200"></canvas>
             </div>
 
             {% if downloadsByMonths.length > 1 %}
                 <div class="col-12">
-                    <h4>Packages installed per month</h4>
+                    <h2>Packages installed per month</h2>
 
                     <canvas id="packagesPerMonth" width="400" height="200"></canvas>
                 </div>
             {% endif %}
 
             <div class="col-12">
-                <h4>Total</h4>
+                <h2>Total</h2>
                 <p>
-                    Total packages: {{ totals.packageCount }}<br>
-                    Total versions: {{ totals.versionCount }}<br>
-                    Total downloads: {{ totals.downloadCount }}<br>
+                    Total packages: {{ totals.packageCount|number_format(0, ',', '.') }}<br>
+                    Total versions: {{ totals.versionCount|number_format(0, ',', '.') }}<br>
+                    Total downloads: {{ totals.downloadCount|number_format(0, ',', '.') }}<br>
                     (Downloads are tracked since 2020-06-08)
                 </p>
             </div>
