@@ -1,5 +1,5 @@
 :root {
-    --fos-p: #007bff;
+    --fos-p: #0d6efd;
     --fos-background: #fff;
 }
 
@@ -18,6 +18,10 @@ h1 {
   border-bottom: 1px solid var(--fos-p);
   margin: -5px 0 15px;
   padding: 0 0 15px;
+}
+
+h2.card-title {
+    font-size: 1.25rem;
 }
 
 .text-info {
