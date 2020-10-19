@@ -31,6 +31,7 @@ RUN npm install
 RUN mkdir -p public/build
 COPY assets /app/assets
 COPY config /app/config
+COPY templates /app/templates
 COPY webpack.config.js /app/
 RUN npm run build
 
