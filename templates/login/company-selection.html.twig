@@ -14,7 +14,7 @@
             <form method="post">
                 <div class="mb-3">
                     <label for="membership">Company</label>
-                    <select name="membership" id="membership" class="form-control">
+                    <select name="membership" id="membership" class="form-select">
                         {% for membership in memberships %}
                             {% if membership.canAccessShop() %}
                                 <option value="{{ membership.id }}">{{ membership.company.name }}</option>
