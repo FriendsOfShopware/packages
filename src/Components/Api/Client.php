@@ -92,7 +92,7 @@ class Client
             return [];
         }
 
-        usort($content, static function ($a, $b) {
+        \usort($content, static function ($a, $b) {
             return $a->company->name <=> $b->company->name;
         });
 
@@ -135,8 +135,8 @@ class Client
                     $shop->companyName = $content->company->name;
                     $shop->type = $content->type->name;
                     $shop->staging = false;
-                    $shop->domain_idn = idn_to_ascii($shop->domain);
-                    $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => date('Y-m-d H:i:s', strtotime('+1 year'))])];
+                    $shop->domain_idn = \idn_to_ascii($shop->domain);
+                    $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => \date('Y-m-d H:i:s', \strtotime('+1 year'))])];
                 }
             } catch (ClientException $e) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.
@@ -161,7 +161,7 @@ class Client
 
         $allShops = \array_merge($shops, $clientShops, $wildcardShops);
 
-        usort($allShops, static function ($a, $b) {
+        \usort($allShops, static function ($a, $b) {
             return $a->domain <=> $b->domain;
         });
 
@@ -299,7 +299,7 @@ class Client
     }
 
     /**
-     * @param License       $license
+     * @param License $license
      *
      * @return string
      */

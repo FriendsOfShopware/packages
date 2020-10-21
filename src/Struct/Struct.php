@@ -64,7 +64,7 @@ abstract class Struct implements \JsonSerializable
             }
 
             if (isset(static::$mappedFields[$key])) {
-                if (is_array($value) && isset($value[0])) {
+                if (\is_array($value) && isset($value[0])) {
                     $data = [];
 
                     foreach ($value as $item) {

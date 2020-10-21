@@ -539,9 +539,6 @@
             "webpack.config.js"
         ]
     },
-    "symfony/yaml": {
-        "version": "v5.1.7"
-    },
     "twig/extra-bundle": {
         "version": "v3.0.5"
     },

@@ -32,7 +32,6 @@
         "symfony/security-bundle": "5.1.*",
         "symfony/twig-pack": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "5.1.*",
         "doctrine/dbal": "2.12.x-dev"
     },
     "require-dev": {

@@ -106,16 +106,16 @@ class Download
 
     private function repackZip(string $url): Response
     {
-        $downloadCurl = curl_init($url);
-        curl_setopt($downloadCurl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($downloadCurl, CURLOPT_FOLLOWLOCATION, true);
-        $zipContent = curl_exec($downloadCurl);
+        $downloadCurl = \curl_init($url);
+        \curl_setopt($downloadCurl, \CURLOPT_RETURNTRANSFER, true);
+        \curl_setopt($downloadCurl, \CURLOPT_FOLLOWLOCATION, true);
+        $zipContent = \curl_exec($downloadCurl);
 
-        if (curl_getinfo($downloadCurl, CURLINFO_RESPONSE_CODE) !== 200) {
+        if (\curl_getinfo($downloadCurl, \CURLINFO_RESPONSE_CODE) !== 200) {
             return new Response($zipContent, 403);
         }
 
-        curl_close($downloadCurl);
+        \curl_close($downloadCurl);
 
         $tmpFile = \tempnam(\sys_get_temp_dir(), 'plugin');
         \file_put_contents($tmpFile, $zipContent);
