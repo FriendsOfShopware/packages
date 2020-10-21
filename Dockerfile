@@ -35,7 +35,7 @@ COPY templates /app/templates
 COPY webpack.config.js /app/
 RUN npm run build
 
-FROM ghcr.io/shyim/shopware-docker/6/nginx:php74
+FROM ghcr.io/shyim/shopware-docker/6/nginx-production:php74
 
 ARG GIT_TAG=unspecified
 ENV APP_ENV=prod REDIS_URL=redis://redis:6379 VERSION=$GIT_TAG FPM_PM_MAX_CHILDREN=10 PHP_MAX_EXECUTION_TIME=60
