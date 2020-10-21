@@ -24,7 +24,7 @@ RUN set -ex; \
 
 # Webpack Encore
 
-FROM node:14-alpine as npm
+FROM node:alpine as npm
 WORKDIR /app
 COPY package.json package-lock.json /app/
 RUN npm install
@@ -35,12 +35,46 @@ COPY templates /app/templates
 COPY webpack.config.js /app/
 RUN npm run build
 
-FROM ghcr.io/shyim/shopware-docker/6/nginx-production:php74
+FROM php:8.0.0RC2-fpm-alpine
 
 ARG GIT_TAG=unspecified
-ENV APP_ENV=prod REDIS_URL=redis://redis:6379 VERSION=$GIT_TAG FPM_PM_MAX_CHILDREN=10 PHP_MAX_EXECUTION_TIME=60
+ENV APP_ENV=prod \
+    REDIS_URL=redis://redis:6379 \
+    VERSION=$GIT_TAG \
+    TZ=Europe/Berlin \
+    FPM_PM=dynamic \
+    FPM_PM_MAX_CHILDREN=10 \
+    FPM_PM_START_SERVERS=2 \
+    FPM_PM_MIN_SPARE_SERVERS=1 \
+    FPM_PM_MAX_SPARE_SERVERS=3 \
+    PHP_MAX_UPLOAD_SIZE=128m \
+    PHP_MAX_EXECUTION_TIME=60 \
+    PHP_MEMORY_LIMIT=512m
 
-COPY config/docker/www.conf /etc/nginx/sites-enabled/
+COPY --from=ochinchina/supervisord:latest /usr/local/bin/supervisord /usr/bin/supervisord
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
+RUN apk add --no-cache \
+      nginx \
+      shadow && \
+    install-php-extensions bcmath intl mysqli pdo_mysql sockets bz2 gmp soap zip gmp redis opcache && \
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log && \
+    rm -rf /var/lib/nginx/tmp && \
+    ln -sf /tmp /var/lib/nginx/tmp && \
+    mkdir -p /var/tmp/nginx/ || true && \
+    chown -R www-data:www-data /var/lib/nginx /var/tmp/nginx/ && \
+    chmod 777 -R /var/tmp/nginx/ && \
+    rm -rf /tmp/* && \
+    chown -R www-data:www-data /var/www && \
+    usermod -u 1000 www-data && \
+    chown -R 1000 /var/www/html
+
+COPY config/docker/ /
+
+ENTRYPOINT ["/entrypoint.sh"]
+STOPSIGNAL SIGKILL
+
 COPY --chown=1000:1000 . /var/www/html
 COPY --from=vendor --chown=1000:1000 /app/vendor /var/www/html/vendor
 COPY --from=npm --chown=1000:1000 /app/public /var/www/html/public

@@ -1,13 +1,13 @@
 version: '3.7'
 services:
     cli:
-        image: shyim/shopware-cli:php74
+        image: shyim/shopware-cli:php80
         env_file: .env.docker
         tty: true
         volumes:
             - ./:/var/www/html/
     web:
-        image: shyim/shopware-platform-nginx:php74
+        image: friendsofshopware/packages:php8
         env_file: .env.docker
         ports:
             - 80:80
