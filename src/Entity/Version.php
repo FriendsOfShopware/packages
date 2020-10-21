@@ -2,19 +2,9 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(
- *     itemOperations={"get"},
- *     collectionOperations={"get"},
- *     graphql={
- *       "create"={"security"="is_granted('ROLE_ADMIN')"},
- *       "update"={"security"="is_granted('ROLE_ADMIN')"},
- *       "delete"={"security"="is_granted('ROLE_ADMIN')"}
- *     }
- * )
  * @ORM\Entity(repositoryClass="App\Repository\VersionRepository")
  */
 class Version
