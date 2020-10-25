@@ -41,6 +41,10 @@ class Account extends AbstractController
         /** @var AccessToken $token */
         $token = $this->getUser();
 
+        if (!$token) {
+            return $this->redirectToRoute('login');
+        }
+
         $licenses = $this->client->licenses($token);
 
         $data = $this->packagistLoader->load($licenses, $token->getShop());
@@ -62,6 +66,10 @@ class Account extends AbstractController
 
     private function haveShop(): ?RedirectResponse
     {
+        if (!$this->getUser()) {
+            return null;
+        }
+
         if (!$this->getUser()->getShop()) {
             return $this->redirectToRoute('shop-selection');
         }
