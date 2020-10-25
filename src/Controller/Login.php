@@ -75,6 +75,11 @@ class Login extends AbstractController
     {
         /** @var AccessToken $token */
         $token = $this->getUser();
+
+        if (!$token) {
+            return $this->redirectToRoute('login');
+        }
+
         $memberShips = $this->client->memberShips($token);
 
         if ($selectedCompany = $request->request->get('membership')) {
@@ -100,6 +105,11 @@ class Login extends AbstractController
     {
         /** @var AccessToken $token */
         $token = $this->getUser();
+
+        if (!$token) {
+            return $this->redirectToRoute('login');
+        }
+
         $shops = $this->client->shops($token);
 
         if ($selectedShop = $request->request->get('shop')) {
