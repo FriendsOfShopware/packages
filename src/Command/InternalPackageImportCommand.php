@@ -288,7 +288,7 @@ class InternalPackageImportCommand extends Command
     private function getLabel(object $plugin): ?string
     {
         foreach ($plugin->infos as $info) {
-            if ($info->locale->name === 'en_GB') {
+            if ($info->locale->name === 'en_GB' && !empty($info->name)) {
                 return $info->name;
             }
         }
@@ -299,7 +299,7 @@ class InternalPackageImportCommand extends Command
             }
         }
 
-        return null;
+        return $plugin->name;
     }
 
     private function rebuildRequireStructure(): void
