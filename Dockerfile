@@ -24,7 +24,7 @@ RUN set -ex; \
 
 # Webpack Encore
 
-FROM node:alpine as npm
+FROM node:14-alpine as npm
 WORKDIR /app
 COPY package.json package-lock.json /app/
 RUN npm install
