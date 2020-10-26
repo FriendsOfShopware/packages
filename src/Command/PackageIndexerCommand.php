@@ -32,6 +32,7 @@ class PackageIndexerCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '2048M');
         $this->client->deleteAllIndexes();
         $index = $this->client->createIndex(self::INDEX_NAME);
         $index->updateSettings([
