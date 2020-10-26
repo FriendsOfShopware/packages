@@ -60,6 +60,11 @@ class Login extends AbstractController
                 return $this->redirectToRoute('company-selection');
             }
 
+            if (isset($memberShips[0])) {
+                $accessToken->setMemberShip($memberShips[0]);
+                $accessToken->setUserId($memberShips[0]->company->id);
+            }
+
             return $this->redirectToRoute('shop-selection');
         } catch (AccessDeniedException $e) {
             return $this->render('login/index.html.twig', [
