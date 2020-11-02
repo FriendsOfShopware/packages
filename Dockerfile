@@ -24,7 +24,7 @@ RUN set -ex; \
 
 # Webpack Encore
 
-FROM node:alpine as npm
+FROM node:14-alpine as npm
 WORKDIR /app
 COPY package.json package-lock.json /app/
 RUN npm install
@@ -35,7 +35,7 @@ COPY templates /app/templates
 COPY webpack.config.js /app/
 RUN npm run build
 
-FROM php:8.0.0RC2-fpm-alpine
+FROM php:8.0.0RC3-fpm-alpine
 
 ARG GIT_TAG=unspecified
 ENV APP_ENV=prod \
