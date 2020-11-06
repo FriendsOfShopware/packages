@@ -14,13 +14,11 @@ class PluginReader
         \file_put_contents($tmpFile, $content);
 
         $zip = new \ZipArchive();
-        $zip->open($tmpFile);
-
-        $zipIndex = @$zip->statIndex(0);
-
-        if (!\is_array($zipIndex)) {
+        if ($zip->open($tmpFile) !== true) {
             throw new \InvalidArgumentException('Invalid zip file');
         }
+
+        $zipIndex = $zip->statIndex(0);
 
         $folderPath = \str_replace('\\', '/', $zipIndex['name']);
         $pos = \strpos($folderPath, '/');
