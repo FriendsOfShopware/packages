@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PackageIndexerCommand extends Command
 {
     public const INDEX_NAME = 'packages';
-1
+
     protected static $defaultName = 'search:package:index';
 
     private Client $client;

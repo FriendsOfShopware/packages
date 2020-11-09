@@ -15,41 +15,23 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class PackagesJson
 {
-    private Client $client;
-
-    private PackagistLoader $packagistLoader;
-
-    private Encryption $encryption;
-
-    private CacheInterface $cache;
-
-    public function __construct(Client $client, PackagistLoader $packagistLoader, Encryption $encryption, CacheInterface $cache)
+    public function __construct(private Client $client, private PackagistLoader $packagistLoader, private Encryption $encryption, private CacheInterface $cache)
     {
-        $this->client = $client;
-        $this->packagistLoader = $packagistLoader;
-        $this->encryption = $encryption;
-        $this->cache = $cache;
     }
 
-    /**
-     * @Route(path="/packages.json", name="index")
-     */
+    #[Route('/packages.json', name: 'index')]
     public function index(Request $request): JsonResponse
     {
         if (!$request->headers->has('Token')) {
             throw new InvalidTokenHttpException();
         }
-
         $tokenValue = $request->headers->get('Token');
-
         try {
             $credentials = $this->encryption->decrypt($tokenValue);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             throw new InvalidTokenHttpException();
         }
-
         $cacheKey = \md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
-
         $token = $this->cache->get(\md5($cacheKey), function (ItemInterface $item) use ($tokenValue) {
             $credentials = $this->encryption->decrypt($tokenValue);
 

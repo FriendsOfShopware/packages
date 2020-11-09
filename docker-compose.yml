@@ -11,8 +11,8 @@ services:
         env_file: .env.docker
         ports:
             - 80:80
-#        volumes:
-#            - ./:/var/www/html/
+        volumes:
+            - ./:/var/www/html/
     redis:
         image: redis:5-alpine
     mysql:

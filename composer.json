@@ -2,6 +2,7 @@
     "type": "project",
     "name": "frosh/packages",
     "license": "mit",
+    "minimum-stability": "beta",
     "require": {
         "php": "^8.0",
         "composer-runtime-api": "^2",
@@ -13,23 +14,25 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-zip": "*",
+        "ext-pdo": "*",
+        "ext-mbstring": "*",
         "composer/semver": "^3",
         "meilisearch/meilisearch-php": "^0.15.0",
         "psr/simple-cache": "^1.0",
         "sensio/framework-extra-bundle": "^5.4",
         "sentry/sentry-symfony": "^3.5.3",
-        "symfony/cache": "5.1.*",
-        "symfony/console": "5.1.*",
-        "symfony/dotenv": "5.1.*",
-        "symfony/expression-language": "5.1.*",
+        "symfony/cache": "5.2.*",
+        "symfony/console": "5.2.*",
+        "symfony/dotenv": "5.2.*",
+        "symfony/expression-language": "5.2.*",
         "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "5.1.*",
-        "symfony/http-client": "5.1.*",
-        "symfony/mime": "5.1.*",
+        "symfony/framework-bundle": "5.2.*",
+        "symfony/http-client": "5.2.*",
+        "symfony/mime": "5.2.*",
         "symfony/orm-pack": "^1.0",
         "symfony/polyfill-php80": "v1.17.0",
         "symfony/profiler-pack": "^1.0",
-        "symfony/security-bundle": "5.1.*",
+        "symfony/security-bundle": "5.2.*",
         "symfony/twig-pack": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7"
     },
@@ -89,7 +92,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.1.*"
+            "require": "5.2.*"
         }
     }
 }

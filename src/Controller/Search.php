@@ -11,17 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Search extends AbstractController
 {
-    /**
-     * @Route(path="/search", name="search")
-     */
+    #[Route('/search', name: 'search', methods: ['GET'])]
     public function search(): Response
     {
         return $this->render('search.html.twig');
     }
 
-    /**
-     * @Route(path="/api/search", name="api_search")
-     */
+    #[Route('/api/search', name: 'api_search', methods: ['GET'])]
     public function ajaxSearch(Request $request, Client $client): Response
     {
         $index = $client->getIndex(PackageIndexerCommand::INDEX_NAME);

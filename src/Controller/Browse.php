@@ -12,16 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Browse extends AbstractController
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
-    /**
-     * @Route(path="/browse", name="browse")
-     */
+    #[Route('/browse', name: 'browse')]
     public function index(EntityManagerInterface $entityManager): Response
     {
         /** @var PackageRepository $repository */

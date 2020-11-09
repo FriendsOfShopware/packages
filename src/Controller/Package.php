@@ -12,21 +12,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Package extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route(path="/packages/{name}", name="package", requirements={"name"="[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+?)?/"})
-     */
+    #[Route('/packages/{name}', name: 'package', requirements: ['name' => '[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+?)?/'])]
     public function package(string $name, Request $request): Response
     {
         /** @var PackageRepository $repository */
         $repository = $this->entityManager->getRepository(\App\Entity\Package::class);
-
         $package = $repository->findOne($name);
 
         if (!$package) {

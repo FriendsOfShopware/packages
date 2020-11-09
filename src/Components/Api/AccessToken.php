@@ -10,7 +10,7 @@ use App\Struct\CompanyMemberShip\Role;
 use App\Struct\Shop\Shop;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class AccessToken implements \JsonSerializable, UserInterface
+class AccessToken implements \JsonSerializable, UserInterface, \Stringable
 {
     protected \DateTime $expire;
 
@@ -30,7 +30,7 @@ class AccessToken implements \JsonSerializable, UserInterface
 
     protected CompanyMemberShip $memberShip;
 
-    public function __toString()
+    public function __toString(): string
     {
         $encryption = new Encryption();
 

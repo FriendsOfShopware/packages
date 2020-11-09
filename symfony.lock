@@ -200,6 +200,15 @@
     "php-http/promise": {
         "version": "1.1.0"
     },
+    "phpdocumentor/reflection-common": {
+        "version": "2.2.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "5.2.2"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.4.0"
+    },
     "phpstan/extension-installer": {
         "version": "1.0.5"
     },
@@ -450,6 +459,9 @@
     "symfony/security-http": {
         "version": "v5.1.7"
     },
+    "symfony/serializer": {
+        "version": "v5.2.0-beta3"
+    },
     "symfony/serializer-pack": {
         "version": "v1.0.3"
     },
@@ -535,6 +547,9 @@
     },
     "webimpress/safe-writer": {
         "version": "2.1.0"
+    },
+    "webmozart/assert": {
+        "version": "1.9.1"
     },
     "willdurand/negotiation": {
         "version": "v2.3.1"

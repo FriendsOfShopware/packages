@@ -31,12 +31,9 @@ class Client
 
     protected ?AccessToken $currentToken = null;
 
-    private CacheInterface $cache;
-
-    public function __construct(CacheInterface $cache)
+    public function __construct(private CacheInterface $cache)
     {
         $this->client = HttpClient::create();
-        $this->cache = $cache;
     }
 
     public function login(string $username, string $password): AccessToken
@@ -88,7 +85,7 @@ class Client
                 $this->client->request('GET', self::ENDPOINT . 'account/' . $token->getUserAccountId() . '/memberships')->getContent(),
                 false
             );
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return [];
         }
 
@@ -114,7 +111,7 @@ class Client
                 $content = $this->client->request('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
 
                 $clientShops = Shop::mapList(\json_decode($content, false));
-            } catch (ClientException $e) {
+            } catch (ClientException) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.
             }
         }
@@ -138,7 +135,7 @@ class Client
                     $shop->domain_idn = \idn_to_ascii($shop->domain);
                     $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => \date('Y-m-d H:i:s', \strtotime('+1 year'))])];
                 }
-            } catch (ClientException $e) {
+            } catch (ClientException) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.
             }
         }
@@ -154,7 +151,7 @@ class Client
                 ])->getContent();
 
                 $shops = Shop::mapList(\json_decode($shopsContent));
-            } catch (ClientException $e) {
+            } catch (ClientException) {
                 // Partner without own domains
             }
         }
@@ -204,13 +201,13 @@ class Client
                         'limit' => 1_000,
                     ],
                 ])->getContent());
-            } catch (ClientException $e) {
+            } catch (ClientException) {
                 $content = [];
             }
 
             try {
                 $enterprisePlugins = \json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
-            } catch (ClientException $e) {
+            } catch (ClientException) {
                 $enterprisePlugins = [];
             }
 
@@ -240,7 +237,7 @@ class Client
     {
         try {
             return $this->client->request('GET', self::ENDPOINT . 'companies/' . $this->currentToken()->getMemberShip()->company->id . '/allocations')->toArray();
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
     }
@@ -266,7 +263,7 @@ class Client
                 'query' => $query,
                 'headers' => $headers,
             ])->toArray();
-        } catch (ClientException $e) {
+        } catch (ClientException) {
             return null;
         }
 

@@ -26,18 +26,15 @@ class InternalPackageImportCommand extends Command
 
     private HttpClientInterface $client;
 
-    private EntityManagerInterface $entityManager;
-
     private ObjectRepository $packageRepository;
 
     private ObjectRepository $producerRepository;
 
     private VersionParser $versionParser;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
         parent::__construct();
-        $this->entityManager = $entityManager;
         $this->packageRepository = $entityManager->getRepository(Package::class);
         $this->producerRepository = $entityManager->getRepository(Producer::class);
         $this->versionParser = new VersionParser();
@@ -51,7 +48,7 @@ class InternalPackageImportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->login($input);
+        $this->login();
 
         $current = (int) $input->getOption('offset');
         $plugins = $this->loadPlugins($current);
@@ -70,7 +67,7 @@ class InternalPackageImportCommand extends Command
             $this->entityManager->clear();
             $current += \count($plugins);
             $plugins = $this->loadPlugins($current);
-            $this->login($input);
+            $this->login();
         }
 
         $progressBar->finish();
@@ -181,7 +178,7 @@ class InternalPackageImportCommand extends Command
         foreach ($plugin->binaries as $binary) {
             try {
                 $this->versionParser->normalize($binary->version);
-            } catch (\UnexpectedValueException $e) {
+            } catch (\UnexpectedValueException) {
                 // Very old version
                 if ($binary->creationDate === null) {
                     continue;
@@ -250,13 +247,13 @@ class InternalPackageImportCommand extends Command
                         'unencrypted' => 'true',
                     ],
                 ])->getContent();
-            } catch (\Throwable $e) {
+            } catch (\Throwable) {
                 continue;
             }
 
             try {
                 PluginReader::readFromZip($pluginZip, $version);
-            } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException) {
                 continue;
             }
 

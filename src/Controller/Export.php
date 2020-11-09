@@ -10,9 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Export
 {
-    /**
-     * @Route(path="/export.json")
-     */
+    #[Route('/export.json')]
     public function export(EntityManagerInterface $entityManager, CacheInterface $cache): JsonResponse
     {
         /** @var PackageRepository $repository */

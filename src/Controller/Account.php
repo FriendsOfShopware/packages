@@ -16,22 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Account extends AbstractController
 {
-    private Client $client;
-
-    private PackagistLoader $packagistLoader;
-
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(Client $client, PackagistLoader $packagistLoader, EntityManagerInterface $entityManager)
+    public function __construct(private Client $client, private PackagistLoader $packagistLoader, private EntityManagerInterface $entityManager)
     {
-        $this->client = $client;
-        $this->packagistLoader = $packagistLoader;
-        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route(path="/account", name="account")
-     */
+    #[Route('/account', name: 'account')]
     public function index(Request $request): Response
     {
         if ($redirect = $this->haveShop()) {
@@ -40,13 +29,11 @@ class Account extends AbstractController
 
         /** @var AccessToken $token */
         $token = $this->getUser();
-
         if (!$token) {
             return $this->redirectToRoute('login');
         }
 
         $licenses = $this->client->licenses($token);
-
         $data = $this->packagistLoader->load($licenses, $token->getShop());
         $packageNames = \array_map(static fn (string $name) => \str_replace('store.shopware.com/', '', $name), \array_keys($data['packages']));
 

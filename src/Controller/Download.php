@@ -20,22 +20,11 @@ use ZipArchive;
 
 class Download
 {
-    private Encryption $encryption;
-
-    private Client $client;
-
-    private CacheInterface $cache;
-
-    public function __construct(Encryption $encryption, Client $client, CacheInterface $cache)
+    public function __construct(private Encryption $encryption, private Client $client, private CacheInterface $cache)
     {
-        $this->encryption = $encryption;
-        $this->client = $client;
-        $this->cache = $cache;
     }
 
-    /**
-     * @Route(path="/download")
-     */
+    #[\Symfony\Component\Routing\Annotation\Route('/download')]
     public function download(Request $request): Response
     {
         $tokenValue = $request->query->get('token');
@@ -46,12 +35,11 @@ class Download
 
         try {
             $credentials = $this->encryption->decrypt($tokenValue);
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             throw new InvalidTokenHttpException();
         }
 
         $cacheKey = \md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
-
         $token = $this->cache->get(\md5($cacheKey), function (ItemInterface $item) use ($credentials) {
             if (empty($credentials)) {
                 throw new InvalidTokenHttpException();
@@ -131,15 +119,15 @@ class Download
         for ($i = 0; $i < $zip->numFiles; ++$i) {
             $filename = $zip->getNameIndex($i);
 
-            if (\strpos($filename, 'Backend/') === 0) {
+            if (str_starts_with($filename, 'Backend/')) {
                 $filename = \substr($filename, 8);
             }
 
-            if (\strpos($filename, 'Core/') === 0) {
+            if (str_starts_with($filename, 'Core/')) {
                 $filename = \substr($filename, 5);
             }
 
-            if (\strpos($filename, 'Frontend/') === 0) {
+            if (str_starts_with($filename, 'Frontend/')) {
                 $filename = \substr($filename, 9);
             }
 

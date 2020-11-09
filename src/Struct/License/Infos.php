@@ -15,5 +15,8 @@ class Infos extends Struct
 
     public $locale;
 
-    public $name;
+    public ?string $name;
+
+    public ?string $description;
+    public ?string $shortDescription;
 }

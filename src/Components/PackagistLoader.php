@@ -16,18 +16,9 @@ class PackagistLoader
 {
     private PackageRepository $packageRepository;
 
-    private Client $client;
-
-    private Encryption $encryption;
-
-    private RouterInterface $router;
-
-    public function __construct(EntityManagerInterface $entityManager, Client $client, Encryption $encryption, RouterInterface $router)
+    public function __construct(EntityManagerInterface $entityManager, private Client $client, private Encryption $encryption, private RouterInterface $router)
     {
         $this->packageRepository = $entityManager->getRepository(Package::class);
-        $this->client = $client;
-        $this->encryption = $encryption;
-        $this->router = $router;
     }
 
     /**

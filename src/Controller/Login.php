@@ -16,31 +16,20 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 class Login extends AbstractController
 {
-    private Client $client;
-
-    private CacheInterface $cache;
-
-    public function __construct(Client $client, CacheInterface $cache)
+    public function __construct(private Client $client, private CacheInterface $cache)
     {
-        $this->client = $client;
-        $this->cache = $cache;
     }
 
-    /**
-     * @Route(path="/login", name="login", methods={"GET"})
-     */
+    #[Route('/login', name: 'login', methods: ['GET'])]
     public function loginForm(): Response
     {
         if ($this->getUser() instanceof AccessToken) {
             return $this->redirectToRoute('account');
         }
-
         return $this->render('login/index.html.twig');
     }
 
-    /**
-     * @Route(path="/login", methods={"POST"})
-     */
+    #[Route('/login', methods: ['POST'])]
     public function loginSubmit(Request $request, EventDispatcherInterface $dispatcher): Response
     {
         $username = $request->request->get('shopwareId');
@@ -73,20 +62,15 @@ class Login extends AbstractController
         }
     }
 
-    /**
-     * @Route(path="/account/company-selection", name="company-selection")
-     */
-    public function companySelection(Request $request)
+    #[Route('/account/company-selection', name: 'company-selection')]
+    public function companySelection(Request $request): Response
     {
         /** @var AccessToken $token */
         $token = $this->getUser();
-
         if (!$token) {
             return $this->redirectToRoute('login');
         }
-
         $memberShips = $this->client->memberShips($token);
-
         if ($selectedCompany = $request->request->get('membership')) {
             foreach ($memberShips as $memberShip) {
                 if ($memberShip->id === (int) $selectedCompany) {
@@ -97,26 +81,21 @@ class Login extends AbstractController
                 }
             }
         }
-
         return $this->render('login/company-selection.html.twig', [
             'memberships' => $memberShips,
         ]);
     }
 
-    /**
-     * @Route(path="/account/shop-selection", name="shop-selection")
-     */
-    public function shopSelection(Request $request)
+    #[Route('/account/shop-selection', name: 'shop-selection')]
+    public function shopSelection(Request $request): Response
     {
         /** @var AccessToken $token */
         $token = $this->getUser();
-
         if (!$token) {
             return $this->redirectToRoute('login');
         }
 
         $shops = $this->client->shops($token);
-
         if ($selectedShop = $request->request->get('shop')) {
             foreach ($shops as $shop) {
                 if ($shop->domain === $selectedShop) {

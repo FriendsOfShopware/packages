@@ -11,34 +11,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * @Route("/feeds")
- */
+#[Route('/feeds')]
 class Feed extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private RouterInterface $router;
-
-    public function __construct(EntityManagerInterface $entityManager, RouterInterface $router)
+    public function __construct(private EntityManagerInterface $entityManager, private RouterInterface $router)
     {
-        $this->entityManager = $entityManager;
-        $this->router = $router;
     }
 
-    /**
-     * @Route(
-     *     "/package.{packageName}.{format}",
-     *     name="feed_package",
-     *     requirements={"format"="(rss|atom)", "packageName"="[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+"},
-     *     methods={"GET"}
-     * )
-     */
+    #[Route('/package.{packageName}.{format}', name: 'feed_package', requirements: ['format' => '(rss|atom)', 'packageName' => '[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+'], methods: ['GET'])]
     public function packageAction(string $packageName, string $format): Response
     {
         /** @var PackageRepository $repository */
         $repository = $this->entityManager->getRepository(\App\Entity\Package::class);
-
         $package = $repository->findOne($packageName);
 
         if (!$package) {

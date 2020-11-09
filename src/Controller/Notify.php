@@ -13,16 +13,11 @@ class Notify
 {
     private const USER_AGENT_REGEX = '/Composer\/(?<composerVersion>\d+\.\d+\.\d+).*; PHP\s(?<phpVersion>\d+\.\d+\.\d+)/m';
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route(path="/downloads/", name="notify")
-     */
+    #[Route('/downloads/', name: 'notify')]
     public function notify(Request $request): JsonResponse
     {
         $json = \json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
@@ -53,7 +48,6 @@ class Notify
         }
 
         $this->entityManager->flush();
-
         return new JsonResponse();
     }
 
