@@ -35,43 +35,4 @@ class Kernel extends BaseKernel
             (require $path)($routes->withPath($path), $this);
         }
     }
-
-    protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, string $class, string $baseClass)
-    {
-        // cache the container
-        $dumper = new PhpDumper($container);
-
-        if (class_exists('ProxyManager\Configuration') && class_exists('Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper')) {
-            $dumper->setProxyDumper(new ProxyDumper());
-        }
-
-        // FrameworkBundle triggers Segment Fault
-        $classes = array_map('get_class', $this->bundles);
-        unset($classes['FrameworkBundle']);
-
-        $content = $dumper->dump([
-            'class' => $class,
-            'base_class' => $baseClass,
-            'file' => $cache->getPath(),
-            'as_files' => true,
-            'debug' => $this->debug,
-            'build_time' => $container->hasParameter('kernel.container_build_time') ? $container->getParameter('kernel.container_build_time') : time(),
-            'preload_classes' => $classes,
-        ]);
-
-        $rootCode = array_pop($content);
-        $dir = \dirname($cache->getPath()).'/';
-        $fs = new Filesystem();
-
-        foreach ($content as $file => $code) {
-            $fs->dumpFile($dir.$file, $code);
-            @chmod($dir.$file, 0666 & ~umask());
-        }
-        $legacyFile = \dirname($dir.key($content)).'.legacy';
-        if (file_exists($legacyFile)) {
-            @unlink($legacyFile);
-        }
-
-        $cache->write($rootCode, $container->getResources());
-    }
 }

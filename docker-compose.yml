@@ -7,7 +7,7 @@ services:
         volumes:
             - ./:/var/www/html/
     web:
-        image: friendsofshopware/packages
+        image: friendsofshopware/packages:php8
         env_file: .env.docker
         ports:
             - 80:80
