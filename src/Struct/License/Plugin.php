@@ -26,41 +26,41 @@ use App\Struct\Struct;
  */
 class Plugin extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $name = null;
+    public $name;
 
-    public $code = null;
+    public $code;
 
-    public $iconUrl = null;
+    public $iconUrl;
 
-    public $infos = null;
+    public $infos;
 
-    public $storeAvailabilities = null;
+    public $storeAvailabilities;
 
-    public $activationStatus = null;
+    public $activationStatus;
 
-    public $approvalStatus = null;
+    public $approvalStatus;
 
-    public $generation = null;
+    public $generation;
 
-    public $isPremiumPlugin = null;
+    public $isPremiumPlugin;
 
-    public $isAdvancedFeature = null;
+    public $isAdvancedFeature;
 
-    public $isEnterpriseAccelerator = null;
+    public $isEnterpriseAccelerator;
 
-    public $hasPriceModelBuy = null;
+    public $hasPriceModelBuy;
 
-    public $isSubscriptionEnabled = null;
+    public $isSubscriptionEnabled;
 
-    public $support = null;
+    public $support;
 
-    public $supportOnlyCommercial = null;
+    public $supportOnlyCommercial;
 
-    public $producer = null;
+    public $producer;
 
-    public $binaries = null;
+    public $binaries;
 
     public string $creationDate;
 

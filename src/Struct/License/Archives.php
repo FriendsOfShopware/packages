@@ -13,13 +13,13 @@ use App\Struct\Struct;
  */
 class Archives extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $localPath = null;
+    public $localPath;
 
-    public $remoteLink = null;
+    public $remoteLink;
 
-    public $shopwareMajorVersion = null;
+    public $shopwareMajorVersion;
 
-    public $ioncubeEncrypted = null;
+    public $ioncubeEncrypted;
 }

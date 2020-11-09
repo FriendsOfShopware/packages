@@ -11,11 +11,11 @@ use App\Struct\Struct;
  */
 class Changelogs extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $locale = null;
+    public $locale;
 
-    public $text = null;
+    public $text;
 
     public static $mappedFields = [
         'locale' => 'App\\Struct\\License\\VariantType',

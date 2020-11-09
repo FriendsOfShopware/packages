@@ -11,9 +11,9 @@ use App\Struct\Struct;
  */
 class Infos extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $locale = null;
+    public $locale;
 
-    public $name = null;
+    public $name;
 }

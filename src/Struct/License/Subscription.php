@@ -11,9 +11,9 @@ use App\Struct\Struct;
  */
 class Subscription extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $creationDate = null;
+    public $creationDate;
 
-    public $expirationDate = null;
+    public $expirationDate;
 }

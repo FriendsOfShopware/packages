@@ -12,13 +12,13 @@ use App\Struct\Struct;
  */
 class Producer extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $name = null;
+    public $name;
 
-    public $prefix = null;
+    public $prefix;
 
-    public $companyId = null;
+    public $companyId;
 
     public static $mappedFields = [
     ];

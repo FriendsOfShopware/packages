@@ -15,17 +15,17 @@ use App\Struct\Struct;
  */
 class CompatibleSoftwareVersions extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $name = null;
+    public $name;
 
-    public $parent = null;
+    public $parent;
 
-    public $selectable = null;
+    public $selectable;
 
-    public $major = null;
+    public $major;
 
-    public $releaseDate = null;
+    public $releaseDate;
 
-    public $public = null;
+    public $public;
 }

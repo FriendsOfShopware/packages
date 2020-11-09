@@ -82,10 +82,9 @@ class InternalPackageImportCommand extends Command
         return 0;
     }
 
-    private function login(InputInterface $input): void
+    private function login(): void
     {
         $client = HttpClient::create();
-
         $response = $client->request('POST', \getenv('SBP_LOGIN'), [
             'headers' => [
                 'Content-Type' => 'application/json',

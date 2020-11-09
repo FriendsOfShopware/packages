@@ -37,16 +37,12 @@ class Search extends AbstractController
         $selectedTypes = \array_filter(\explode('|', $request->query->get('types', '')));
         $selectedProducers = \array_filter(\explode('|', $request->query->get('producers', '')));
 
-        if (!empty($selectedTypes)) {
-            foreach ($selectedTypes as $selectedType) {
-                $options['facetFilters'][] = 'types:' . $selectedType;
-            }
+        foreach ($selectedTypes as $selectedType) {
+            $options['facetFilters'][] = 'types:' . $selectedType;
         }
 
-        if (!empty($selectedProducers)) {
-            foreach ($selectedProducers as $selectedProducer) {
-                $options['facetFilters'][] = 'producerName:' . $selectedProducer;
-            }
+        foreach ($selectedProducers as $selectedProducer) {
+            $options['facetFilters'][] = 'producerName:' . $selectedProducer;
         }
 
         $searchResult = $index->search($term, $options);

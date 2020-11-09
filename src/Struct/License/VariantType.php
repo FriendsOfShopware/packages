@@ -10,7 +10,7 @@ use App\Struct\Struct;
  */
 class VariantType extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $name = null;
+    public $name;
 }

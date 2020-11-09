@@ -9,5 +9,5 @@ use App\Struct\Struct;
  */
 class Company extends Struct
 {
-    public $id = null;
+    public $id;
 }

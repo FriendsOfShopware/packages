@@ -21,31 +21,31 @@ use App\Struct\Struct;
  */
 class Binaries extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $name = null;
+    public $name;
 
-    public $localPath = null;
+    public $localPath;
 
-    public $remoteLink = null;
+    public $remoteLink;
 
-    public $version = null;
+    public $version;
 
-    public $status = null;
+    public $status;
 
-    public $compatibleSoftwareVersions = null;
+    public $compatibleSoftwareVersions;
 
-    public $changelogs = null;
+    public $changelogs;
 
-    public $creationDate = null;
+    public $creationDate;
 
-    public $lastChangeDate = null;
+    public $lastChangeDate;
 
-    public $archives = null;
+    public $archives;
 
-    public $ionCubeEncrypted = null;
+    public $ionCubeEncrypted;
 
-    public $licenseCheckRequired = null;
+    public $licenseCheckRequired;
 
     public static $mappedFields = [
         'status' => 'App\\Struct\\License\\Status',

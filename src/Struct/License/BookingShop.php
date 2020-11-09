@@ -11,11 +11,11 @@ use App\Struct\Struct;
  */
 class BookingShop extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $company = null;
+    public $company;
 
-    public $domain = null;
+    public $domain;
 
     public static $mappedFields = [
         'company' => 'App\\Struct\\License\\Company',

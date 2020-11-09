@@ -27,43 +27,43 @@ use App\Struct\Struct;
  */
 class License extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $bookingShop = null;
+    public $bookingShop;
 
-    public $licenseShop = null;
+    public $licenseShop;
 
-    public $variantType = null;
+    public $variantType;
 
-    public $orderNumber = null;
+    public $orderNumber;
 
-    public $price = null;
+    public $price;
 
-    public $creationDate = null;
+    public $creationDate;
 
-    public $payed = null;
+    public $payed;
 
-    public $archived = null;
+    public $archived;
 
-    public $shopwareMajorVersion = null;
+    public $shopwareMajorVersion;
 
-    public $subscription = null;
+    public $subscription;
 
-    public $expirationDate = null;
+    public $expirationDate;
 
-    public $plugin = null;
+    public $plugin;
 
-    public $charging = null;
+    public $charging;
 
-    public $disbursed = null;
+    public $disbursed;
 
-    public $quantity = null;
+    public $quantity;
 
-    public $description = null;
+    public $description;
 
-    public $licenseKey = null;
+    public $licenseKey;
 
-    public $licenseMigrated = null;
+    public $licenseMigrated;
 
     public static $mappedFields = [
         'bookingShop' => 'App\\Struct\\License\\BookingShop',

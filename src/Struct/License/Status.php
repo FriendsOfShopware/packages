@@ -11,9 +11,9 @@ use App\Struct\Struct;
  */
 class Status extends Struct
 {
-    public $id = null;
+    public $id;
 
-    public $name = null;
+    public $name;
 
-    public $description = null;
+    public $description;
 }
