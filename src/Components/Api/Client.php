@@ -3,6 +3,7 @@
 namespace App\Components\Api;
 
 use App\Components\Api\Exceptions\AccessDeniedException;
+use App\Components\Api\Exceptions\ApiException;
 use App\Components\Api\Exceptions\TokenMissingException;
 use App\Entity\Version;
 use App\Struct\CompanyMemberShip\CompanyMemberShip;
@@ -242,7 +243,7 @@ class Client
         }
     }
 
-    public function fetchDownloadJson(string $binaryLink): ?array
+    public function fetchDownloadJson(string $binaryLink): array
     {
         if (!$this->currentToken) {
             throw new TokenMissingException();
@@ -263,8 +264,14 @@ class Client
                 'query' => $query,
                 'headers' => $headers,
             ])->toArray();
-        } catch (ClientException) {
-            return null;
+        } catch (ClientException $e) {
+            $response = $e->getResponse()->toArray(false);
+
+            if (\array_key_exists('code', $response)) {
+                throw new ApiException($response['code']);
+            }
+
+            throw new ApiException(\json_encode($response));
         }
 
         return $json;
