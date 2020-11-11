@@ -2,7 +2,7 @@
     "type": "project",
     "name": "frosh/packages",
     "license": "mit",
-    "minimum-stability": "beta",
+    "minimum-stability": "RC",
     "require": {
         "php": "^8.0",
         "composer-runtime-api": "^2",
