@@ -35,7 +35,7 @@ COPY templates /app/templates
 COPY webpack.config.js /app/
 RUN npm run build
 
-FROM phpdaily/php:8.0.0-dev-fpm-alpine
+FROM php:8.0.0RC4-fpm-alpine
 
 ARG GIT_TAG=unspecified
 ENV APP_ENV=prod \
