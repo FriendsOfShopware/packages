@@ -2,17 +2,13 @@
 
 namespace App\Components;
 
+use OpenSSLAsymmetricKey;
+
 class Encryption
 {
-    /**
-     * @var resource
-     */
-    private $publicKey;
+    private OpenSSLAsymmetricKey $publicKey;
 
-    /**
-     * @var resource
-     */
-    private $privateKey;
+    private OpenSSLAsymmetricKey $privateKey;
 
     public function __construct()
     {

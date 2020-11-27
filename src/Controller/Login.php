@@ -65,8 +65,9 @@ class Login extends AbstractController
     #[Route('/account/company-selection', name: 'company-selection')]
     public function companySelection(Request $request): Response
     {
-        /** @var AccessToken $token */
+        /** @var AccessToken|null $token */
         $token = $this->getUser();
+
         if (!$token) {
             return $this->redirectToRoute('login');
         }
@@ -89,8 +90,9 @@ class Login extends AbstractController
     #[Route('/account/shop-selection', name: 'shop-selection')]
     public function shopSelection(Request $request): Response
     {
-        /** @var AccessToken $token */
+        /** @var AccessToken|null $token */
         $token = $this->getUser();
+
         if (!$token) {
             return $this->redirectToRoute('login');
         }

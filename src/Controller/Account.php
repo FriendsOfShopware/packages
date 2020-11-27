@@ -27,8 +27,9 @@ class Account extends AbstractController
             return $redirect;
         }
 
-        /** @var AccessToken $token */
+        /** @var AccessToken|null $token */
         $token = $this->getUser();
+
         if (!$token) {
             return $this->redirectToRoute('login');
         }
