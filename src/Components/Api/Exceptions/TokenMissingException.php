@@ -12,4 +12,3 @@ class TokenMissingException extends HttpException
         parent::__construct(Response::HTTP_BAD_REQUEST, 'Token is missing');
     }
 }
-
