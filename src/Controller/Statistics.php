@@ -7,10 +7,11 @@ namespace App\Controller;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
-use PDO;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 use function array_keys;
 use function array_map;
 use function array_values;
@@ -19,7 +20,7 @@ use function json_encode;
 
 class Statistics extends AbstractController
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private Connection $connection, private CacheInterface $cache)
     {
     }
 
@@ -35,9 +36,9 @@ class Statistics extends AbstractController
 
     private function getTotals(): array
     {
-        $packagesCount = (int) $this->connection->fetchColumn('SELECT COUNT(*) FROM package');
-        $versionCount = (int) $this->connection->fetchColumn('SELECT COUNT(*) FROM version');
-        $downloadCount = (int) $this->connection->fetchColumn('SELECT COUNT(*) FROM download');
+        $packagesCount = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM package');
+        $versionCount = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM version');
+        $downloadCount = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM download');
 
         return [
             'packageCount' => $packagesCount,
@@ -60,10 +61,14 @@ SQL;
         $current = new DateTimeImmutable();
         $past = $current->sub(new DateInterval('P30D'));
 
-        return $this->connection->executeQuery($sql, [
-            'from' => $past->format('Y-m-d'),
-            'to' => $current->format('Y-m-d'),
-        ])->fetchAll(PDO::FETCH_KEY_PAIR);
+        return $this->cache->get('download-30-days', function (CacheItemInterface $item) use($sql, $past, $current) {
+            $item->expiresAfter(300);
+
+            return $this->connection->fetchAllKeyValue($sql, [
+                'from' => $past->format('Y-m-d'),
+                'to' => $current->format('Y-m-d'),
+            ]);
+        });
     }
 
     private function getDownloadsByMonths(): array
@@ -76,7 +81,11 @@ FROM download
 GROUP BY EXTRACT( YEAR_MONTH FROM download.installed_at )
 SQL;
 
-        return $this->connection->executeQuery($sql)->fetchAll(PDO::FETCH_KEY_PAIR);
+        return $this->cache->get('download-by-months', function (CacheItemInterface $item) use($sql) {
+            $item->expiresAfter(300);
+
+            return $this->connection->fetchAllKeyValue($sql);
+        });
     }
 
     private function formatForChartJs(array $data): array
