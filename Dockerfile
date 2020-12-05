@@ -27,6 +27,7 @@ RUN set -ex; \
 FROM node:14-alpine as npm
 WORKDIR /app
 COPY package.json package-lock.json /app/
+COPY --from=vendor --chown=1000:1000 /app/vendor /app/vendor
 RUN npm install
 RUN mkdir -p public/build
 COPY assets /app/assets

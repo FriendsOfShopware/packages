@@ -24,6 +24,10 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('sf-ux', './assets/js/sf-ux.js')
+
+    .enableStimulusBridge('./assets/controllers.json')
+
     //.addEntry('page1', './assets/page1.js')
     //.addEntry('page2', './assets/page2.js')
 
@@ -46,6 +50,10 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+
+    .configureBabel((config) => {
+        config.plugins.push('@babel/plugin-proposal-class-properties');
+    })
 
     // enables @babel/preset-env polyfills
     .configureBabelPresetEnv((config) => {

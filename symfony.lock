@@ -171,7 +171,7 @@
         "version": "2.9.1"
     },
     "php": {
-        "version": "7.4"
+        "version": "8.0"
     },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
@@ -482,6 +482,9 @@
     "symfony/twig-pack": {
         "version": "v1.0.0"
     },
+    "symfony/ux-chartjs": {
+        "version": "v1.0.0"
+    },
     "symfony/var-dumper": {
         "version": "v5.1.7"
     },
@@ -511,10 +514,13 @@
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "1.6",
-            "ref": "69e1d805ad95964088bd510c05995e87dc391564"
+            "ref": "6747b34e25c836dd684d27846a452d8f8a3abb2e"
         },
         "files": [
             "assets/app.js",
+            "assets/bootstrap.js",
+            "assets/controllers.json",
+            "assets/controllers/hello_controller.js",
             "assets/styles/app.css",
             "config/packages/assets.yaml",
             "config/packages/prod/webpack_encore.yaml",

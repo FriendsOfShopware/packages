@@ -12,11 +12,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 use function array_keys;
-use function array_map;
 use function array_values;
-use function count;
-use function json_encode;
 
 class Statistics extends AbstractController
 {
@@ -25,12 +24,12 @@ class Statistics extends AbstractController
     }
 
     #[Route('/statistics', name: 'statistics')]
-    public function index(): Response
+    public function index(ChartBuilderInterface $chartBuilder): Response
     {
         return $this->render('statistics.html.twig', [
             'totals' => $this->getTotals(),
-            'downloads30Days' => $this->formatForChartJs($this->getDownloadsLast30Days()),
-            'downloadsByMonths' => $this->formatForChartJs($this->getDownloadsByMonths()),
+            'downloads30Days' => $this->getDownloadsLast30Days($chartBuilder),
+            'downloadsByMonths' => $this->getDownloadsByMonths($chartBuilder),
         ]);
     }
 
@@ -47,7 +46,7 @@ class Statistics extends AbstractController
         ];
     }
 
-    private function getDownloadsLast30Days(): array
+    private function getDownloadsLast30Days(ChartBuilderInterface $chartBuilder): Chart
     {
         $sql = <<<SQL
 SELECT
@@ -61,7 +60,7 @@ SQL;
         $current = new DateTimeImmutable();
         $past = $current->sub(new DateInterval('P30D'));
 
-        return $this->cache->get('download-30-days', function (CacheItemInterface $item) use($sql, $past, $current) {
+        $values = $this->cache->get('download-30-days', function (CacheItemInterface $item) use($sql, $past, $current) {
             $item->expiresAfter(300);
 
             return $this->connection->fetchAllKeyValue($sql, [
@@ -69,9 +68,22 @@ SQL;
                 'to' => $current->format('Y-m-d'),
             ]);
         });
+
+        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+        $chart->setData([
+            'labels' => array_keys($values),
+            'datasets' => [
+                [
+                    'label' => 'Downloads',
+                    'data' => array_values($values)
+                ]
+            ]
+        ]);
+
+        return $chart;
     }
 
-    private function getDownloadsByMonths(): array
+    private function getDownloadsByMonths(ChartBuilderInterface $chartBuilder): Chart
     {
         $sql = <<<SQL
 SELECT
@@ -81,19 +93,23 @@ FROM download
 GROUP BY EXTRACT( YEAR_MONTH FROM download.installed_at )
 SQL;
 
-        return $this->cache->get('download-by-months', function (CacheItemInterface $item) use($sql) {
+        $values = $this->cache->get('download-by-months', function (CacheItemInterface $item) use($sql) {
             $item->expiresAfter(300);
 
             return $this->connection->fetchAllKeyValue($sql);
         });
-    }
 
-    private function formatForChartJs(array $data): array
-    {
-        return [
-            'keys' => json_encode(array_keys($data)),
-            'values' => json_encode(array_map('intval', array_values($data))),
-            'length' => count($data),
-        ];
+        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+        $chart->setData([
+            'labels' => array_keys($values),
+            'datasets' => [
+                [
+                    'label' => 'Downloads',
+                    'data' => array_values($values)
+                ]
+            ]
+        ]);
+
+        return $chart;
     }
 }
