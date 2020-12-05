@@ -83,5 +83,10 @@ COPY --from=npm --chown=1000:1000 /app/public /var/www/html/public
 RUN php bin/console cache:clear && \
     echo "opcache.preload=/var/www/html/var/cache/prod/App_KernelProdContainer.preload.php" > /usr/local/etc/php/conf.d/preload.ini && \
     echo "opcache.preload_user=www-data" >> /usr/local/etc/php/conf.d/preload.ini && \
+    echo "opcache.memory_consumption=256" >> /usr/local/etc/php/conf.d/preload.ini && \
+    echo "opcache.max_accelerated_files=20000" >> /usr/local/etc/php/conf.d/preload.ini && \
+    echo "opcache.validate_timestamps=0" >> /usr/local/etc/php/conf.d/preload.ini && \
     echo "opcache.jit_buffer_size=100M" >> /usr/local/etc/php/conf.d/preload.ini && \
+    echo "realpath_cache_size=4096K" >> /usr/local/etc/php/conf.d/preload.ini && \
+    echo "realpath_cache_ttl=600" >> /usr/local/etc/php/conf.d/preload.ini && \
     echo "display_errors=0" > /usr/local/etc/php/conf.d/prod.ini
