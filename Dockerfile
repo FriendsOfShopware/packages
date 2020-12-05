@@ -36,7 +36,7 @@ COPY templates /app/templates
 COPY webpack.config.js /app/
 RUN npm run build
 
-FROM amd64/php:8.0-fpm-alpine
+FROM php:8.0-fpm-alpine
 
 ARG GIT_TAG=unspecified
 ENV APP_ENV=prod \
@@ -52,7 +52,7 @@ ENV APP_ENV=prod \
     PHP_MAX_EXECUTION_TIME=60 \
     PHP_MEMORY_LIMIT=512m
 
-COPY --from=ochinchina/supervisord:latest /usr/local/bin/supervisord /usr/bin/supervisord
+COPY --from=ghcr.io/shyim/supervisord /usr/local/bin/supervisord /usr/bin/supervisord
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN apk add --no-cache \
