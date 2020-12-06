@@ -33,7 +33,7 @@
         "symfony/profiler-pack": "^1.0",
         "symfony/security-bundle": "5.2.*",
         "symfony/twig-pack": "^1.0",
-        "symfony/ux-chartjs": "1.0.0",
+        "symfony/ux-chartjs": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7"
     },
     "require-dev": {
