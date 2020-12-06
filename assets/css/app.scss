@@ -1,6 +1,6 @@
 :root {
-    --fos-p: #0d6efd;
-    --fos-background: #fff;
+    --fos-p: #164be5;
+    --fos-background: #171717;
 }
 
 .btn-primary {
@@ -47,6 +47,16 @@ footer {
 .search-page {
     .list-group-item {
         cursor: pointer;
+        background: var(--fos-p);
+        border-bottom-color: #171717;
+
+        &.active {
+            background-color: #0e35a7 !important;
+            border-color: #0e35a7 !important;
+        }
+        .badge.bg-secondary {
+            background-color: #0d0d0d !important;
+        }
     }
 }
 
@@ -75,39 +85,52 @@ footer {
 
 a {
     text-decoration: none;
+    color: #4977fd;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --fos-p: #3742fa;
-        --fos-background: #171717;
-    }
+code {
+    color: #e2378c;
+}
 
-    .navbar {
-        background-color: #2f3136 !important;
-        .navbar-nav .nav-link, .navbar-brand {
+.navbar {
+    background-color: #0d0d0d !important;
+    .navbar-nav .nav-link, .navbar-brand {
+        color: hsla(0,0%,100%,.7);
+        &:hover, &:focus {
             color: #fff;
         }
     }
-    body {
-        background: #2F3136;
-        color: #fff;
-    }
+}
+body {
+    background: #0d0d0d;
+    color: #fff;
+}
 
-    .form-control, .form-control:focus {
-        background-color: #202225;
-        color: #72767d;
-        border: 1px solid #000000;
-    }
+p {
+    color: #fff;
+}
 
-    .card {
-        background: #171717;
-        .card-header {
-            background: rgba(0, 0, 0, 0.23);
-        }
+.form-control, .form-control:focus, .form-control[readonly] {
+    background-color: #0d0d0d;
+    color: #FFFFFF;
+    border: 1px solid #0d0d0d;
+    &::placeholder {
+        color: #FFFFFF;
     }
+}
 
-    .modal-content {
-        background-color: var(--fos-background);
+#composerCmd {
+    background-color: #171717;
+    border-color: #171717;
+}
+
+.card {
+    background: #171717;
+    .card-header {
+        background: rgba(0, 0, 0, 0.23);
     }
+}
+
+.modal-content {
+    background-color: var(--fos-background);
 }

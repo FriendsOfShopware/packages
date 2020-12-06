@@ -12,3 +12,5 @@ shell:
 phpstan:
 	docker-compose exec cli ./vendor/bin/phpstan analyse -c .phpstan.neon
 
+index:
+	docker-compose exec cli bin/console search:package:index

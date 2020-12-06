@@ -75,7 +75,13 @@ SQL;
             'datasets' => [
                 [
                     'label' => 'Downloads',
-                    'data' => array_values($values)
+                    'data' => array_values($values),
+                    'backgroundColor' => [
+                        'rgba(22,75,229, .5)'
+                    ],
+                    'borderColor' => [
+                        'rgb(22,75,229)'
+                    ]
                 ]
             ]
         ]);
@@ -105,7 +111,13 @@ SQL;
             'datasets' => [
                 [
                     'label' => 'Downloads',
-                    'data' => array_values($values)
+                    'data' => array_values($values),
+                    'backgroundColor' => [
+                        'rgba(22,75,229, .5)'
+                    ],
+                    'borderColor' => [
+                        'rgb(22,75,229)'
+                    ]
                 ]
             ]
         ]);
