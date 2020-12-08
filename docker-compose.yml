@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     cli:
-        image: shyim/shopware-cli:php80
+        image: webdevops/php:8.0
         env_file: .env.docker
         tty: true
         volumes:
