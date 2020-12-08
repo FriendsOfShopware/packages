@@ -4,5 +4,6 @@
 		"../docker-compose.yml"
 	],
 	"service": "cli",
-	"workspaceFolder": "/var/www/html"
+	"workspaceFolder": "/var/www/html",
+	"containerUser": "application"
 }
