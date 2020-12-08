@@ -5,5 +5,6 @@
 	],
 	"service": "cli",
 	"workspaceFolder": "/var/www/html",
-	"containerUser": "application"
+	"containerUser": "dev",
+	"runArgs": ["-v", "/var/run/docker.sock:/var/run/docker.sock"]
 }
