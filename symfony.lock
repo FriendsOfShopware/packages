@@ -122,6 +122,9 @@
             ".php_cs.dist"
         ]
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.0"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.5.5"
     },
@@ -166,9 +169,6 @@
     },
     "ocramius/package-versions": {
         "version": "1.5.1"
-    },
-    "ocramius/proxy-manager": {
-        "version": "2.9.1"
     },
     "php": {
         "version": "8.0"
@@ -409,6 +409,9 @@
     "symfony/property-info": {
         "version": "v5.1.7"
     },
+    "symfony/proxy-manager-bridge": {
+        "version": "v5.2.1"
+    },
     "symfony/routing": {
         "version": "5.1",
         "recipe": {
@@ -535,9 +538,6 @@
     },
     "twig/twig": {
         "version": "v3.0.5"
-    },
-    "webimpress/safe-writer": {
-        "version": "2.1.0"
     },
     "willdurand/negotiation": {
         "version": "v2.3.1"

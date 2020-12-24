@@ -15,13 +15,13 @@
     },
     "devDependencies": {
         "@symfony/stimulus-bridge": "^1.1.0",
-        "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/Resources/assets",
         "@symfony/webpack-encore": "^0.33.0",
         "core-js": "^3.6.5",
         "regenerator-runtime": "^0.13.5",
         "sass": "^1.28.0",
         "sass-loader": "^10.0.5",
         "stimulus": "^2.0.0",
-        "webpack-notifier": "^1.8.0"
+        "webpack-notifier": "^1.8.0",
+        "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/Resources/assets"
     }
 }
