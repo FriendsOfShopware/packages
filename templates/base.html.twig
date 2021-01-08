@@ -102,9 +102,5 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
-
-        {% if app.request.host == 'packages.friendsofshopware.com' %}
-            <script async defer data-domain="packages.friendsofshopware.com" src="https://stats.fos.gg/js/plausible.js"></script>
-        {% endif %}
     </body>
 </html>
