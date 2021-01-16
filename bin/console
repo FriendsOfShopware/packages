@@ -38,6 +38,10 @@ if ($_SERVER['APP_DEBUG']) {
     }
 }
 
+if (isset($_SERVER['SENTRY_DSN'])) {
+    \Sentry\init(['dsn' => $_SERVER['SENTRY_DSN']]);
+}
+
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $application = new Application($kernel);
 $application->run($input);

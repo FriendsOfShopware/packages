@@ -59,12 +59,10 @@ class ErrorSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $lastEvent = Hub::getCurrent()->getLastEventId();
-
         $response = new Response();
         $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         $tpl = $this->twig->render('error.html.twig', [
-            'lastEventId' => $lastEvent
+            'lastEventId' => $event->getRequest()->attributes->get('sentryId')
         ]);
         $response->setContent($tpl);
 
