@@ -13,7 +13,6 @@ use App\Struct\License\Binaries;
 use App\Struct\License\Plugin;
 use Composer\Semver\VersionParser;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;

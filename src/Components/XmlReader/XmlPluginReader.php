@@ -6,16 +6,11 @@ namespace App\Components\XmlReader;
 
 use DOMDocument;
 use DOMElement;
-use DOMNodeList;
 use DOMXPath;
 
 class XmlPluginReader extends XmlReaderBase
 {
-    /**
-     * @var string
-     */
     protected string $xsdFile = __DIR__ . '/schema/plugin.xsd';
-
 
     /**
      * This method should be overridden as main entry point to parse a xml file.

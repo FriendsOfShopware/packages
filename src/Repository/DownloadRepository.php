@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @template Download
  * @extends ServiceEntityRepository<Download>
+ *
  * @method Download|null find($id, $lockMode = null, $lockVersion = null)
  * @method Download|null findOneBy(array $criteria, array $orderBy = null)
  * @method Download[]    findAll()

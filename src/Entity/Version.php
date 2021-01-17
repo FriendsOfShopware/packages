@@ -167,6 +167,7 @@ class Version
 
     /**
      * @param array<string, string> $requireSection
+     *
      * @return $this
      */
     public function setRequireSection(array $requireSection): self
@@ -195,9 +196,6 @@ class Version
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getHomepage(): ?string
     {
         return $this->homepage;

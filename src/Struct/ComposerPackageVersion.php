@@ -15,24 +15,24 @@ class ComposerPackageVersion extends Struct
     public string $version;
 
     /**
-     * @var array<string, string> $dist
+     * @var array<string, string>
      */
     public array $dist;
 
     public string $type;
 
     /**
-     * @var array<string, string> $extra
+     * @var array<string, string>
      */
     public array $extra;
 
     /**
-     * @var array<string, string> $require
+     * @var array<string, string>
      */
     public array $require;
 
     /**
-     * @var array<string, string> $authors
+     * @var array<string, string>
      */
     public array $authors;
 }

@@ -7,10 +7,8 @@ use App\Components\Api\Client;
 use App\Components\PackagistLoader;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -40,7 +38,6 @@ class Account extends AbstractController
         $licenses = $this->client->licenses($token);
         $data = $this->packagistLoader->load($licenses, $token->getShop());
         $packageNames = \array_map(static fn (string $name) => \str_replace('store.shopware.com/', '', $name), \array_keys($data['packages']));
-
 
         /** @var Package[] $packages */
         $packages = $this->packageRepository->findPackagesByNames($packageNames);

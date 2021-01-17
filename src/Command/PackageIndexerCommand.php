@@ -5,7 +5,6 @@ namespace App\Command;
 use App\Entity\Package;
 use App\Entity\Version;
 use App\Repository\PackageRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use MeiliSearch\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;

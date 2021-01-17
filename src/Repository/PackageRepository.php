@@ -14,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @template Package
  * @extends ServiceEntityRepository<Package>
+ *
  * @method Package|null find($id, $lockMode = null, $lockVersion = null)
  * @method Package|null findOneBy(array $criteria, array $orderBy = null)
  * @method Package[]    findAll()
@@ -56,6 +57,7 @@ class PackageRepository extends ServiceEntityRepository
 
     /**
      * @param string[] $names
+     *
      * @return Package[]
      */
     public function findPackagesForLicenses(array $names): array
@@ -79,6 +81,7 @@ class PackageRepository extends ServiceEntityRepository
 
     /**
      * @param string[] $names
+     *
      * @return Package[]
      */
     public function findPackagesByNames(array $names): array

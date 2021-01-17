@@ -46,6 +46,7 @@ abstract class Struct implements \JsonSerializable
 
     /**
      * @param array<array<string, mixed>> $data
+     *
      * @return static[]
      */
     public static function mapList(array $data): array
