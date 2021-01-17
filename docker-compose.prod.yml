@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+    web:
+        image: friendsofshopware/packages
+        env_file: /home/deploy/data/friendsofshopware/packages/.env
+        expose:
+          - "80"
+        volumes:
+          - /home/deploy/data/friendsofshopware/packages/volumes/ssl:/var/www/html/ssl
+    redis:
+        image: redis:5-alpine
+    mysql:
+        image: mysql:8
+        volumes:
+          - /home/deploy/data/friendsofshopware/packages/volumes/mysql:/var/lib/mysql
+        env_file: /home/deploy/data/friendsofshopware/packages/.env
+        command: ["mysqld", "--default-authentication-plugin=mysql_native_password"]
+    mellisearch:
+        image: getmeili/meilisearch:latest
+        command: ['./meilisearch']
+    filemanager:
+        image: mohamnag/nginx-file-browser
+        environment:
+          VIRTUAL_HOST: packages-dump.friendsofshopware.com
+          CERT_NAME: friendsofshopware.com
+        volumes:
+          - /home/deploy/data/friendsofshopware/packages/volumes/dumps:/opt/www/files
+    backup:
+        image: fradelg/mysql-cron-backup
+        volumes:
+          - /home/deploy/data/friendsofshopware/packages/volumes/dumps:/backup
+        env_file: /home/deploy/data/friendsofshopware/packages/.env
