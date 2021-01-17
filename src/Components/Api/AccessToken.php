@@ -99,7 +99,7 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
     }
 
     /**
-     * @return array{'userId': string, 'userAccountId': int, 'token': string, 'locale': string, 'username': string, 'password': string, 'expire': string}
+     * @return array<string, mixed>
      */
     public function jsonSerialize(): array
     {

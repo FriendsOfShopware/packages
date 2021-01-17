@@ -42,7 +42,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
      *
      * @param DOMNodeList<DOMElement> $list
      *
-     * @return array{'de': string, 'en': string}|null
+     * @return array<string, string>
      */
     public static function parseTranslatableNodeList(DOMNodeList $list): ?array
     {

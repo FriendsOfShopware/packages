@@ -10,6 +10,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\UsageTrackingTokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -30,7 +31,7 @@ class Login extends AbstractController
     }
 
     #[Route('/login', methods: ['POST'])]
-    public function loginSubmit(Request $request, EventDispatcherInterface $dispatcher): Response
+    public function loginSubmit(Request $request, EventDispatcherInterface $dispatcher, UsageTrackingTokenStorage $tokenStorage): Response
     {
         $username = $request->request->get('shopwareId');
         $password = $request->request->get('password');
@@ -39,7 +40,7 @@ class Login extends AbstractController
             $accessToken = $this->client->login($username, $password);
 
             $loginToken = new UsernamePasswordToken($accessToken, null, 'main', ['ROLE_USER']);
-            $this->get('security.token_storage')->setToken($loginToken);
+            $tokenStorage->setToken($loginToken);
 
             $event = new InteractiveLoginEvent($request, $loginToken);
             $dispatcher->dispatch($event);

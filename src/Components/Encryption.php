@@ -13,16 +13,32 @@ class Encryption
     public function __construct()
     {
         $path = \dirname(__DIR__, 2) . '/ssl/';
-        $this->publicKey = \openssl_pkey_get_public(\file_get_contents($path . 'public.pem'));
-        $this->privateKey = \openssl_pkey_get_private(\file_get_contents($path . 'private.pem'));
+        $publicBody = \file_get_contents($path . 'public.pem');
+        $privateBody = \file_get_contents($path . 'private.pem');
+
+        if ($publicBody === false || $privateBody === false) {
+            throw new \RuntimeException('Cannot read encryption files');
+        }
+
+        if ($publicKey = \openssl_pkey_get_public($publicBody)) {
+            $this->publicKey = $publicKey;
+        } else {
+            throw new \RuntimeException('Cannot read public key');
+        }
+
+        if ($privateKey = \openssl_pkey_get_public($privateBody)) {
+            $this->privateKey = $privateKey;
+        } else {
+            throw new \RuntimeException('Cannot read private key');
+        }
     }
 
     /**
-     * @param array<string, string|bool|int> $data
+     * @param array{'domain'?: string, 'username'?: string, 'password'?: string, 'userId'?: int, 'filePath'?: string} $data
      */
     public function encrypt(array $data): string
     {
-        $str = \json_encode($data);
+        $str = \json_encode($data, \JSON_THROW_ON_ERROR);
 
         \openssl_public_encrypt($str, $encryptedData, $this->publicKey);
 
@@ -30,7 +46,7 @@ class Encryption
     }
 
     /**
-     * @return array<string, string|bool|int>
+     * @return array{'domain': string, 'username': string, 'password': string, 'userId': int, 'filePath': string}
      */
     public function decrypt(string $data): array
     {

@@ -41,6 +41,7 @@ class Client
     public function login(string $username, string $password): AccessToken
     {
         try {
+            /** @var array{'userId': string|null, 'userAccountId': int, 'token': string, 'locale': string, 'expire': array{'date': string}} $response */
             $response = $this->client->request('POST', self::ENDPOINT . 'accesstokens', [
                 'json' => [
                     'shopwareId' => $username,
@@ -134,7 +135,13 @@ class Client
                     $shop->companyName = $content->company->name;
                     $shop->type = $content->type->name;
                     $shop->staging = false;
-                    $shop->domain_idn = \idn_to_ascii($shop->domain);
+
+                    $idn = \idn_to_ascii($shop->domain);
+
+                    if ($idn) {
+                        $shop->domain_idn = $idn;
+                    }
+
                     $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => \date('Y-m-d H:i:s', \strtotime('+1 year'))])];
                 }
             } catch (ClientException) {
@@ -241,14 +248,16 @@ class Client
     public function getPartnerAllocation(): ?array
     {
         try {
-            return $this->client->request('GET', self::ENDPOINT . 'companies/' . $this->currentToken()->getMemberShip()->company->id . '/allocations')->toArray();
+            /** @var array{'partnerId': string} $response */
+            $response = $this->client->request('GET', self::ENDPOINT . 'companies/' . $this->currentToken()->getMemberShip()->company->id . '/allocations')->toArray();
+            return $response;
         } catch (Throwable) {
             return null;
         }
     }
 
     /**
-     * @return array{'url': string, 'binary': array{'version': string}|null}
+     * @return array{'url': string, 'binary'?: array{'version': string}}
      */
     public function fetchDownloadJson(string $binaryLink): array
     {
@@ -267,6 +276,7 @@ class Client
                 $query['shopId'] = $this->currentToken->getShop()->id;
             }
 
+            /** @var array{'url': string, 'binary'?: array{'version': string}} $json */
             $json = $this->client->request('GET', self::ENDPOINT . $binaryLink, [
                 'query' => $query,
                 'headers' => $headers,
@@ -278,7 +288,7 @@ class Client
                 throw new ApiException($response['code']);
             }
 
-            throw new ApiException(\json_encode($response));
+            throw new ApiException((string) \json_encode($response));
         }
 
         return $json;

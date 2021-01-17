@@ -58,7 +58,12 @@ class InternalPackageImportCommand extends Command
     {
         $this->login();
 
-        $current = (int) $input->getOption('offset');
+        $current = 0;
+
+        if (\is_string($input->getOption('offset'))) {
+            $current = (int) $input->getOption('offset');
+        }
+
         $plugins = $this->loadPlugins($current);
 
         $progressBar = new ProgressBar($output);
@@ -90,6 +95,11 @@ class InternalPackageImportCommand extends Command
     private function login(): void
     {
         $client = HttpClient::create();
+
+        if (\getenv('SBP_LOGIN') === false) {
+            throw new \RuntimeException('Please specify SBP_LOGIN env variable');
+        }
+
         $response = $client->request('POST', \getenv('SBP_LOGIN'), [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -113,6 +123,10 @@ class InternalPackageImportCommand extends Command
      */
     private function loadPlugins(int $offset): array
     {
+        if (\getenv('SBP_PLUGIN_LIST') === false) {
+            throw new \RuntimeException('Env variable SBP_PLUGIN_LIST is not defined');
+        }
+
         return \json_decode($this->client->request('GET', \getenv('SBP_PLUGIN_LIST'), [
             'query' => [
                 'limit' => 100,

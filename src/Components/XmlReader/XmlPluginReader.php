@@ -15,21 +15,37 @@ class XmlPluginReader extends XmlReaderBase
     /**
      * This method should be overridden as main entry point to parse a xml file.
      *
-     * @return array{'label': array{'de': string, 'en': string}, 'license': string, 'link': string, 'requiredPlugins': array{'pluginName': string, 'minVersion': string}[]|null}
+     * @return array<string, mixed>
      */
     protected function parseFile(DOMDocument $xml)
     {
         $xpath = new DOMXPath($xml);
         $plugin = $xpath->query('//plugin');
+
+        if ($plugin === false) {
+            throw new \RuntimeException('Cannot find "plugin" node in xml');
+        }
+
         /** @var DOMElement $pluginData */
         $pluginData = $plugin->item(0);
         $info = [];
 
-        if ($label = self::parseTranslatableNodeList($xpath->query('//plugin/label'))) {
+        $labels = $xpath->query('//plugin/label');
+
+        if ($labels === false) {
+            throw new \RuntimeException('Cannot find "label" in xml node');
+        }
+
+        if ($label = self::parseTranslatableNodeList($labels)) {
             $info['label'] = $label;
         }
 
-        if ($description = self::parseTranslatableNodeList($xpath->query('//plugin/description'))) {
+        $description = $xpath->query('//plugin/description');
+        if ($description === false) {
+            throw new \RuntimeException('Cannot find "description" in xml node');
+        }
+
+        if ($description = self::parseTranslatableNodeList($description)) {
             $info['description'] = $description;
         }
 
@@ -48,14 +64,21 @@ class XmlPluginReader extends XmlReaderBase
                 $info['changelog'][$version][$lang][] = $changes->nodeValue;
             }
         }
-        /** @var DOMElement|null $compatibility */
-        $compatibility = $xpath->query('//plugin/compatibility')->item(0);
-        if (null !== $compatibility) {
-            $info['compatibility'] = [
-                'minVersion' => $compatibility->getAttribute('minVersion'),
-                'maxVersion' => $compatibility->getAttribute('maxVersion'),
-            ];
+
+        $compatibilityNode = $xpath->query('//plugin/compatibility');
+
+        if ($compatibilityNode) {
+            /** @var DOMElement|null $compatibility */
+            $compatibility = $compatibilityNode->item(0);
+
+            if (null !== $compatibility) {
+                $info['compatibility'] = [
+                    'minVersion' => $compatibility->getAttribute('minVersion'),
+                    'maxVersion' => $compatibility->getAttribute('maxVersion'),
+                ];
+            }
         }
+
         $requiredPlugins = self::getFirstChildren(
             $pluginData,
             'requiredPlugins'
@@ -70,7 +93,7 @@ class XmlPluginReader extends XmlReaderBase
     /**
      * parse required plugins.
      *
-     * @return array{'pluginName': string, 'minVersion': string|null, 'maxVersion': string|null}[]
+     * @return array{'pluginName': string, 'minVersion'?: string|null, 'maxVersion'?: string|null}[]
      */
     private function parseRequiredPlugins(DOMElement $requiredPluginNode): array
     {

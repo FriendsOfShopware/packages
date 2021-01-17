@@ -93,18 +93,25 @@ class Download
 
     private function repackZip(string $url): Response
     {
+        /** @var \CurlHandle $downloadCurl */
         $downloadCurl = \curl_init($url);
+
         \curl_setopt($downloadCurl, \CURLOPT_RETURNTRANSFER, true);
         \curl_setopt($downloadCurl, \CURLOPT_FOLLOWLOCATION, true);
         $zipContent = \curl_exec($downloadCurl);
 
         if (\curl_getinfo($downloadCurl, \CURLINFO_RESPONSE_CODE) !== 200) {
-            return new Response($zipContent, 403);
+            return new Response((string) $zipContent, 403);
         }
 
         \curl_close($downloadCurl);
 
         $tmpFile = \tempnam(\sys_get_temp_dir(), 'plugin');
+
+        if ($tmpFile == false) {
+            throw new RuntimeException('Cannot create temp file');
+        }
+
         \file_put_contents($tmpFile, $zipContent);
 
         $extractLocation = \sys_get_temp_dir() . '/' . \uniqid('location', true);
@@ -117,6 +124,10 @@ class Download
 
         for ($i = 0; $i < $zip->numFiles; ++$i) {
             $filename = $zip->getNameIndex($i);
+
+            if ($filename === false) {
+                continue;
+            }
 
             if (\str_starts_with($filename, 'Backend/')) {
                 $filename = \substr($filename, 8);

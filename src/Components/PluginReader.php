@@ -11,6 +11,11 @@ class PluginReader
     public static function readFromZip(string $content, Version $version): void
     {
         $tmpFile = \tempnam(\sys_get_temp_dir(), 'plugin');
+
+        if ($tmpFile === false) {
+            throw new \RuntimeException('Cannot generate tmp file');
+        }
+
         \file_put_contents($tmpFile, $content);
 
         $zip = new \ZipArchive();
@@ -20,8 +25,17 @@ class PluginReader
 
         $zipIndex = $zip->statIndex(0);
 
+        if ($zipIndex === false) {
+            throw new \InvalidArgumentException('Invalid zip file');
+        }
+
         $folderPath = \str_replace('\\', '/', $zipIndex['name']);
         $pos = \strpos($folderPath, '/');
+
+        if ($pos === false) {
+            throw new \InvalidArgumentException('Zip is wrong packed');
+        }
+
         $path = \substr($folderPath, 0, $pos);
 
         switch ($path) {
@@ -82,7 +96,13 @@ class PluginReader
                 $version->setHomepage($xml['link']);
             }
         } elseif (\file_exists($extractLocation . '/' . $pluginName . '/composer.json')) {
-            $composerJson = \json_decode(\file_get_contents($extractLocation . '/' . $pluginName . '/composer.json'), true, 512, \JSON_THROW_ON_ERROR);
+            $composerJsonBody = \file_get_contents($extractLocation . '/' . $pluginName . '/composer.json');
+
+            if ($composerJsonBody === false) {
+                throw new \RuntimeException('Cannot find composer.json in plugin');
+            }
+
+            $composerJson = \json_decode($composerJsonBody, true, 512, \JSON_THROW_ON_ERROR);
 
             if (isset($composerJson['type'])) {
                 $version->setType($composerJson['type']);
