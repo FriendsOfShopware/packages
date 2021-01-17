@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\PackageRepository;
+use App\Entity\Package;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,9 @@ class Notify
 {
     private const USER_AGENT_REGEX = '/Composer\/(?<composerVersion>\d+\.\d+\.\d+).*; PHP\s(?<phpVersion>\d+\.\d+\.\d+)/m';
 
+    /**
+     * @param PackageRepository<Package> $packageRepository
+     */
     public function __construct(private PackageRepository $packageRepository, private EntityManagerInterface $entityManager)
     {
     }

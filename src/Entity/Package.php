@@ -50,6 +50,7 @@ class Package
     private ?DateTimeInterface $releaseDate = null;
 
     /**
+     * @var Collection<int, Version>
      * @ORM\OneToMany(targetEntity="App\Entity\Version", mappedBy="package", orphanRemoval=true, cascade={"persist"})
      */
     private Collection $versions;
@@ -61,6 +62,7 @@ class Package
     private Producer $producer;
 
     /**
+     * @var Collection<int, Download>
      * @ORM\OneToMany(targetEntity=Download::class, mappedBy="package", orphanRemoval=true)
      */
     private Collection $downloads;
@@ -108,13 +110,16 @@ class Package
         return $currentVersion;
     }
 
+    /**
+     * @param Collection<int, Version> $versions
+     */
     public function setVersions(Collection $versions): void
     {
         $this->versions = $versions;
     }
 
     /**
-     * @return Collection|Version[]
+     * @return Collection<int, Version>
      */
     public function getVersions(): Collection
     {
@@ -214,7 +219,7 @@ class Package
     }
 
     /**
-     * @return Collection|Download[]
+     * @return Collection<int, Download>
      */
     public function getDownloads(): Collection
     {

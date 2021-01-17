@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Package;
 use App\Entity\Version;
 use App\Repository\PackageRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -14,6 +14,9 @@ use Symfony\Component\Routing\RouterInterface;
 #[Route('/feeds')]
 class Feed extends AbstractController
 {
+    /**
+     * @param PackageRepository<Package> $packageRepository
+     */
     public function __construct(private PackageRepository $packageRepository, private RouterInterface $router)
     {
     }

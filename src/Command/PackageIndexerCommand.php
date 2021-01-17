@@ -18,6 +18,9 @@ class PackageIndexerCommand extends Command
 
     protected static $defaultName = 'search:package:index';
 
+    /**
+     * @param PackageRepository<Package> $packageRepository
+     */
     public function __construct(private Client $client, private PackageRepository $packageRepository)
     {
         parent::__construct();

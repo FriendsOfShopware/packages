@@ -28,8 +28,14 @@ class InternalPackageImportCommand extends Command
 
     private HttpClientInterface $client;
 
+    /**
+     * @var PackageRepository<Package>
+     */
     private PackageRepository $packageRepository;
 
+    /**
+     * @var ProducerRepository<Producer>
+     */
     private ProducerRepository $producerRepository;
 
     private VersionParser $versionParser;

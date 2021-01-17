@@ -9,21 +9,21 @@ use App\Entity\Version;
 use App\Repository\PackageRepository;
 use App\Struct\License\License;
 use App\Struct\Shop\Shop;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class PackagistLoader
 {
-    private PackageRepository $packageRepository;
-
-    public function __construct(EntityManagerInterface $entityManager, private Client $client, private Encryption $encryption, private RouterInterface $router)
+    /**
+     * @param PackageRepository<Package> $packageRepository
+     */
+    public function __construct(private PackageRepository $packageRepository, private Client $client, private Encryption $encryption, private RouterInterface $router)
     {
-        $this->packageRepository = $entityManager->getRepository(Package::class);
     }
 
     /**
      * @param License[] $licenses
      * @param Shop      $shop
+     *
      * @return array{'notify-batch': string, 'packages': array<string, array<string, array<string, mixed>>>}
      */
     public function load(array $licenses, object $shop): array
@@ -36,6 +36,7 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
+     *
      * @return array<string, array<string, array<string, mixed>>>
      */
     private function mapLicensesToComposerPackages(array $licenses, Shop $shop): array
@@ -76,6 +77,7 @@ class PackagistLoader
 
     /**
      * @param License $license
+     *
      * @return array<string, array<string, mixed>>
      */
     private function convertBinaries(string $packageName, $license, Package $package, Shop $shop): array

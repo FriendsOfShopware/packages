@@ -29,7 +29,7 @@ class Producer
     private string $prefix;
 
     /**
-     * @var Collection<Package>
+     * @var Collection<int, Package>
      * @ORM\OneToMany(targetEntity="App\Entity\Package", mappedBy="producer", orphanRemoval=true)
      */
     private Collection $package;
@@ -66,6 +66,9 @@ class Producer
         $this->prefix = $prefix;
     }
 
+    /**
+     * @return Collection<int, Package>
+     */
     public function getPackage(): Collection
     {
         return $this->package;

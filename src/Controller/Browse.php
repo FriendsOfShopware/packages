@@ -12,6 +12,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Browse extends AbstractController
 {
+    /**
+     * @param PackageRepository<Package> $packageRepository
+     */
     public function __construct(private Connection $connection, private PackageRepository $packageRepository)
     {
     }

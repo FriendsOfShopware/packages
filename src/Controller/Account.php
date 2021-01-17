@@ -16,6 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Account extends AbstractController
 {
+    /**
+     * @param PackageRepository<Package> $packageRepository
+     */
     public function __construct(private Client $client, private PackagistLoader $packagistLoader, private PackageRepository $packageRepository)
     {
     }
@@ -52,7 +55,7 @@ class Account extends AbstractController
 
     private function haveShop(): ?RedirectResponse
     {
-        if (!$this->getUser()) {
+        if (! $this->getUser() instanceof AccessToken) {
             return null;
         }
 
