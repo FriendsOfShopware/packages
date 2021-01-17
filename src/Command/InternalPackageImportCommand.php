@@ -43,6 +43,7 @@ class InternalPackageImportCommand extends Command
     public function configure(): void
     {
         $this
+            ->setDescription('This command can be only used by an Shopware employee')
             ->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, 'Offset', 0);
     }
 
@@ -117,6 +118,11 @@ class InternalPackageImportCommand extends Command
      */
     private function processPlugin($plugin): void
     {
+        // Skip apps
+        if ($plugin->generation->name === 'apps') {
+            return;
+        }
+
         // Don't trigger an error on api server, cause this is an fake plugin
         if ($plugin->name === 'SwagCorePlatform') {
             return;
