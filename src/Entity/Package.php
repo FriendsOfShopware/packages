@@ -135,10 +135,6 @@ class Package
     {
         if ($this->versions->contains($version)) {
             $this->versions->removeElement($version);
-            // set the owning side to null (unless already changed)
-            if ($version->getPackage() === $this) {
-                $version->setPackage(null);
-            }
         }
 
         return $this;

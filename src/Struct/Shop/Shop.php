@@ -2,7 +2,10 @@
 
 namespace App\Struct\Shop;
 
-class Shop extends \App\Struct\Struct
+use App\Struct\GeneralStatus;
+use App\Struct\Struct;
+
+class Shop extends Struct
 {
     const TYPE_PARTNER = 'partner';
 
@@ -16,39 +19,11 @@ class Shop extends \App\Struct\Struct
 
     public int $ownerId;
 
-    public int $dispo;
-
-    public int $balance;
-
     public bool $isPartnerShop;
-
-    /**
-     * @var null
-     */
-    public $subaccount;
-
-    /** @var SubscriptionModules[] */
-    public array $subscriptionModules;
-
-    public bool $isCommercial;
-
-    public string $documentComment;
-
-    public bool $activated;
 
     public ?string $accountId;
 
-    public int $shopNumber;
-
-    public bool $staging;
-
-    public bool $instance;
-
-    public Environment $environment;
-
     public string $creationDate;
-
-    public ShopwareVersion $shopwareVersion;
 
     public string $domain_idn;
 
@@ -56,10 +31,18 @@ class Shop extends \App\Struct\Struct
 
     public int $baseId;
 
-    public static $mappedFields = [
-        'subscriptionModules' => 'App\Struct\Shop\SubscriptionModules',
-        'environment' => 'App\Struct\Shop\Environment',
-        'shopwareVersion' => 'App\Struct\Shop\ShopwareVersion'
+    public bool $staging;
+
+    public GeneralStatus $shopwareVersion;
+
+    /**
+     * @var SubscriptionModules[]
+     */
+    public array $subscriptionModules;
+
+    public static array $mappedFields = [
+        'subscriptionModules' => SubscriptionModules::class,
+        'shopwareVersion' => GeneralStatus::class,
     ];
 
     public function hasActiveSubscription(): bool

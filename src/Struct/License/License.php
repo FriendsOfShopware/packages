@@ -2,74 +2,28 @@
 
 namespace App\Struct\License;
 
+use App\Struct\GeneralStatus;
 use App\Struct\Struct;
 
-/**
- * @property int          $id
- * @property BookingShop  $bookingShop
- * @property BookingShop  $licenseShop
- * @property VariantType  $variantType
- * @property string       $orderNumber
- * @property int          $price
- * @property string       $creationDate
- * @property bool         $payed
- * @property bool         $archived
- * @property int          $shopwareMajorVersion
- * @property Subscription $subscription
- * @property null         $expirationDate
- * @property Plugin       $plugin
- * @property null         $charging
- * @property bool         $disbursed
- * @property int          $quantity
- * @property string       $description
- * @property string       $licenseKey
- * @property bool         $licenseMigrated
- */
 class License extends Struct
 {
-    public $id;
+    public int $id;
 
-    public $bookingShop;
+    public GeneralStatus $variantType;
 
-    public $licenseShop;
+    public string $creationDate;
 
-    public $variantType;
+    public bool $archived;
 
-    public $orderNumber;
+    public Subscription $subscription;
 
-    public $price;
+    public string $expirationDate;
 
-    public $creationDate;
+    public Plugin $plugin;
 
-    public $payed;
-
-    public $archived;
-
-    public $shopwareMajorVersion;
-
-    public $subscription;
-
-    public $expirationDate;
-
-    public $plugin;
-
-    public $charging;
-
-    public $disbursed;
-
-    public $quantity;
-
-    public $description;
-
-    public $licenseKey;
-
-    public $licenseMigrated;
-
-    public static $mappedFields = [
-        'bookingShop' => 'App\\Struct\\License\\BookingShop',
-        'licenseShop' => 'App\\Struct\\License\\BookingShop',
-        'variantType' => 'App\\Struct\\License\\VariantType',
-        'subscription' => 'App\\Struct\\License\\Subscription',
-        'plugin' => 'App\\Struct\\License\\Plugin',
+    public static array $mappedFields = [
+        'variantType' => GeneralStatus::class,
+        'subscription' => Subscription::class,
+        'plugin' => Plugin::class,
     ];
 }

@@ -7,14 +7,15 @@ use App\Components\Api\Exceptions\ApiException;
 use App\Components\Api\Exceptions\TokenMissingException;
 use App\Entity\Version;
 use App\Struct\CompanyMemberShip\CompanyMemberShip;
+use App\Struct\GeneralStatus;
 use App\Struct\License\License;
-use App\Struct\License\VariantType;
 use App\Struct\Shop\Shop;
 use App\Struct\Shop\SubscriptionModules;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
 class Client
@@ -28,7 +29,7 @@ class Client
 
     public const ENDPOINT = 'https://api.shopware.com/';
 
-    protected \Symfony\Contracts\HttpClient\HttpClientInterface $client;
+    protected HttpClientInterface $client;
 
     protected ?AccessToken $currentToken = null;
 
@@ -186,7 +187,7 @@ class Client
                     $license = new License();
                     $license->archived = false;
                     $license->plugin = $pluginData;
-                    $license->variantType = new VariantType();
+                    $license->variantType = new GeneralStatus();
                     $license->variantType->name = 'buy'; // this is not really true but it's okay for our purposes
 
                     $licenses[] = $license;
@@ -234,6 +235,9 @@ class Client
         });
     }
 
+    /**
+     * @return array{'partnerId': string}|null
+     */
     public function getPartnerAllocation(): ?array
     {
         try {
@@ -243,6 +247,9 @@ class Client
         }
     }
 
+    /**
+     * @return array{'url': string, 'binary': array{'version': string}|null}
+     */
     public function fetchDownloadJson(string $binaryLink): array
     {
         if (!$this->currentToken) {

@@ -16,20 +16,12 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 abstract class XmlReaderBase implements XmlReaderInterface
 {
-    const DEFAULT_LANG = 'en';
-
-    /**
-     * Map of language shortcuts to locale.
-     */
-    protected static array $languageMapping = [
-        'de' => 'de_DE',
-        'en' => 'en_GB',
-    ];
+    private const DEFAULT_LANG = 'en';
 
     /**
      * @var string should be set in instance that extends this class
      */
-    protected $xsdFile;
+    protected string $xsdFile;
 
     /**
      * load and validate xml file - parse to array.
@@ -48,9 +40,9 @@ abstract class XmlReaderBase implements XmlReaderInterface
     /**
      * Parses translatable node list.
      *
-     * @return array|null
+     * @return array{'de': string, 'en': string}|null
      */
-    public static function parseTranslatableNodeList(DOMNodeList $list)
+    public static function parseTranslatableNodeList(DOMNodeList $list): ?array
     {
         if (0 === $list->length) {
             return null;
@@ -72,9 +64,9 @@ abstract class XmlReaderBase implements XmlReaderInterface
      *
      * @param mixed $name
      *
-     * @return array
+     * @return DOMElement[]
      */
-    public static function getChildren(DOMNode $node, $name)
+    public static function getChildren(DOMNode $node, $name): array
     {
         $children = [];
         foreach ($node->childNodes as $child) {
@@ -121,30 +113,6 @@ abstract class XmlReaderBase implements XmlReaderInterface
     }
 
     /**
-     * @return array|null
-     */
-    public static function parseOptionsNodeList(DOMNodeList $optionsList)
-    {
-        if (0 === $optionsList->length) {
-            return null;
-        }
-        $optionsItem = $optionsList->item(0);
-        $optionList = $optionsItem->childNodes;
-        if (0 === $optionList->length) {
-            return null;
-        }
-        $options = [];
-        /** @var DOMElement $option */
-        foreach ($optionList as $option) {
-            if ($option instanceof DOMElement) {
-                $options[$option->nodeName] = XmlUtils::phpize($option->nodeValue);
-            }
-        }
-
-        return $options;
-    }
-
-    /**
      * Returns all element child values by nodeName.
      *
      * @param string $name
@@ -154,7 +122,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
      *
      * @return string|null
      */
-    public static function getElementChildValueByName(DOMElement $element, $name, $throwException = false)
+    public static function getElementChildValueByName(DOMElement $element, $name, $throwException = false): ?string
     {
         $children = $element->getElementsByTagName($name);
         if (0 === $children->length) {
@@ -188,7 +156,7 @@ abstract class XmlReaderBase implements XmlReaderInterface
     /**
      * This method should be overridden as main entry point to parse a xml file.
      *
-     * @return array
+     * @return array{'label': array{'de': string, 'en': string}, 'license': string, 'link': string, 'requiredPlugins': array{'pluginName': string, 'minVersion': string}[]|null}
      */
     abstract protected function parseFile(DOMDocument $xml);
 }

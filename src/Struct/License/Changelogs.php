@@ -2,22 +2,21 @@
 
 namespace App\Struct\License;
 
+use App\Struct\GeneralStatus;
 use App\Struct\Struct;
 
-/**
- * @property int         $id
- * @property VariantType $locale
- * @property string      $text
- */
 class Changelogs extends Struct
 {
-    public $id;
+    public int $id;
 
-    public $locale;
+    public GeneralStatus $locale;
 
-    public $text;
+    public string $text;
 
-    public static $mappedFields = [
-        'locale' => 'App\\Struct\\License\\VariantType',
+    /**
+     * @var string[]
+     */
+    public static array $mappedFields = [
+        'locale' => GeneralStatus::class,
     ];
 }

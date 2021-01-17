@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Throwable;
@@ -119,15 +118,15 @@ class Download
         for ($i = 0; $i < $zip->numFiles; ++$i) {
             $filename = $zip->getNameIndex($i);
 
-            if (str_starts_with($filename, 'Backend/')) {
+            if (\str_starts_with($filename, 'Backend/')) {
                 $filename = \substr($filename, 8);
             }
 
-            if (str_starts_with($filename, 'Core/')) {
+            if (\str_starts_with($filename, 'Core/')) {
                 $filename = \substr($filename, 5);
             }
 
-            if (str_starts_with($filename, 'Frontend/')) {
+            if (\str_starts_with($filename, 'Frontend/')) {
                 $filename = \substr($filename, 9);
             }
 

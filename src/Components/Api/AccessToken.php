@@ -72,9 +72,12 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
         return $this->userAccountId;
     }
 
-    public static function create(array $response): self
+    /**
+     * @param array{'userId': string, 'userAccountId': int, 'token': string, 'locale': string, 'username': string, 'password': string, 'expire': array{'date': string}} $response
+     */
+    public static function create(array $response): static
     {
-        $me = new self();
+        $me = new static();
         $me->userId = (int) $response['userId'];
         $me->userAccountId = (int) $response['userAccountId'];
         $me->token = $response['token'];
@@ -95,6 +98,9 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
         return $me;
     }
 
+    /**
+     * @return array{'userId': string, 'userAccountId': int, 'token': string, 'locale': string, 'username': string, 'password': string, 'expire': string}
+     */
     public function jsonSerialize(): array
     {
         return \get_object_vars($this);
@@ -105,7 +111,7 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
         return ['ROLE_USER'];
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -130,7 +136,7 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
         $this->shop = $shop;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 

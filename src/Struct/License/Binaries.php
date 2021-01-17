@@ -2,55 +2,47 @@
 
 namespace App\Struct\License;
 
+use App\Struct\GeneralStatus;
 use App\Struct\Struct;
 
-/**
- * @property int                          $id
- * @property string                       $name
- * @property string                       $localPath
- * @property string                       $remoteLink
- * @property string                       $version
- * @property Status                       $status
- * @property CompatibleSoftwareVersions[] $compatibleSoftwareVersions
- * @property Changelogs                   $changelogs
- * @property string                       $creationDate
- * @property string                       $lastChangeDate
- * @property Archives                     $archives
- * @property bool                         $ionCubeEncrypted
- * @property bool                         $licenseCheckRequired
- */
 class Binaries extends Struct
 {
-    public $id;
+    public ?int $id;
 
-    public $name;
+    public ?string $name;
 
-    public $localPath;
+    public ?string $remoteLink;
 
-    public $remoteLink;
+    public ?string $version;
 
-    public $version;
+    public ?GeneralStatus $status;
 
-    public $status;
+    /**
+     * @var CompatibleSoftwareVersions[]
+     */
+    public array $compatibleSoftwareVersions;
 
-    public $compatibleSoftwareVersions;
+    /**
+     * @var Changelogs[]
+     */
+    public array $changelogs;
 
-    public $changelogs;
+    public ?string $creationDate;
 
-    public $creationDate;
+    public string $lastChangeDate;
 
-    public $lastChangeDate;
+    /**
+     * @var Archives[]
+     */
+    public array $archives;
 
-    public $archives;
-
-    public $ionCubeEncrypted;
-
-    public $licenseCheckRequired;
-
-    public static $mappedFields = [
-        'status' => 'App\\Struct\\License\\Status',
-        'compatibleSoftwareVersions' => 'App\\Struct\\License\\CompatibleSoftwareVersions',
-        'changelogs' => 'App\\Struct\\License\\Changelogs',
-        'archives' => 'App\\Struct\\License\\Archives',
+    /**
+     * @var string[]
+     */
+    public static array $mappedFields = [
+        'status' => GeneralStatus::class,
+        'compatibleSoftwareVersions' => CompatibleSoftwareVersions::class,
+        'changelogs' => Changelogs::class,
+        'archives' => Archives::class,
     ];
 }

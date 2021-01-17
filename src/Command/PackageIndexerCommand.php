@@ -18,15 +18,9 @@ class PackageIndexerCommand extends Command
 
     protected static $defaultName = 'search:package:index';
 
-    private Client $client;
-
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(Client $client, EntityManagerInterface $entityManager)
+    public function __construct(private Client $client, private PackageRepository $packageRepository)
     {
         parent::__construct();
-        $this->client = $client;
-        $this->entityManager = $entityManager;
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -41,15 +35,12 @@ class PackageIndexerCommand extends Command
             ],
         ]);
 
-        /** @var PackageRepository $repository */
-        $repository = $this->entityManager->getRepository(Package::class);
-
-        $total = $repository->findAllPackagesTotal();
+        $total = $this->packageRepository->findAllPackagesTotal();
         $progressBar = new ProgressBar($output);
         $progressBar->start($total);
 
         for ($i = 0; $i <= $total; $i += 100) {
-            $packages = $repository->findAllPackages($i);
+            $packages = $this->packageRepository->findAllPackages($i);
 
             $items = [];
 

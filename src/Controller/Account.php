@@ -16,12 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Account extends AbstractController
 {
-    public function __construct(private Client $client, private PackagistLoader $packagistLoader, private EntityManagerInterface $entityManager)
+    public function __construct(private Client $client, private PackagistLoader $packagistLoader, private PackageRepository $packageRepository)
     {
     }
 
     #[Route('/account', name: 'account')]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         if ($redirect = $this->haveShop()) {
             return $redirect;
@@ -38,11 +38,9 @@ class Account extends AbstractController
         $data = $this->packagistLoader->load($licenses, $token->getShop());
         $packageNames = \array_map(static fn (string $name) => \str_replace('store.shopware.com/', '', $name), \array_keys($data['packages']));
 
-        /** @var PackageRepository $repository */
-        $repository = $this->entityManager->getRepository(Package::class);
 
         /** @var Package[] $packages */
-        $packages = $repository->findPackagesByNames($packageNames);
+        $packages = $this->packageRepository->findPackagesByNames($packageNames);
 
         return $this->render('account.html.twig', [
             'packages' => $packages,

@@ -18,7 +18,7 @@ class CompanyMemberShip extends Struct
     public const PARTNER_SHOPS_PERMISSION = 'partner_accounting';
     public const WILDCARD_SHOP_PERMISSION = 'partner_wildcard';
 
-    public static $mappedFields = ['company' => Company::class, 'roles' => Role::class];
+    public static array $mappedFields = ['company' => Company::class, 'roles' => Role::class];
 
     public int $id;
 

@@ -17,6 +17,9 @@ class Encryption
         $this->privateKey = \openssl_pkey_get_private(\file_get_contents($path . 'private.pem'));
     }
 
+    /**
+     * @param array<string, string|bool|int> $data
+     */
     public function encrypt(array $data): string
     {
         $str = \json_encode($data);
@@ -26,6 +29,9 @@ class Encryption
         return \base64_encode($encryptedData);
     }
 
+    /**
+     * @return array<string, string|bool|int>
+     */
     public function decrypt(string $data): array
     {
         $data = \base64_decode($data);

@@ -9,6 +9,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ApiException extends HttpException
 {
+    /**
+     * @var array<string, string>
+     */
     private array $errorMessageMapper = [
         'WildcardLicensesException-1' => 'Access to wildcard license forbidden',
         'WildcardLicensesException-2' => 'Duplicate name',
@@ -19,6 +22,9 @@ class ApiException extends HttpException
         'WildcardLicensesException-10' => 'Requested Shopware version not found',
     ];
 
+    /**
+     * @var array<string, int>
+     */
     private array $errorHttpMapper = [
         'WildcardLicensesException-6' => Response::HTTP_NOT_FOUND,
         'WildcardLicensesException-7' => Response::HTTP_NOT_FOUND,

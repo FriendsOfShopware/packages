@@ -47,26 +47,31 @@ class Version
     private ?string $license = null;
 
     /**
+     * @var array<array{'name': string}>
      * @ORM\Column(type="json")
      */
     private array $authors = [];
 
     /**
+     * @var array<string, string>
      * @ORM\Column(type="json")
      */
     private array $extra = [];
 
     /**
+     * @var array<string, string>
      * @ORM\Column(type="json")
      */
     private array $requireSection = [];
 
     /**
+     * @var array<string, string[]>
      * @ORM\Column(type="json")
      */
     private array $autoload = [];
 
     /**
+     * @var array<string, string[]>
      * @ORM\Column(name="autoload_dev", type="json")
      */
     private array $autoloadDev = [];
@@ -82,6 +87,7 @@ class Version
     private ?\DateTimeInterface $releaseDate = null;
 
     /**
+     * @var array<string, mixed>
      * @ORM\Column(name="composer_json", type="json", nullable=true)
      */
     private ?array $composerJson = null;
@@ -133,11 +139,17 @@ class Version
         return $this;
     }
 
+    /**
+     * @return array<string, string>|null
+     */
     public function getExtra(): ?array
     {
         return $this->extra;
     }
 
+    /**
+     * @param array<string, string> $extra
+     */
     public function setExtra(array $extra): self
     {
         $this->extra = $extra;
@@ -145,11 +157,18 @@ class Version
         return $this;
     }
 
+    /**
+     * @return array<string, string>|null
+     */
     public function getRequireSection(): ?array
     {
         return $this->requireSection;
     }
 
+    /**
+     * @param array<string, string> $requireSection
+     * @return $this
+     */
     public function setRequireSection(array $requireSection): self
     {
         $this->requireSection = $requireSection;
@@ -169,7 +188,7 @@ class Version
         return $this->package;
     }
 
-    public function setPackage(?Package $package): self
+    public function setPackage(Package $package): self
     {
         $this->package = $package;
 
@@ -177,33 +196,39 @@ class Version
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getHomepage()
+    public function getHomepage(): ?string
     {
         return $this->homepage;
     }
 
-    public function setHomepage($homepage): void
+    public function setHomepage(?string $homepage): void
     {
         $this->homepage = $homepage;
     }
 
-    public function getLicense()
+    public function getLicense(): string
     {
         return $this->license;
     }
 
-    public function setLicense($license): void
+    public function setLicense(string $license): void
     {
         $this->license = $license;
     }
 
+    /**
+     * @return array<array{'name': string}>
+     */
     public function getAuthors(): array
     {
         return $this->authors;
     }
 
+    /**
+     * @param array<array{'name': string}> $authors
+     */
     public function setAuthors(array $authors): void
     {
         $this->authors = $authors;
@@ -229,31 +254,49 @@ class Version
         $this->releaseDate = $releaseDate;
     }
 
+    /**
+     * @return array<string, string[]>
+     */
     public function getAutoload(): array
     {
         return $this->autoload;
     }
 
+    /**
+     * @param array<string, string[]> $autoload
+     */
     public function setAutoload(array $autoload): void
     {
         $this->autoload = $autoload;
     }
 
+    /**
+     * @return array<string, string[]>
+     */
     public function getAutoloadDev(): array
     {
         return $this->autoloadDev;
     }
 
+    /**
+     * @param array<string, string[]> $autoloadDev
+     */
     public function setAutoloadDev(array $autoloadDev): void
     {
         $this->autoloadDev = $autoloadDev;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function getComposerJson(): ?array
     {
         return $this->composerJson;
     }
 
+    /**
+     * @param array<string, mixed>|null $composerJson
+     */
     public function setComposerJson(?array $composerJson): void
     {
         $this->composerJson = $composerJson;
@@ -269,6 +312,9 @@ class Version
         $this->binaryId = $binaryId;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toJson(): array
     {
         $json = [

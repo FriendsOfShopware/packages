@@ -2,21 +2,24 @@
 
 namespace App\Struct\License;
 
+use App\Struct\GeneralStatus;
 use App\Struct\Struct;
 
-/**
- * @property int         $id
- * @property VariantType $locale
- * @property string      $name
- */
 class Infos extends Struct
 {
-    public $id;
+    public int $id;
 
-    public $locale;
+    public GeneralStatus $locale;
 
     public ?string $name;
 
     public ?string $description;
     public ?string $shortDescription;
+
+    /**
+     * @var string[]
+     */
+    public static array $mappedFields = [
+        'locale' => GeneralStatus::class,
+    ];
 }

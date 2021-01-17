@@ -2,75 +2,54 @@
 
 namespace App\Struct\License;
 
+use App\Struct\GeneralStatus;
 use App\Struct\Struct;
 
-/**
- * @property int                 $id
- * @property string              $name
- * @property string              $code
- * @property string              $iconUrl
- * @property Infos[]             $infos
- * @property StoreAvailabilities $storeAvailabilities
- * @property StoreAvailabilities $activationStatus
- * @property ApprovalStatus      $approvalStatus
- * @property Generation          $generation
- * @property bool                $isPremiumPlugin
- * @property bool                $isAdvancedFeature
- * @property bool                $isEnterpriseAccelerator
- * @property bool                $hasPriceModelBuy
- * @property bool                $isSubscriptionEnabled
- * @property bool                $support
- * @property bool                $supportOnlyCommercial
- * @property Producer            $producer
- * @property Binaries[]          $binaries
- */
 class Plugin extends Struct
 {
-    public $id;
+    public int $id;
 
-    public $name;
+    public string $name;
 
-    public $code;
+    public string $code;
 
-    public $iconUrl;
+    public ?string $iconUrl;
 
-    public $infos;
+    /**
+     * @var Infos[]
+     */
+    public array $infos;
 
-    public $storeAvailabilities;
+    public GeneralStatus $activationStatus;
 
-    public $activationStatus;
+    public GeneralStatus $approvalStatus;
 
-    public $approvalStatus;
+    public GeneralStatus $generation;
 
-    public $generation;
+    public bool $isPremiumPlugin;
 
-    public $isPremiumPlugin;
+    public bool $isAdvancedFeature;
 
-    public $isAdvancedFeature;
+    public bool $isEnterpriseAccelerator;
 
-    public $isEnterpriseAccelerator;
+    public Producer $producer;
 
-    public $hasPriceModelBuy;
-
-    public $isSubscriptionEnabled;
-
-    public $support;
-
-    public $supportOnlyCommercial;
-
-    public $producer;
-
-    public $binaries;
+    /**
+     * @var Binaries[]
+     */
+    public array $binaries;
 
     public string $creationDate;
 
-    public static $mappedFields = [
-        'infos' => 'App\\Struct\\License\\Infos',
-        'storeAvailabilities' => 'App\\Struct\\License\\StoreAvailabilities',
-        'activationStatus' => 'App\\Struct\\License\\StoreAvailabilities',
-        'approvalStatus' => 'App\\Struct\\License\\ApprovalStatus',
-        'generation' => 'App\\Struct\\License\\Generation',
-        'producer' => 'App\\Struct\\License\\Producer',
-        'binaries' => 'App\\Struct\\License\\Binaries',
+    /**
+     * @var string[]
+     */
+    public static array $mappedFields = [
+        'infos' => Infos::class,
+        'activationStatus' => GeneralStatus::class,
+        'approvalStatus' => GeneralStatus::class,
+        'generation' => GeneralStatus::class,
+        'producer' => Producer::class,
+        'binaries' => Binaries::class,
     ];
 }

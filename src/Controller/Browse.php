@@ -12,22 +12,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Browse extends AbstractController
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private Connection $connection, private PackageRepository $packageRepository)
     {
     }
 
     #[Route('/browse', name: 'browse')]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(): Response
     {
-        /** @var PackageRepository $repository */
-        $repository = $entityManager->getRepository(Package::class);
-
         return $this->render('browse.html.twig', [
-            'newPackages' => $repository->findNewPackages(),
+            'newPackages' => $this->packageRepository->findNewPackages(),
             'popularPackages' => $this->getPopularPackages(),
         ]);
     }
 
+    /**
+     * @return array{'name': string, 'downloads': string}[]
+     */
     private function getPopularPackages(): array
     {
         $sql = <<<SQL

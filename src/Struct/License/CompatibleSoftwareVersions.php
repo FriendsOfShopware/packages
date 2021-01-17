@@ -4,28 +4,19 @@ namespace App\Struct\License;
 
 use App\Struct\Struct;
 
-/**
- * @property int    $id
- * @property string $name
- * @property int    $parent
- * @property bool   $selectable
- * @property string $major
- * @property null   $releaseDate
- * @property bool   $public
- */
 class CompatibleSoftwareVersions extends Struct
 {
-    public $id;
+    public int $id;
 
-    public $name;
+    public string $name;
 
-    public $parent;
+    public ?int $parent;
 
-    public $selectable;
+    public bool $selectable;
 
-    public $major;
+    public ?string $major;
 
-    public $releaseDate;
+    public ?string $releaseDate;
 
-    public $public;
+    public bool $public;
 }

@@ -12,6 +12,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @template Package
+ * @extends ServiceEntityRepository<Package>
  * @method Package|null find($id, $lockMode = null, $lockVersion = null)
  * @method Package|null findOneBy(array $criteria, array $orderBy = null)
  * @method Package[]    findAll()
@@ -22,17 +24,6 @@ class PackageRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Package::class);
-    }
-
-    public function findJoinedAll(): array
-    {
-        $qb = $this->createQueryBuilder('package');
-        $qb->innerJoin('package.versions', 'versions')
-            ->innerJoin('package.producer', 'producer')
-            ->addSelect('versions')
-            ->addSelect('producer');
-
-        return $qb->getQuery()->getArrayResult();
     }
 
     public function findOne(string $name): ?Package
@@ -64,6 +55,7 @@ class PackageRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string[] $names
      * @return Package[]
      */
     public function findPackagesForLicenses(array $names): array
@@ -85,6 +77,10 @@ class PackageRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @param string[] $names
+     * @return Package[]
+     */
     public function findPackagesByNames(array $names): array
     {
         $qb = $this->createQueryBuilder('package');

@@ -4,7 +4,10 @@ namespace App\Struct;
 
 abstract class Struct implements \JsonSerializable
 {
-    public static $mappedFields = [];
+    /**
+     * @var string[]
+     */
+    public static array $mappedFields = [];
 
     /**
      * @return static
@@ -42,6 +45,7 @@ abstract class Struct implements \JsonSerializable
     }
 
     /**
+     * @param array<array<string, mixed>> $data
      * @return static[]
      */
     public static function mapList(array $data): array
@@ -53,7 +57,10 @@ abstract class Struct implements \JsonSerializable
         return \array_map(static fn ($item) => static::map($item), $data);
     }
 
-    public static function make(array $data)
+    /**
+     * @param array<string, mixed> $data
+     */
+    public static function make(array $data): static
     {
         $newObject = new static();
 

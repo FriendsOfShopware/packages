@@ -10,7 +10,7 @@ shell:
 	docker-compose exec cli bash
 
 phpstan:
-	docker-compose exec cli ./vendor/bin/phpstan analyse -c .phpstan.neon
+	docker-compose exec cli php -d memory_limit=-1 ./vendor/bin/phpstan analyse -c .phpstan.neon
 
 index:
 	docker-compose exec cli bin/console search:package:index

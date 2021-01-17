@@ -8,7 +8,10 @@ use App\Struct\Struct;
 
 class Role extends Struct
 {
-    public static $mappedFields = [
+    /**
+     * @var string[]
+     */
+    public static array $mappedFields = [
         'permissions' => Permission::class,
     ];
 

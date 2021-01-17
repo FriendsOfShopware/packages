@@ -7,6 +7,8 @@ use App\Components\PluginReader;
 use App\Entity\Package;
 use App\Entity\Producer;
 use App\Entity\Version;
+use App\Repository\PackageRepository;
+use App\Repository\ProducerRepository;
 use App\Struct\License\Binaries;
 use App\Struct\License\Plugin;
 use Composer\Semver\VersionParser;
@@ -26,9 +28,9 @@ class InternalPackageImportCommand extends Command
 
     private HttpClientInterface $client;
 
-    private ObjectRepository $packageRepository;
+    private PackageRepository $packageRepository;
 
-    private ObjectRepository $producerRepository;
+    private ProducerRepository $producerRepository;
 
     private VersionParser $versionParser;
 
@@ -101,6 +103,9 @@ class InternalPackageImportCommand extends Command
         ]);
     }
 
+    /**
+     * @return Plugin[]
+     */
     private function loadPlugins(int $offset): array
     {
         return \json_decode($this->client->request('GET', \getenv('SBP_PLUGIN_LIST'), [
@@ -287,7 +292,7 @@ class InternalPackageImportCommand extends Command
     /**
      * @param Plugin $plugin
      */
-    private function getLabel(object $plugin): ?string
+    private function getLabel(object $plugin): string
     {
         foreach ($plugin->infos as $info) {
             if ($info->locale->name === 'en_GB' && !empty($info->name)) {

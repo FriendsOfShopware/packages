@@ -14,31 +14,13 @@ class XmlPluginReader extends XmlReaderBase
     /**
      * @var string
      */
-    protected $xsdFile = __DIR__ . '/schema/plugin.xsd';
+    protected string $xsdFile = __DIR__ . '/schema/plugin.xsd';
 
-    /**
-     * parse required plugin blacklist.
-     *
-     * @return array|null
-     */
-    public static function parseBlacklist(DOMNodeList $items)
-    {
-        if (0 === $items->length) {
-            return null;
-        }
-        $blacklist = [];
-        /** @var DOMElement $item */
-        foreach ($items as $item) {
-            $blacklist[] = $item->nodeValue;
-        }
-
-        return $blacklist;
-    }
 
     /**
      * This method should be overridden as main entry point to parse a xml file.
      *
-     * @return array
+     * @return array{'label': array{'de': string, 'en': string}, 'license': string, 'link': string, 'requiredPlugins': array{'pluginName': string, 'minVersion': string}[]|null}
      */
     protected function parseFile(DOMDocument $xml)
     {
@@ -77,9 +59,6 @@ class XmlPluginReader extends XmlReaderBase
             $info['compatibility'] = [
                 'minVersion' => $compatibility->getAttribute('minVersion'),
                 'maxVersion' => $compatibility->getAttribute('maxVersion'),
-                'blacklist' => self::parseBlacklist(
-                    $compatibility->getElementsByTagName('blacklist')
-                ),
             ];
         }
         $requiredPlugins = self::getFirstChildren(
@@ -96,9 +75,9 @@ class XmlPluginReader extends XmlReaderBase
     /**
      * parse required plugins.
      *
-     * @return array
+     * @return array{'pluginName': string, 'minVersion': string|null, 'maxVersion': string|null}[]
      */
-    private function parseRequiredPlugins(DOMElement $requiredPluginNode)
+    private function parseRequiredPlugins(DOMElement $requiredPluginNode): array
     {
         $plugins = [];
         $requiredPlugins = $requiredPluginNode->getElementsByTagName('requiredPlugin');
@@ -111,12 +90,6 @@ class XmlPluginReader extends XmlReaderBase
             }
             if ($maxVersion = $requiredPlugin->getAttribute('maxVersion')) {
                 $plugin['maxVersion'] = $maxVersion;
-            }
-            $blacklist = self::parseBlacklist(
-                $requiredPlugin->getElementsByTagName('blacklist')
-            );
-            if (null !== $blacklist) {
-                $plugin['blacklist'] = $blacklist;
             }
             $plugins[] = $plugin;
         }

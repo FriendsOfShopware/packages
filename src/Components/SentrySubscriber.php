@@ -21,6 +21,9 @@ use Symfony\Component\Security\Core\Exception\InsufficientAuthenticationExceptio
  */
 class SentrySubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var string[]
+     */
     private array $ignoreExceptions = [
         NotFoundHttpException::class,
         InsufficientAuthenticationException::class,
@@ -38,7 +41,7 @@ class SentrySubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onController(ControllerEvent $event)
+    public function onController(ControllerEvent $event): void
     {
         if ($_SERVER['APP_ENV'] !== 'prod') {
             return;
@@ -50,18 +53,18 @@ class SentrySubscriber implements EventSubscriberInterface
 
         $route = (string) $event->getRequest()->attributes->get('route');
 
-        \Sentry\configureScope(function (Scope $scope) use($route) {
+        \Sentry\configureScope(static function (Scope $scope) use ($route) {
             $scope->setTag('route', $route);
         });
     }
 
-    public function onError(ExceptionEvent $event)
+    public function onError(ExceptionEvent $event): void
     {
         if ($_SERVER['APP_ENV'] !== 'prod') {
             return;
         }
 
-        $eventClass = get_class($event->getThrowable());
+        $eventClass = \get_class($event->getThrowable());
 
         if (\in_array($eventClass, $this->ignoreExceptions, true)) {
             return;

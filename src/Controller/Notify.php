@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Repository\PackageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ class Notify
 {
     private const USER_AGENT_REGEX = '/Composer\/(?<composerVersion>\d+\.\d+\.\d+).*; PHP\s(?<phpVersion>\d+\.\d+\.\d+)/m';
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private PackageRepository $packageRepository, private EntityManagerInterface $entityManager)
     {
     }
 
@@ -29,11 +30,9 @@ class Notify
             return new JsonResponse();
         }
 
-        $packageRepository = $this->entityManager->getRepository(\App\Entity\Package::class);
-
         foreach ($json['downloads'] as $download) {
             /** @var \App\Entity\Package|null $package */
-            $package = $packageRepository->findOneBy(['name' => \str_replace('store.shopware.com/', '', $download['name'])]);
+            $package = $this->packageRepository->findOneBy(['name' => \str_replace('store.shopware.com/', '', $download['name'])]);
             if ($package === null) {
                 continue;
             }
@@ -51,6 +50,9 @@ class Notify
         return new JsonResponse();
     }
 
+    /**
+     * @return array{0: string, 1: string}|null[]
+     */
     private function getComposerAndPhpVersionFromRequest(Request $request): array
     {
         $userAgent = $request->headers->get('User-Agent');
@@ -59,7 +61,7 @@ class Notify
             return [null, null];
         }
 
-        if (!str_contains($userAgent, 'Composer')) {
+        if (!\str_contains($userAgent, 'Composer')) {
             return [null, null];
         }
 

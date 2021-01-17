@@ -24,6 +24,7 @@ class PackagistLoader
     /**
      * @param License[] $licenses
      * @param Shop      $shop
+     * @return array{'notify-batch': string, 'packages': array<string, array<string, array<string, mixed>>>}
      */
     public function load(array $licenses, object $shop): array
     {
@@ -35,6 +36,7 @@ class PackagistLoader
 
     /**
      * @param License[] $licenses
+     * @return array<string, array<string, array<string, mixed>>>
      */
     private function mapLicensesToComposerPackages(array $licenses, Shop $shop): array
     {
@@ -74,6 +76,7 @@ class PackagistLoader
 
     /**
      * @param License $license
+     * @return array<string, array<string, mixed>>
      */
     private function convertBinaries(string $packageName, $license, Package $package, Shop $shop): array
     {

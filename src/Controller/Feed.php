@@ -14,16 +14,14 @@ use Symfony\Component\Routing\RouterInterface;
 #[Route('/feeds')]
 class Feed extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private RouterInterface $router)
+    public function __construct(private PackageRepository $packageRepository, private RouterInterface $router)
     {
     }
 
     #[Route('/package.{packageName}.{format}', name: 'feed_package', requirements: ['format' => '(rss|atom)', 'packageName' => '[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+'], methods: ['GET'])]
     public function packageAction(string $packageName, string $format): Response
     {
-        /** @var PackageRepository $repository */
-        $repository = $this->entityManager->getRepository(\App\Entity\Package::class);
-        $package = $repository->findOne($packageName);
+        $package = $this->packageRepository->findOne($packageName);
 
         if (!$package) {
             throw new NotFoundHttpException(\sprintf('Cannot find package by name %s', $packageName));

@@ -4,22 +4,13 @@ namespace App\Struct\License;
 
 use App\Struct\Struct;
 
-/**
- * @property int    $id
- * @property string $localPath
- * @property string $remoteLink
- * @property null   $shopwareMajorVersion
- * @property bool   $ioncubeEncrypted
- */
 class Archives extends Struct
 {
-    public $id;
+    public ?int $id;
 
-    public $localPath;
+    public ?string $remoteLink;
 
-    public $remoteLink;
+    public mixed $shopwareMajorVersion;
 
-    public $shopwareMajorVersion;
-
-    public $ioncubeEncrypted;
+    public ?bool $ioncubeEncrypted;
 }

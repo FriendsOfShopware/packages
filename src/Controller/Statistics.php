@@ -14,8 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
-use function array_keys;
-use function array_values;
 
 class Statistics extends AbstractController
 {
@@ -33,6 +31,9 @@ class Statistics extends AbstractController
         ]);
     }
 
+    /**
+     * @return array{'packageCount': int, 'versionCount': int, 'downloadCount': int}
+     */
     private function getTotals(): array
     {
         $packagesCount = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM package');
@@ -60,7 +61,7 @@ SQL;
         $current = new DateTimeImmutable();
         $past = $current->sub(new DateInterval('P30D'));
 
-        $values = $this->cache->get('download-30-days', function (CacheItemInterface $item) use($sql, $past, $current) {
+        $values = $this->cache->get('download-30-days', function (CacheItemInterface $item) use ($sql, $past, $current) {
             $item->expiresAfter(300);
 
             return $this->connection->fetchAllKeyValue($sql, [
@@ -71,11 +72,11 @@ SQL;
 
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
-            'labels' => array_keys($values),
+            'labels' => \array_keys($values),
             'datasets' => [
                 [
                     'label' => 'Downloads',
-                    'data' => array_values($values),
+                    'data' => \array_values($values),
                     'backgroundColor' => [
                         'rgba(22,75,229, .5)'
                     ],
@@ -99,7 +100,7 @@ FROM download
 GROUP BY EXTRACT( YEAR_MONTH FROM download.installed_at )
 SQL;
 
-        $values = $this->cache->get('download-by-months', function (CacheItemInterface $item) use($sql) {
+        $values = $this->cache->get('download-by-months', function (CacheItemInterface $item) use ($sql) {
             $item->expiresAfter(300);
 
             return $this->connection->fetchAllKeyValue($sql);
@@ -107,11 +108,11 @@ SQL;
 
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
-            'labels' => array_keys($values),
+            'labels' => \array_keys($values),
             'datasets' => [
                 [
                     'label' => 'Downloads',
-                    'data' => array_values($values),
+                    'data' => \array_values($values),
                     'backgroundColor' => [
                         'rgba(22,75,229, .5)'
                     ],

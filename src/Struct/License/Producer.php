@@ -4,22 +4,11 @@ namespace App\Struct\License;
 
 use App\Struct\Struct;
 
-/**
- * @property int    $id
- * @property string $name
- * @property string $prefix
- * @property int    $companyId
- */
 class Producer extends Struct
 {
-    public $id;
+    public int $id;
 
-    public $name;
+    public string $name;
 
-    public $prefix;
-
-    public $companyId;
-
-    public static $mappedFields = [
-    ];
+    public string $prefix;
 }
