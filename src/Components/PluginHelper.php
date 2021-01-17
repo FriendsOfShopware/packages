@@ -13,6 +13,6 @@ class PluginHelper
 
     private static function camelCaseToDashes(string $str): string
     {
-        return \strtolower(\preg_replace('/([A-Z])/', '-$1', $str));
+        return \strtolower((string) \preg_replace('/([A-Z])/', '-$1', $str));
     }
 }

@@ -43,7 +43,7 @@ class Feed extends AbstractController
             'items' => \array_map(static fn (Version $version) => [
                 'title' => \sprintf('%s (%s)', $packageName, $version->getVersion()),
                 'link' => $packageLink . '?version=' . $version->getVersion(),
-                'description' => \strip_tags($version->getChangelog(), '<br>'),
+                'description' => \strip_tags((string) $version->getChangelog(), '<br>'),
                 'date' => $version->getReleaseDate(),
             ], $package->getVersions()->toArray()),
         ];

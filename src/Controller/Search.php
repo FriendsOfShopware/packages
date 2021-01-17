@@ -22,7 +22,7 @@ class Search extends AbstractController
     {
         $index = $client->getIndex(PackageIndexerCommand::INDEX_NAME);
 
-        $term = \mb_strtolower($request->query->get('term'));
+        $term = \mb_strtolower($request->query->get('term', ''));
         $options = [
             'facetsDistribution' => [
                 'types',

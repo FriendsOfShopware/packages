@@ -206,7 +206,7 @@ class Version
         $this->homepage = $homepage;
     }
 
-    public function getLicense(): string
+    public function getLicense(): ?string
     {
         return $this->license;
     }
@@ -330,7 +330,7 @@ class Version
             ],
         ];
 
-        if ($this->type === 'shopware-platform-plugin') {
+        if ($this->type === 'shopware-platform-plugin' && isset($this->getComposerJson()['name'])) {
             $json['replace'][$this->getComposerJson()['name']] = 'self.version';
         }
 

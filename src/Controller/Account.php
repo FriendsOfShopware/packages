@@ -31,7 +31,7 @@ class Account extends AbstractController
         /** @var AccessToken|null $token */
         $token = $this->getUser();
 
-        if (!$token) {
+        if ($token === null || $token->getShop() === null) {
             return $this->redirectToRoute('login');
         }
 

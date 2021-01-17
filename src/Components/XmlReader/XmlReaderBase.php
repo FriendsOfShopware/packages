@@ -133,7 +133,11 @@ abstract class XmlReaderBase implements XmlReaderInterface
             return null;
         }
 
-        return $children->item(0)->nodeValue;
+        if ($node = $children->item(0)) {
+            return $node->nodeValue;
+        }
+
+        return null;
     }
 
     /**

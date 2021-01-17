@@ -48,7 +48,7 @@ class PackageRepository extends ServiceEntityRepository
         $this->getEntityManager()->detach($package);
 
         $versions = $package->getVersions()->toArray();
-        \uasort($versions, static fn (Version $a, Version $b) => \version_compare($a->getVersion(), $b->getVersion()));
+        \uasort($versions, static fn (Version $a, Version $b) => \version_compare((string) $a->getVersion(), (string) $b->getVersion()));
 
         $package->setVersions(new ArrayCollection(\array_reverse($versions)));
 

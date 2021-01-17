@@ -102,7 +102,7 @@ class Package
 
         /** @var Version $version */
         foreach ($this->versions as $version) {
-            if (\version_compare($version->getVersion(), $currentVersion->getVersion(), '>')) {
+            if (\version_compare((string) $version->getVersion(), (string) $currentVersion->getVersion(), '>')) {
                 $currentVersion = $version;
             }
         }
@@ -169,8 +169,8 @@ class Package
         }
 
         $text = \strip_tags($this->description, '<h2><h3><h4><h5><h6><p><b><strong><li><ol><ul><br><i><a><style>');
-        $text = \preg_replace('/style=\\"[^\\"]*\\"/', '', $text);
-        $text = \preg_replace('/class=\\"[^\\"]*\\"/', '', $text);
+        $text = \preg_replace('/style=\\"[^\\"]*\\"/', '', (string) $text);
+        $text = \preg_replace('/class=\\"[^\\"]*\\"/', '', (string) $text);
 
         $followList = [
             \getenv('APP_URL'),
@@ -179,7 +179,7 @@ class Package
         return \preg_replace(
             '%(<a\s*(?!.*\brel=)[^>]*)(href="https?://)((?!(?:(?:www\.)?' . \implode('|(?:www\.)?', $followList) . '))[^"]+)"((?!.*\brel=)[^>]*)(?:[^>]*)>%',
             '$1$2$3"$4 rel="noopener noreferrer">',
-            $text
+            (string) $text
         );
     }
 

@@ -34,6 +34,10 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
     {
         $encryption = new Encryption();
 
+        if ($this->shop === null) {
+            throw new \RuntimeException('Cannot serialize without shop');
+        }
+
         return $encryption->encrypt([
             'username' => $this->username,
             'password' => $this->password,
