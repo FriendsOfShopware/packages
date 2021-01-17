@@ -1,20 +1,31 @@
 name: Deploy Live
 on:
-    release:
-        types: [published]
+    push:
 
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+              with:
+                fetch-depth: 0
 
-            -   name: Get the version
-                id: get_version
-                run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+            - name: Get the version
+              id: get_version
+              run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-            - name: Build image and push
+            - name: Setup SSH Keys and known_hosts
+              env:
+                  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
               run: |
-                  echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "shyim" --password-stdin
-                  docker build -t friendsofshopware/packages --build-arg GIT_TAG=${{ steps.get_version.outputs.VERSION }} .
-                  docker push friendsofshopware/packages
+                  mkdir -p ~/.ssh
+                  ssh-keyscan pikachu.shyim.de >> ~/.ssh/known_hosts
+                  ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+                  ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+
+            - name: Deploy
+              env:
+                  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+              run: |
+                  git remote add deploy deploy@pikachu.shyim.de:packages
+                  git push -u deploy ${{ steps.get_version.outputs.VERSION }}
