@@ -24,7 +24,10 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
 }
 
 if (isset($_SERVER['SENTRY_DSN'])) {
-    \Sentry\init(['dsn' => $_SERVER['SENTRY_DSN']]);
+    \Sentry\init([
+        'dsn' => $_SERVER['SENTRY_DSN'],
+        'release' => $_SERVER['VERSION']
+    ]);
 }
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
