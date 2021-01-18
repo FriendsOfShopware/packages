@@ -30,3 +30,13 @@ jobs:
               run: |
                   git remote add deploy deploy@pikachu.shyim.de:packages
                   git push -u deploy ${{ steps.get_version.outputs.VERSION }}
+                  
+            - name: Create Sentry release
+              uses: getsentry/action-release@v1
+              env:
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+              with:
+                environment: production
+                version: "${{ steps.get_version.outputs.VERSION }}"
