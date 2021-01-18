@@ -14,3 +14,7 @@ phpstan:
 
 index:
 	docker-compose exec cli bin/console search:package:index
+
+cache:
+	rm -rf var/cache/*
+	docker-compose exec redis redis-cli flushdb

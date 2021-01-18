@@ -9,6 +9,7 @@ use App\Entity\Version;
 use App\Struct\CompanyMemberShip\CompanyMemberShip;
 use App\Struct\GeneralStatus;
 use App\Struct\License\License;
+use App\Struct\License\Plugin;
 use App\Struct\Shop\Shop;
 use App\Struct\Shop\SubscriptionModules;
 use Psr\Cache\CacheItemInterface;
@@ -68,6 +69,9 @@ class Client
         $this->currentToken = $token;
     }
 
+    /**
+     * @param array{'headers'?: array{'X-Shopware-Token'?: string, 'User-Agent'?: string}, 'query'?: array{'json'?: bool, 'userId'?: int, 'limit'?: int, 'variantTypes'?: string, 'shopId'?: int}} $options
+     */
     private function sendRequest(string $method, string $url, array $options = []): ResponseInterface
     {
         if ($this->currentToken === null) {
@@ -81,7 +85,7 @@ class Client
             ],
         ];
 
-        return $this->client->request($method, $url, \array_merge_recursive($defaultOptions, $options));
+        return $this->client->request($method, $url, \array_replace_recursive($defaultOptions, $options));
     }
 
     /**
@@ -199,13 +203,13 @@ class Client
             $item->expiresAfter(300);
 
             if ($token->getShop()->type === Shop::TYPE_PARTNER) {
-                $content = \json_decode($this->sendRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
+                $content = \json_decode($this->sendRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent(), true);
 
                 $licenses = [];
-                foreach ($content->plugins as $pluginData) {
+                foreach ($content['plugins'] as $pluginData) {
                     $license = new License();
                     $license->archived = false;
-                    $license->plugin = $pluginData;
+                    $license->plugin = Plugin::make($pluginData);
                     $license->variantType = new GeneralStatus();
                     $license->variantType->name = 'buy'; // this is not really true but it's okay for our purposes
 
@@ -222,6 +226,13 @@ class Client
                         'limit' => 1_000,
                     ],
                 ])->getContent());
+
+                // Some weird licenses doesnt have a plugin.
+                foreach ($content as $key => $license) {
+                    if (!isset($license->plugin)) {
+                        unset($content[$key]);
+                    }
+                }
             } catch (ClientException) {
                 $content = [];
             }
@@ -320,16 +331,6 @@ class Client
         return $json['url'];
     }
 
-    public function fetchDownloadVersion(string $binaryLink): ?string
-    {
-        $json = $this->fetchDownloadJson($binaryLink);
-        if (!\array_key_exists('binary', $json) || !\is_array($json['binary'])) {
-            return null;
-        }
-
-        return $json['binary']['version'] ?? null;
-    }
-
     public function currentToken(): AccessToken
     {
         if ($this->currentToken === null) {
@@ -353,7 +354,7 @@ class Client
         }
 
         if ($shop->type === Shop::TYPE_PARTNER) {
-            $filePath = "wildcardlicenses/{$shop->baseId}/instances/{$shop->id}/downloads/{$license->plugin->code}/{$shop->shopwareVersion->name}";
+            $filePath = "wildcardlicenses/{$shop->baseId}/instances/{$shop->id}/downloads/{$license->plugin->code}/{$shop->shopwareVersion->name}?json=true";
         } elseif ($binary) {
             $filePath = 'plugins/' . $license->plugin->id . '/binaries/' . $binary->getBinaryId() . '/file';
         } else {
