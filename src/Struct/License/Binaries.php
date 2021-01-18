@@ -7,15 +7,15 @@ use App\Struct\Struct;
 
 class Binaries extends Struct
 {
-    public ?int $id;
+    public int $id;
 
-    public ?string $name;
+    public string $name;
 
     public ?string $remoteLink;
 
-    public ?string $version;
+    public string $version;
 
-    public ?GeneralStatus $status;
+    public GeneralStatus $status;
 
     /**
      * @var CompatibleSoftwareVersions[]

@@ -242,8 +242,12 @@ class Version
         $this->changelog = $changelog;
     }
 
-    public function getReleaseDate(): ?\DateTimeInterface
+    public function getReleaseDate(): \DateTimeInterface
     {
+        if ($this->releaseDate === null) {
+            return new \DateTime();
+        }
+
         return $this->releaseDate;
     }
 

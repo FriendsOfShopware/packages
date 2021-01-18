@@ -123,6 +123,10 @@ class PackagistLoader
 
     private function generateLink(string $filePath, AccessToken $token, bool $isOldArchive): string
     {
+        if ($token->getShop() === null) {
+            throw new \InvalidArgumentException('Token needs a Shop');
+        }
+
         $data = [
             'filePath' => $filePath,
             'domain' => $token->getShop()->domain,

@@ -10,5 +10,5 @@ class Subscription extends Struct
 
     public string $creationDate;
 
-    public ?string $expirationDate;
+    public string $expirationDate;
 }

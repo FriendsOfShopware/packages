@@ -181,6 +181,10 @@ class Client
     {
         $this->useToken($token);
 
+        if ($token->getShop() === null) {
+            throw new \InvalidArgumentException('Token needs a Shop');
+        }
+
         $cacheKey = $this->getLicenseCacheKey($token);
 
         return $this->cache->get($cacheKey, function (CacheItemInterface $item) use ($token) {
@@ -265,6 +269,10 @@ class Client
             throw new TokenMissingException();
         }
 
+        if ($this->currentToken->getShop() === null) {
+            throw new \InvalidArgumentException('Token needs a Shop');
+        }
+
         try {
             $query = ['json' => true];
             $headers = [];
@@ -314,8 +322,12 @@ class Client
         return $json['binary']['version'] ?? null;
     }
 
-    public function currentToken(): ?AccessToken
+    public function currentToken(): AccessToken
     {
+        if ($this->currentToken === null) {
+            throw new \RuntimeException('Current Token is not set');
+        }
+
         return $this->currentToken;
     }
 
@@ -326,11 +338,18 @@ class Client
      */
     public function getBinaryFilePath($license, Version $binary = null)
     {
-        $shop = $this->currentToken->getShop();
+        $shop = $this->currentToken()->getShop();
+
+        if ($shop === null) {
+            throw new \InvalidArgumentException('Token needs a Shop');
+        }
+
         if ($shop->type === Shop::TYPE_PARTNER) {
             $filePath = "wildcardlicenses/{$shop->baseId}/instances/{$shop->id}/downloads/{$license->plugin->code}/{$shop->shopwareVersion->name}";
-        } else {
+        } elseif ($binary) {
             $filePath = 'plugins/' . $license->plugin->id . '/binaries/' . $binary->getBinaryId() . '/file';
+        } else {
+            throw new \RuntimeException('Cannot determine filePath');
         }
 
         return $filePath;
@@ -338,11 +357,19 @@ class Client
 
     public function getLicenseCacheKey(AccessToken $token): string
     {
+        if ($token->getShop() === null) {
+            throw new \InvalidArgumentException('Token needs a Shop');
+        }
+
         return \md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
     }
 
     private function getLicensesListPath(AccessToken $token): string
     {
+        if ($token->getShop() === null) {
+            throw new \InvalidArgumentException('Token needs a Shop');
+        }
+
         if ($token->getShop()->ownerId === $token->getUserId()) {
             return 'shops/' . $token->getShop()->id . '/pluginlicenses';
         }

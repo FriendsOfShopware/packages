@@ -207,7 +207,7 @@ class InternalPackageImportCommand extends Command
         /** @var Binaries $binary */
         foreach ($plugin->binaries as $binary) {
             try {
-                $this->versionParser->normalize($binary->version);
+                $this->versionParser->normalize((string) $binary->version);
             } catch (\UnexpectedValueException) {
                 // Very old version
                 if ($binary->creationDate === null) {
@@ -221,7 +221,7 @@ class InternalPackageImportCommand extends Command
 
             $foundVersion = false;
             foreach ($package->getVersions() as $version) {
-                if ($version->getVersion() === $binary->version) {
+                if ($version->getVersion() === $binary->version && isset($binary->status)) {
                     if ('codereviewsucceeded' !== $binary->status->name) {
                         $this->entityManager->remove($version);
                         $this->entityManager->flush();
@@ -231,8 +231,8 @@ class InternalPackageImportCommand extends Command
             }
 
             if ($foundVersion) {
-                $foundVersion->setReleaseDate(new \DateTime($binary->creationDate));
-                $foundVersion->setBinaryId($binary->id);
+                $foundVersion->setReleaseDate(new \DateTime($binary->creationDate ?? 'now'));
+                $foundVersion->setBinaryId((int) $binary->id);
 
                 foreach ($binary->changelogs as $changelog) {
                     if ('en_GB' === $changelog->locale->name) {
@@ -253,7 +253,7 @@ class InternalPackageImportCommand extends Command
 
             $version = new Version();
             $version->setBinaryId($binary->id);
-            $version->setVersion($binary->version);
+            $version->setVersion((string) $binary->version);
             $version->setType('shopware-plugin');
             $version->setExtra([
                 'installer-name' => $plugin->name,
@@ -287,9 +287,9 @@ class InternalPackageImportCommand extends Command
                 continue;
             }
 
-            $version->setDescription(\mb_substr($version->getDescription(), 0, 255));
+            $version->setDescription(\mb_substr((string) $version->getDescription(), 0, 255));
             $version->setPackage($package);
-            $version->setReleaseDate(new \DateTime($binary->creationDate));
+            $version->setReleaseDate(new \DateTime($binary->creationDate ?? 'now'));
             $package->addVersion($version);
 
             foreach ($binary->changelogs as $changelog) {
