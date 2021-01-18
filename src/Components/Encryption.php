@@ -26,7 +26,7 @@ class Encryption
             throw new \RuntimeException('Cannot read public key');
         }
 
-        if ($privateKey = \openssl_pkey_get_public($privateBody)) {
+        if ($privateKey = \openssl_pkey_get_private($privateBody)) {
             $this->privateKey = $privateKey;
         } else {
             throw new \RuntimeException('Cannot read private key');

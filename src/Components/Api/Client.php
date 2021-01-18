@@ -13,9 +13,10 @@ use App\Struct\Shop\Shop;
 use App\Struct\Shop\SubscriptionModules;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
-use Symfony\Component\HttpClient\HttpClient;
+
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 use Throwable;
 
 class Client
@@ -29,13 +30,10 @@ class Client
 
     public const ENDPOINT = 'https://api.shopware.com/';
 
-    protected HttpClientInterface $client;
-
     protected ?AccessToken $currentToken = null;
 
-    public function __construct(private CacheInterface $cache)
+    public function __construct(private CacheInterface $cache, private HttpClientInterface $client)
     {
-        $this->client = HttpClient::create();
     }
 
     public function login(string $username, string $password): AccessToken
@@ -68,12 +66,22 @@ class Client
         }
 
         $this->currentToken = $token;
-        $this->client = HttpClient::create([
+    }
+
+    private function sendRequest(string $method, string $url, array $options = []): ResponseInterface
+    {
+        if ($this->currentToken === null) {
+            return $this->client->request($method, $url, $options);
+        }
+
+        $defaultOptions = [
             'headers' => [
-                'X-Shopware-Token' => $token->getToken(),
+                'X-Shopware-Token' => $this->currentToken->getToken(),
                 'User-Agent' => 'packages.friendsofshopware.de',
             ],
-        ]);
+        ];
+
+        return $this->client->request($method, $url, \array_merge_recursive($defaultOptions, $options));
     }
 
     /**
@@ -85,7 +93,7 @@ class Client
 
         try {
             $content = \json_decode(
-                $this->client->request('GET', self::ENDPOINT . 'account/' . $token->getUserAccountId() . '/memberships')->getContent(),
+                $this->sendRequest('GET', self::ENDPOINT . 'account/' . $token->getUserAccountId() . '/memberships')->getContent(),
                 false
             );
         } catch (\Throwable) {
@@ -111,7 +119,7 @@ class Client
 
         if ($token->getMemberShip()->can(CompanyMemberShip::PARTNER_SHOPS_PERMISSION)) {
             try {
-                $content = $this->client->request('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
+                $content = $this->sendRequest('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
 
                 $clientShops = Shop::mapList(\json_decode($content, false));
             } catch (ClientException) {
@@ -124,7 +132,7 @@ class Client
 
         if ($token->getMemberShip()->can(CompanyMemberShip::WILDCARD_SHOP_PERMISSION)) {
             try {
-                $content = $this->client->request('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
+                $content = $this->sendRequest('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
                 $content = \json_decode($content);
                 $content = \array_shift($content);
                 $instances = $content->instances ?? [];
@@ -153,7 +161,7 @@ class Client
 
         if ($token->getMemberShip()->can(CompanyMemberShip::COMPANY_SHOPS_PERMISSION)) {
             try {
-                $shopsContent = $this->client->request('GET', self::ENDPOINT . 'shops', [
+                $shopsContent = $this->sendRequest('GET', self::ENDPOINT . 'shops', [
                     'query' => [
                         'userId' => $token->getUserId(),
                     ],
@@ -191,7 +199,7 @@ class Client
             $item->expiresAfter(300);
 
             if ($token->getShop()->type === Shop::TYPE_PARTNER) {
-                $content = \json_decode($this->client->request('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
+                $content = \json_decode($this->sendRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent());
 
                 $licenses = [];
                 foreach ($content->plugins as $pluginData) {
@@ -208,7 +216,7 @@ class Client
             }
 
             try {
-                $content = \json_decode($this->client->request('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
+                $content = \json_decode($this->sendRequest('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
                     'query' => [
                         'variantTypes' => 'buy,free,rent,support,test',
                         'limit' => 1_000,
@@ -219,7 +227,7 @@ class Client
             }
 
             try {
-                $enterprisePlugins = \json_decode($this->client->request('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
+                $enterprisePlugins = \json_decode($this->sendRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
             } catch (ClientException) {
                 $enterprisePlugins = [];
             }
@@ -253,7 +261,7 @@ class Client
     {
         try {
             /** @var array{'partnerId': string} $response */
-            $response = $this->client->request('GET', self::ENDPOINT . 'companies/' . $this->currentToken()->getMemberShip()->company->id . '/allocations')->toArray();
+            $response = $this->sendRequest('GET', self::ENDPOINT . 'companies/' . $this->currentToken()->getMemberShip()->company->id . '/allocations')->toArray();
             return $response;
         } catch (Throwable) {
             return null;
@@ -285,7 +293,7 @@ class Client
             }
 
             /** @var array{'url': string, 'binary'?: array{'version': string}} $json */
-            $json = $this->client->request('GET', self::ENDPOINT . $binaryLink, [
+            $json = $this->sendRequest('GET', self::ENDPOINT . $binaryLink, [
                 'query' => $query,
                 'headers' => $headers,
             ])->toArray();
