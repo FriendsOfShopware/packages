@@ -2,17 +2,8 @@ name: Qodana - Code Inspection
 
 # The name of the GitHub event that triggers the workflow.
 on:
-  # You can manually trigger workflow runs
-  # https://docs.github.com/en/free-pro-team@latest/actions/managing-workflow-runs/manually-running-a-workflow
   workflow_dispatch:
-
-  # You can trigger workflow on push or pull-request event and configure a workflow to run on specific branches or tags
-  # push:
-  #   branches:
-  #     - main
-  # pull_request:
-  #   branches:
-  #     - main
+  push:
 
 jobs:
   code_inspection:
