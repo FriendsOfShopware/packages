@@ -30,7 +30,7 @@
         "symfony/http-client": "5.2.*",
         "symfony/mime": "5.2.*",
         "symfony/orm-pack": "^2.0",
-        "symfony/polyfill-php80": "v1.17.0",
+        "symfony/polyfill-php80": "v1.22.0",
         "symfony/profiler-pack": "^1.0",
         "symfony/security-bundle": "5.2.*",
         "symfony/twig-pack": "^1.0",
