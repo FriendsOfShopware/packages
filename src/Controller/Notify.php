@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class Notify
 {
-    private const USER_AGENT_REGEX = '/Composer\/(?<composerVersion>\d+\.\d+\.\d+).*; PHP\s(?<phpVersion>\d+\.\d+\.\d+)/m';
+    private const USER_AGENT_REGEX = '/Composer\/(?<composerVersion>\d+\.\d+).*;\s*PHP\s*(?<phpVersion>\d+\.\d+\.\d+)/m';
 
     /**
      * @param PackageRepository<Package> $packageRepository
