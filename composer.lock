@@ -3085,16 +3085,16 @@
         },
         {
             "name": "sentry/sentry",
-            "version": "3.1.2",
+            "version": "3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/getsentry/sentry-php.git",
-                "reference": "e9b2d45b248d75f4c79a9d166b13b947b72f01fa"
+                "reference": "db8a322f87983bb4f3cd8db01f9a9a593efe72a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/e9b2d45b248d75f4c79a9d166b13b947b72f01fa",
-                "reference": "e9b2d45b248d75f4c79a9d166b13b947b72f01fa",
+                "url": "https://api.github.com/repos/getsentry/sentry-php/zipball/db8a322f87983bb4f3cd8db01f9a9a593efe72a3",
+                "reference": "db8a322f87983bb4f3cd8db01f9a9a593efe72a3",
                 "shasum": ""
             },
             "require": {
@@ -3174,7 +3174,7 @@
             ],
             "support": {
                 "issues": "https://github.com/getsentry/sentry-php/issues",
-                "source": "https://github.com/getsentry/sentry-php/tree/3.1.2"
+                "source": "https://github.com/getsentry/sentry-php/tree/3.1.3"
             },
             "funding": [
                 {
@@ -3186,7 +3186,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-01-07T18:51:44+00:00"
+            "time": "2021-01-25T08:47:45+00:00"
         },
         {
             "name": "symfony/asset",
