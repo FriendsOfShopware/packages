@@ -4,6 +4,7 @@ namespace App\Components;
 
 use App\Components\Api\AccessToken;
 use App\Components\Api\Client;
+use App\Entity\DependencyPackage;
 use App\Entity\Package;
 use App\Entity\Version;
 use App\Repository\PackageRepository;
@@ -67,9 +68,33 @@ class PackagistLoader
                 continue;
             }
 
+            /** @var Package $package */
             $package = $databasePlugins[$packageName];
 
             $response[$packageName] = $this->convertBinaries($packageName, $license, $package, $shop);
+
+            // Add dependency private packages
+            /** @var Version $packageVersion */
+            foreach (\array_reverse($package->getVersions()->toArray()) as $packageVersion) {
+                /** @var DependencyPackage $dependencyPackage */
+                foreach ($packageVersion->getDependencyPackages() as $dependencyPackage) {
+                    if (!isset($response[$dependencyPackage->getName()])) {
+                        $response[$dependencyPackage->getName()] = [];
+                    }
+
+                    if (isset($response[$dependencyPackage->getName()][$dependencyPackage->getVersion()])) {
+                        continue;
+                    }
+
+                    $composerJson = $dependencyPackage->getComposerJson();
+                    $composerJson['dist'] = [
+                        'url' => \getenv('APP_URL') . '/download/dependency?token=' . \urlencode($this->encryption->encrypt(['dependencyId' => $dependencyPackage->getId()])),
+                        'type' => 'zip'
+                    ];
+
+                    $response[$dependencyPackage->getName()][$dependencyPackage->getVersion()] = $composerJson;
+                }
+            }
         }
 
         return $response;

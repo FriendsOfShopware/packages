@@ -34,7 +34,7 @@ class Encryption
     }
 
     /**
-     * @param array{'domain'?: string, 'username'?: string, 'password'?: string, 'userId'?: int, 'filePath'?: string} $data
+     * @param array{'domain'?: string, 'username'?: string, 'password'?: string, 'userId'?: int, 'filePath'?: string, 'dependencyId'?: int} $data
      */
     public function encrypt(array $data): string
     {
@@ -46,7 +46,7 @@ class Encryption
     }
 
     /**
-     * @return array{'domain': string, 'username': string, 'password': string, 'userId': int, 'filePath': string}
+     * @return array{'domain': string, 'username': string, 'password': string, 'userId': int, 'filePath': string, 'dependencyId'?: int}
      */
     public function decrypt(string $data): array
     {

@@ -23,8 +23,9 @@ class PackagesJson
     public function index(Request $request): JsonResponse
     {
         if (!$request->headers->has('Token')) {
-            throw new InvalidTokenHttpException();
+            return new JsonResponse(['packages' => []]);
         }
+
         $tokenValue = $request->headers->get('Token');
         try {
             $credentials = $this->encryption->decrypt((string) $tokenValue);

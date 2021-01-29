@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -97,6 +99,16 @@ class Version
      * @ORM\JoinColumn(nullable=false)
      */
     private Package $package;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=DependencyPackage::class, mappedBy="packageVersions")
+     */
+    private $dependencyPackages;
+
+    public function __construct()
+    {
+        $this->dependencyPackages = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -339,5 +351,32 @@ class Version
         }
 
         return $json;
+    }
+
+    /**
+     * @return Collection|DependencyPackage[]
+     */
+    public function getDependencyPackages(): Collection
+    {
+        return $this->dependencyPackages;
+    }
+
+    public function addDependencyPackage(DependencyPackage $dependencyPackage): self
+    {
+        if (!$this->dependencyPackages->contains($dependencyPackage)) {
+            $this->dependencyPackages[] = $dependencyPackage;
+            $dependencyPackage->addPackageVersion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDependencyPackage(DependencyPackage $dependencyPackage): self
+    {
+        if ($this->dependencyPackages->removeElement($dependencyPackage)) {
+            $dependencyPackage->removePackageVersion($this);
+        }
+
+        return $this;
     }
 }

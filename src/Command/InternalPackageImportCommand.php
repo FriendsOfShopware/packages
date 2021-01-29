@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Components\Api\Client;
-use App\Components\PluginReader;
+use App\Components\ExtensionReader;
 use App\Entity\Package;
 use App\Entity\Producer;
 use App\Entity\Version;
@@ -39,7 +39,7 @@ class InternalPackageImportCommand extends Command
 
     private VersionParser $versionParser;
 
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager, private ExtensionReader $reader)
     {
         parent::__construct();
         $this->packageRepository = $entityManager->getRepository(Package::class);
@@ -282,7 +282,7 @@ class InternalPackageImportCommand extends Command
             }
 
             try {
-                PluginReader::readFromZip($pluginZip, $version);
+                $this->reader->readFromZip($pluginZip, $version);
             } catch (\InvalidArgumentException) {
                 continue;
             }
