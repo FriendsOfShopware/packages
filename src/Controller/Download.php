@@ -7,11 +7,14 @@ use App\Components\Encryption;
 use App\Exception\AccessDeniedToDownloadPluginHttpException;
 use App\Exception\InvalidShopGivenHttpException;
 use App\Exception\InvalidTokenHttpException;
+use App\Repository\DependencyPackageRepository;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Throwable;
@@ -19,11 +22,11 @@ use ZipArchive;
 
 class Download
 {
-    public function __construct(private Encryption $encryption, private Client $client, private CacheInterface $cache)
+    public function __construct(private Encryption $encryption, private Client $client, private CacheInterface $cache, private DependencyPackageRepository $dependencyPackageRepository)
     {
     }
 
-    #[\Symfony\Component\Routing\Annotation\Route('/download')]
+    #[Route('/download')]
     public function download(Request $request): Response
     {
         $tokenValue = $request->query->get('token');
@@ -89,6 +92,34 @@ class Download
         }
 
         return new RedirectResponse($downloadLink);
+    }
+
+    #[Route('/download/dependency')]
+    public function dependencyDownload(Request $request): Response
+    {
+        $tokenValue = $request->query->get('token');
+
+        if (empty($tokenValue)) {
+            throw new InvalidTokenHttpException();
+        }
+
+        try {
+            $credentials = $this->encryption->decrypt($tokenValue);
+        } catch (Throwable) {
+            throw new InvalidTokenHttpException();
+        }
+
+        if (!isset($credentials['dependencyId'])) {
+            throw new InvalidTokenHttpException();
+        }
+
+        $package = $this->dependencyPackageRepository->find($credentials['dependencyId']);
+
+        if ($package === null) {
+            throw new NotFoundHttpException('Cannot find package');
+        }
+
+        return new BinaryFileResponse($package->getPath());
     }
 
     private function repackZip(string $url): Response

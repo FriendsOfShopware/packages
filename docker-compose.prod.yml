@@ -9,6 +9,7 @@ services:
           - "80"
         volumes:
           - /home/deploy/data/friendsofshopware/packages/volumes/ssl:/var/www/html/ssl
+          - /home/deploy/data/friendsofshopware/packages/volumes/storage:/var/www/html/storage
     redis:
         image: redis:5-alpine
     mysql:

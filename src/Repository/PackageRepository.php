@@ -66,6 +66,9 @@ class PackageRepository extends ServiceEntityRepository
         $qb->innerJoin('package.versions', 'versions')
             ->addSelect('versions');
 
+        $qb->leftJoin('versions.dependencyPackages', 'dependencyPackages')
+            ->addSelect('dependencyPackages');
+
         $qb->where('package.name IN (:names)')
             ->setParameter('names', $names);
 
