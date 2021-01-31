@@ -152,8 +152,13 @@ class InternalPackageImportCommand extends Command
             return;
         }
 
-        // Invalid broken plugin
+        // Broken plugin
         if ($plugin->id === 2_394) {
+            return;
+        }
+
+        // For some reason the producer name is empty, skip it
+        if (empty($plugin->producer->name)) {
             return;
         }
 
@@ -162,15 +167,25 @@ class InternalPackageImportCommand extends Command
         ]);
 
         if (!$package) {
-            // New packages needs to be activated first
             if ($plugin->activationStatus->name !== 'activated') {
-                return;
+                $createDate = new \DateTime($plugin->creationDate);
+                $diff = $createDate->diff(new \DateTime());
+
+                // New packages needs to be activated first. Consider but only within one month
+                if ($diff->m + $diff->y === 0) {
+                    return;
+                }
             }
 
             $package = new Package();
             $package->setName($plugin->name);
 
             $producer = $this->producerRepository->findOneBy(['prefix' => $plugin->producer->prefix]);
+
+            // Search by producer name. Sometimes prefix does not match.
+            if (!$producer) {
+                $producer = $this->producerRepository->findOneBy(['name' => $plugin->producer->name]);
+            }
 
             if (!$producer) {
                 $producer = new Producer();
