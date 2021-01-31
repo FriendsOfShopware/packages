@@ -342,9 +342,9 @@ WHERE JSON_UNQUOTE(composer_json->'$.name') IS NOT NULL
 GROUP BY JSON_UNQUOTE(composer_json->'$.name'), package.name
 SQL;
 
-        $zipPackageNameToStoreName = $connection->executeQuery($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+        $zipPackageNameToStoreName = $connection->fetchAllKeyValue($sql);
 
-        $validVersions = $connection->fetchAll('SELECT id, require_section FROM version
+        $validVersions = $connection->fetchAllAssociative('SELECT id, require_section FROM version
 WHERE JSON_LENGTH(require_section) > 1 AND type = \'shopware-platform-plugin\'');
 
         foreach ($validVersions as $validVersion) {
