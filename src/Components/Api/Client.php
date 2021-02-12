@@ -138,23 +138,25 @@ class Client
             try {
                 $content = $this->sendRequest('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
                 $content = \json_decode($content);
-                $content = \array_shift($content);
-                $instances = $content->instances ?? [];
 
-                $wildcardShops = Shop::mapList($instances);
-                foreach ($wildcardShops as $shop) {
-                    $shop->companyId = $content->company->id;
-                    $shop->companyName = $content->company->name;
-                    $shop->type = $content->type->name;
-                    $shop->staging = false;
+                foreach ($content as $wildcardInstance) {
+                    $instances = $wildcardInstance->instances ?? [];
 
-                    $idn = \idn_to_ascii($shop->domain);
+                    $wildcardShops = Shop::mapList($instances);
+                    foreach ($wildcardShops as $shop) {
+                        $shop->companyId = $wildcardInstance->company->id;
+                        $shop->companyName = $wildcardInstance->company->name;
+                        $shop->type = $wildcardInstance->type->name;
+                        $shop->staging = false;
 
-                    if ($idn) {
-                        $shop->domain_idn = $idn;
+                        $idn = \idn_to_ascii($shop->domain);
+
+                        if ($idn) {
+                            $shop->domain_idn = $idn;
+                        }
+
+                        $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => \date('Y-m-d H:i:s', \strtotime('+1 year'))])];
                     }
-
-                    $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => \date('Y-m-d H:i:s', \strtotime('+1 year'))])];
                 }
             } catch (ClientException) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.
