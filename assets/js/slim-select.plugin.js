@@ -1,4 +1,4 @@
-require('slim-select/dist/slimselect.min.css');
+require('../../node_modules/slim-select/dist/slimselect.min.css');
 require('../css/slim-select.plugin.scss');
 
 import SlimSelect from 'slim-select';

@@ -1,0 +1,53 @@
+on:
+    push:
+    pull_request:
+
+name: Analysis
+
+jobs:
+    phpstan:
+        name: PHPStan
+        runs-on: ubuntu-latest
+        steps:
+            -   name: 'Checkout'
+                uses: actions/checkout@v2
+
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.0'
+                    tools: composer:v2
+
+            -   name: Install dependencies
+                run: composer install --prefer-dist --no-progress --no-suggest --no-scripts
+
+            -   name: PHPStan
+                run: php -d memory_limit=-1 ./vendor/bin/phpstan analyse -c .phpstan.neon
+
+    cs-fixer:
+        name: 'CS-Fixer'
+        runs-on: ubuntu-latest
+        steps:
+            -   name: 'Checkout'
+                uses: actions/checkout@v2
+
+            -   uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.0'
+                    tools: composer:v2
+
+            -   name: Install dependencies
+                run: composer install --prefer-dist --no-progress --no-suggest --no-scripts
+
+            -   name: PHP-CS-Fixer
+                run: ./vendor/bin/php-cs-fixer fix
+
+            -   uses: EndBug/add-and-commit@v4
+                continue-on-error: true
+                with:
+                    add: '.'
+                    author_name: Frosh Bot
+                    author_email: bot@fos.gg
+                    message: 'Fixed code-style issues'
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

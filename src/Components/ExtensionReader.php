@@ -11,6 +11,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ExtensionReader
 {
+    /**
+     * @var string[]
+     */
     private array $packages = [];
 
     private DependencyPackageRepository $dependencyPackageRepository;
@@ -22,6 +25,9 @@ class ExtensionReader
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @return string[]
+     */
     private function getPublicPackageNames(): array
     {
         if (\count($this->packages) !== 0) {

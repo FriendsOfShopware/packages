@@ -100,7 +100,7 @@ class InternalPackageImportCommand extends Command
             throw new \RuntimeException('Please specify SBP_LOGIN env variable');
         }
 
-        $response = $client->request('POST', \getenv('SBP_LOGIN'), [
+        $response = $client->request('POST', (string) \getenv('SBP_LOGIN'), [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
@@ -127,7 +127,7 @@ class InternalPackageImportCommand extends Command
             throw new \RuntimeException('Env variable SBP_PLUGIN_LIST is not defined');
         }
 
-        return \json_decode($this->client->request('GET', \getenv('SBP_PLUGIN_LIST'), [
+        return \json_decode($this->client->request('GET', (string) \getenv('SBP_PLUGIN_LIST'), [
             'query' => [
                 'limit' => 100,
                 'offset' => $offset,
