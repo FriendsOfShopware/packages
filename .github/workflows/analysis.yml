@@ -18,7 +18,7 @@ jobs:
                     tools: composer:v2
 
             -   name: Install dependencies
-                run: composer install --prefer-dist --no-progress --no-suggest --no-scripts
+                run: composer install --prefer-dist --no-progress --no-suggest || true
 
             -   name: PHPStan
                 run: php -d memory_limit=-1 ./vendor/bin/phpstan analyse -c .phpstan.neon
