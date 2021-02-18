@@ -30,21 +30,23 @@ class DependencyPackage
     private string $version;
 
     /**
+     * @var array<string, mixed>
      * @ORM\Column(type="json")
      */
     private array $composerJson = [];
 
     /**
+     * @var Collection<int, Version>
      * @ORM\ManyToMany(targetEntity=Version::class, inversedBy="dependencyPackages")
      */
-    private $packageVersions;
+    private Collection $packageVersions;
 
     public function __construct()
     {
         $this->packageVersions = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -73,11 +75,19 @@ class DependencyPackage
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function getComposerJson(): ?array
     {
         return $this->composerJson;
     }
 
+    /**
+     * @param array<string, mixed> $composerJson
+     *
+     * @return $this
+     */
     public function setComposerJson(array $composerJson): self
     {
         $this->composerJson = $composerJson;
@@ -91,7 +101,7 @@ class DependencyPackage
     }
 
     /**
-     * @return Collection|Version[]
+     * @return Collection<int, Version>
      */
     public function getPackageVersions(): Collection
     {

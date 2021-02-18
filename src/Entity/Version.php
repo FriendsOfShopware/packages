@@ -101,9 +101,10 @@ class Version
     private Package $package;
 
     /**
+     * @var Collection<int, DependencyPackage>
      * @ORM\ManyToMany(targetEntity=DependencyPackage::class, mappedBy="packageVersions")
      */
-    private $dependencyPackages;
+    private Collection $dependencyPackages;
 
     public function __construct()
     {
@@ -354,7 +355,7 @@ class Version
     }
 
     /**
-     * @return Collection|DependencyPackage[]
+     * @return Collection<int, DependencyPackage>
      */
     public function getDependencyPackages(): Collection
     {

@@ -16,10 +16,10 @@ class ExtensionReader
      */
     private array $packages = [];
 
-    private DependencyPackageRepository $dependencyPackageRepository;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(DependencyPackageRepository $dependencyPackageRepository, EntityManagerInterface $entityManager)
+    /**
+     * @param DependencyPackageRepository<DependencyPackage> $dependencyPackageRepository
+     */
+    public function __construct(private DependencyPackageRepository $dependencyPackageRepository, private EntityManagerInterface $entityManager)
     {
         $this->dependencyPackageRepository = $dependencyPackageRepository;
         $this->entityManager = $entityManager;
@@ -34,7 +34,13 @@ class ExtensionReader
             return $this->packages;
         }
 
-        $packages = \json_decode(\file_get_contents('https://packagist.org/packages/list.json'), true);
+        $packageList = \file_get_contents('https://packagist.org/packages/list.json');
+
+        if ($packageList === false) {
+            throw new \RuntimeException('Cannot download package list from packages.org');
+        }
+
+        $packages = \json_decode($packageList, true, \JSON_THROW_ON_ERROR);
 
         return $this->packages = $packages['packageNames'];
     }
@@ -179,7 +185,10 @@ class ExtensionReader
         \unlink($tmpFile);
     }
 
-    private function checkForPrivateDependencies(array $require, Version $version, string $extractLocation)
+    /**
+     * @param array<string, string> $require
+     */
+    private function checkForPrivateDependencies(array $require, Version $version, string $extractLocation): void
     {
         // Has no vendor directory
         if (!\file_exists($extractLocation . '/vendor/composer/installed.json')) {
@@ -206,7 +215,12 @@ class ExtensionReader
                 continue;
             }
 
-            $vendorLibraryComposerJson = \json_decode(\file_get_contents($extractLocation . '/vendor/' . $key . '/composer.json'), true);
+            $dependencyComposerJsonContent = \file_get_contents($extractLocation . '/vendor/' . $key . '/composer.json');
+            if ($dependencyComposerJsonContent === false) {
+                continue;
+            }
+
+            $vendorLibraryComposerJson = \json_decode($dependencyComposerJsonContent, true);
 
             // The package needs an name
             if (!isset($vendorLibraryComposerJson['name'])) {
@@ -252,7 +266,7 @@ class ExtensionReader
                         continue;
                     }
 
-                    $filePath = $file->getRealPath();
+                    $filePath = (string) $file->getRealPath();
                     $relativePath = \substr($filePath, \strlen($dependencyPath) + 1);
 
                     $zip->addFile($filePath, $relativePath);
@@ -265,9 +279,18 @@ class ExtensionReader
         }
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function parseInstalledPackages(string $path): array
     {
-        $deps = \json_decode(\file_get_contents($path), true);
+        $content = \file_get_contents($path);
+
+        if ($content === false) {
+            throw new \RuntimeException('Cannot read from path' . $path);
+        }
+
+        $deps = \json_decode($content, true, \JSON_THROW_ON_ERROR);
         $indexedDeps = [];
 
         if (isset($deps['packages'])) {
@@ -279,7 +302,8 @@ class ExtensionReader
                 continue;
             }
 
-            $indexedDeps[$dep['name']] = $dep['version'];
+            $name = (string) $dep['name'];
+            $indexedDeps[$name] = $dep['version'];
         }
 
         return $indexedDeps;

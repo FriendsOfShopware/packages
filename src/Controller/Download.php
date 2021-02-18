@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Components\Api\Client;
 use App\Components\Encryption;
+use App\Entity\DependencyPackage;
 use App\Exception\AccessDeniedToDownloadPluginHttpException;
 use App\Exception\InvalidShopGivenHttpException;
 use App\Exception\InvalidTokenHttpException;
@@ -22,6 +23,9 @@ use ZipArchive;
 
 class Download
 {
+    /**
+     * @param DependencyPackageRepository<DependencyPackage> $dependencyPackageRepository
+     */
     public function __construct(private Encryption $encryption, private Client $client, private CacheInterface $cache, private DependencyPackageRepository $dependencyPackageRepository)
     {
     }
