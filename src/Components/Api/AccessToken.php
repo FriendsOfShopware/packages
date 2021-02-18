@@ -79,9 +79,9 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
     /**
      * @param array{'userId': string, 'userAccountId'?: int, 'token': string, 'locale': string, 'username': string, 'password': string, 'expire': array{'date': string}} $response
      */
-    public static function create(array $response): static
+    public static function create(array $response): self
     {
-        $me = new static();
+        $me = new self();
         $me->userId = (int) $response['userId'];
 
         if (isset($response['userAccountId'])) {

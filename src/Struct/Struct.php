@@ -4,6 +4,10 @@ namespace App\Struct;
 
 abstract class Struct implements \JsonSerializable
 {
+    final public function __construct()
+    {
+    }
+
     /**
      * @var string[]
      */
