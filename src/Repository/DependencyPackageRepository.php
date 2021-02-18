@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @template DependencyPackage
  * @extends ServiceEntityRepository<DependencyPackage>
+ *
  * @method DependencyPackage|null find($id, $lockMode = null, $lockVersion = null)
  * @method DependencyPackage|null findOneBy(array $criteria, array $orderBy = null)
  * @method DependencyPackage[]    findAll()
