@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c8f6affd98345d28b949bd32fba5494",
+    "content-hash": "04532991f0dbafb0e64d65a42a5afa2b",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -2017,16 +2017,16 @@
         },
         {
             "name": "meilisearch/meilisearch-php",
-            "version": "v0.16.0",
+            "version": "v0.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/meilisearch/meilisearch-php.git",
-                "reference": "e96b639b22c3a5dfc4a977287ad775867f5b36d6"
+                "reference": "cc77f6088a22006851ef727db7b6f852403ce917"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/e96b639b22c3a5dfc4a977287ad775867f5b36d6",
-                "reference": "e96b639b22c3a5dfc4a977287ad775867f5b36d6",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/cc77f6088a22006851ef727db7b6f852403ce917",
+                "reference": "cc77f6088a22006851ef727db7b6f852403ce917",
                 "shasum": ""
             },
             "require": {
@@ -2073,9 +2073,9 @@
             ],
             "support": {
                 "issues": "https://github.com/meilisearch/meilisearch-php/issues",
-                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.16.0"
+                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.17.0"
             },
-            "time": "2021-01-21T15:58:31+00:00"
+            "time": "2021-03-02T13:26:53+00:00"
         },
         {
             "name": "nyholm/psr7",
