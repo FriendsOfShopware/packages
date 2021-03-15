@@ -58,7 +58,7 @@ class Client
         }
 
         if (empty($response['userAccountId'])) {
-           throw new AccessDeniedException('Please login with an Shopware User and not with an Shopware ID');
+            throw new AccessDeniedException('Please login with an Shopware User and not with an Shopware ID');
         }
 
         return AccessToken::create($response + ['username' => $username, 'password' => $password]);
