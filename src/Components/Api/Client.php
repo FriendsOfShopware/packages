@@ -40,7 +40,7 @@ class Client
     public function login(string $username, string $password): AccessToken
     {
         try {
-            /** @var array{'userId': string|null, 'userAccountId'?: int, 'token': string, 'locale': string, 'expire': array{'date': string}} $response */
+            /** @var array{'userId': string|null, 'userAccountId': int, 'token': string, 'locale': string, 'expire': array{'date': string}} $response */
             $response = $this->client->request('POST', self::ENDPOINT . 'accesstokens', [
                 'json' => [
                     'shopwareId' => $username,
