@@ -77,16 +77,13 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
     }
 
     /**
-     * @param array{'userId': string, 'userAccountId'?: int, 'token': string, 'locale': string, 'username': string, 'password': string, 'expire': array{'date': string}} $response
+     * @param array{'userId': string, 'userAccountId': int, 'token': string, 'locale': string, 'username': string, 'password': string, 'expire': array{'date': string}} $response
      */
     public static function create(array $response): self
     {
         $me = new self();
         $me->userId = (int) $response['userId'];
-
-        if (isset($response['userAccountId'])) {
-            $me->userAccountId = (int) $response['userAccountId'];
-        }
+        $me->userAccountId = (int) $response['userAccountId'];
 
         $me->token = $response['token'];
         $me->locale = $response['locale'] ?? 'en_GB'; // for sub-accounts the locale is missing in the response for some reason

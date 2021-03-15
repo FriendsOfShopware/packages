@@ -57,6 +57,10 @@ class Client
             throw new AccessDeniedException('The shop does not have any company');
         }
 
+        if (empty($response['userAccountId'])) {
+           throw new AccessDeniedException('Please login with an Shopware User and not with an Shopware ID');
+        }
+
         return AccessToken::create($response + ['username' => $username, 'password' => $password]);
     }
 
@@ -142,8 +146,8 @@ class Client
                 foreach ($content as $wildcardInstance) {
                     $instances = $wildcardInstance->instances ?? [];
 
-                    $wildcardShops = Shop::mapList($instances);
-                    foreach ($wildcardShops as $shop) {
+                    $list = Shop::mapList($instances);
+                    foreach ($list as $shop) {
                         $shop->companyId = $wildcardInstance->company->id;
                         $shop->companyName = $wildcardInstance->company->name;
                         $shop->type = $wildcardInstance->type->name;
@@ -156,6 +160,7 @@ class Client
                         }
 
                         $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => \date('Y-m-d H:i:s', \strtotime('+1 year'))])];
+                        $wildcardShops[] = $shop;
                     }
                 }
             } catch (ClientException) {
