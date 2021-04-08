@@ -36,21 +36,28 @@
 "repositories": [
     {
         "type": "composer",
-        "url": "{{ url('home') }}",
-        "options": {
-            "http": {
-                "header": [
-                    "Token: {{ token }}"
-                ]
-            }
-        }
+        "url": "{{ url('home') }}"
     }
 ]
 </pre>
                     <p>
                         <button class="btn btn-copy btn-primary" data-clipboard-target="#composerCmd">Copy config</button>
                     </p>
-                    <div class="alert alert-info">Please note that you will need to come back to update the token in your composer.json if...:
+
+                    <p>The credentials should be saved in a auth.json placed in the same folder with the composer.json</p>
+                    <pre id="authJSON">{
+    "bearer": {
+        "{{ app.request.host }}": "{{ token }}"
+    }
+}
+</pre>
+                    <p>
+                        <button class="btn btn-copy btn-primary" data-clipboard-target="#authJSON">Copy config</button>
+                    </p>
+
+                    <div class="alert alert-danger">Note: Make sure the auth.json file is in .gitignore to avoid leaking credentials into your git history.</div>
+
+                    <div class="alert alert-info">Please note that you will need to come back to update the token in your auth.json if...:
                         <ul>
                             <li> you changed your password </li>
                             <li> you changed the domain </li>

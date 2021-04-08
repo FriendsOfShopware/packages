@@ -51,7 +51,7 @@ class InternalPackageImportCommand extends Command
     {
         $this
             ->setDescription('This command can be only used by an Shopware employee')
-            ->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, 'Offset', 0);
+            ->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, 'Offset', '0');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -10,29 +10,45 @@ use App\Entity\Version;
 use App\Repository\PackageRepository;
 use App\Struct\License\License;
 use App\Struct\Shop\Shop;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class PackagistLoader
 {
+    private string $dependencyDownloadUrl;
+    private string $binaryDownloadUrl;
+
     /**
      * @param PackageRepository<Package> $packageRepository
      */
     public function __construct(private PackageRepository $packageRepository, private Client $client, private Encryption $encryption, private RouterInterface $router)
     {
+        $this->dependencyDownloadUrl = $this->router->generate('app_download_dependencydownload', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->binaryDownloadUrl = $this->router->generate('app_download_download', [], UrlGeneratorInterface::ABSOLUTE_URL);
     }
 
     /**
      * @param License[] $licenses
-     * @param Shop      $shop
      *
      * @return array{'notify-batch': string, 'packages': array<string, array<string, array<string, mixed>>>}
      */
-    public function load(array $licenses, object $shop): array
+    public function load(array $licenses, ResolverContext $context): array
     {
-        return [
+        if ($context->token->getShop() === null) {
+            throw new \RuntimeException('Token needs an shop');
+        }
+
+        $body = [
             'notify-batch' => $this->router->generate('notify', [], RouterInterface::ABSOLUTE_URL),
-            'packages' => $this->mapLicensesToComposerPackages($licenses, $shop),
+            'packages' => $this->mapLicensesToComposerPackages($licenses, $context->token->getShop()),
         ];
+
+        if ($context->usesDeprecatedHeader) {
+            $body['warning'] = 'Usage of Token header is deprecated. Please switch to bearer auth. You can generate a new configuration in the Packages account.';
+            $body['warning-versions'] = '>1.0.0';
+        }
+
+        return $body;
     }
 
     /**
@@ -88,7 +104,7 @@ class PackagistLoader
 
                     $composerJson = $dependencyPackage->getComposerJson();
                     $composerJson['dist'] = [
-                        'url' => \getenv('APP_URL') . '/download/dependency?token=' . \urlencode($this->encryption->encrypt(['dependencyId' => $dependencyPackage->getId()])),
+                        'url' => $this->dependencyDownloadUrl . '?token=' . \urlencode($this->encryption->encrypt(['dependencyId' => $dependencyPackage->getId()])),
                         'type' => 'zip'
                     ];
 
@@ -154,16 +170,12 @@ class PackagistLoader
 
         $data = [
             'filePath' => $filePath,
-            'domain' => $token->getShop()->domain,
-            'username' => $token->getUsername(),
-            'password' => $token->getPassword(),
-            'userId' => $token->getUserId(),
         ];
 
         if ($isOldArchive) {
             $data['needsRepack'] = true;
         }
 
-        return \getenv('APP_URL') . '/download?token=' . \urlencode($this->encryption->encrypt($data));
+        return $this->binaryDownloadUrl . '?token=' . \urlencode($this->encryption->encrypt($data));
     }
 }

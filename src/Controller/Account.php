@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Components\Api\AccessToken;
 use App\Components\Api\Client;
 use App\Components\PackagistLoader;
+use App\Components\ResolverContext;
 use App\Entity\Package;
 use App\Repository\PackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +37,8 @@ class Account extends AbstractController
         }
 
         $licenses = $this->client->licenses($token);
-        $data = $this->packagistLoader->load($licenses, $token->getShop());
+        $context = new ResolverContext(false, $token);
+        $data = $this->packagistLoader->load($licenses, $context);
         $packageNames = \array_map(static fn (string $name) => \str_replace('store.shopware.com/', '', $name), \array_keys($data['packages']));
 
         /** @var Package[] $packages */
