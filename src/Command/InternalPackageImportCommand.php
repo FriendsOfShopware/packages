@@ -157,6 +157,7 @@ class InternalPackageImportCommand extends Command
             return;
         }
 
+        /** @var Plugin $plugin */
         $plugin = \json_decode($this->client->request('GET', (string) \getenv('SBP_PLUGIN_LIST') . '/' . $plugin->id)->getContent());
 
         // For some reason the producer name is empty, skip it
