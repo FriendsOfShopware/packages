@@ -3,19 +3,31 @@ services:
     web:
         image: friendsofshopware/packages
         build:
-          context: .
+            context: .
         env_file: /home/deploy/data/friendsofshopware/packages/.env
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.http-fos-packages.entrypoints=web
+            - traefik.http.routers.http-fos-packages.rule=Host(`packages.friendsofshopware.com`)
+            - traefik.http.routers.http-fos-packages.middlewares=web-redirect@file
+            - traefik.http.routers.fos-packages.entrypoints=websecure
+            - traefik.http.routers.fos-packages.rule=Host(`packages.friendsofshopware.com`)
+            - traefik.http.routers.fos-packages.tls=true
+            - traefik.http.routers.fos-packages.middlewares=compress@file
+            - traefik.http.routers.fos-packages.tls.certresolver=hetzner
+            - traefik.http.routers.fos-packages.tls.domains[0].main=friendsofshopware.com
+            - traefik.http.routers.fos-packages.tls.domains[0].sans=*.friendsofshopware.com
         expose:
-          - "80"
+            - "80"
         volumes:
-          - /home/deploy/data/friendsofshopware/packages/volumes/ssl:/var/www/html/ssl
-          - /home/deploy/data/friendsofshopware/packages/volumes/storage:/var/www/html/storage
+            - /home/deploy/data/friendsofshopware/packages/volumes/ssl:/var/www/html/ssl
+            - /home/deploy/data/friendsofshopware/packages/volumes/storage:/var/www/html/storage
     redis:
         image: redis:5-alpine
     mysql:
         image: mysql:8
         volumes:
-          - /home/deploy/data/friendsofshopware/packages/volumes/mysql:/var/lib/mysql
+            - /home/deploy/data/friendsofshopware/packages/volumes/mysql:/var/lib/mysql
         env_file: /home/deploy/data/friendsofshopware/packages/.env
         command: ["mysqld", "--default-authentication-plugin=mysql_native_password"]
     mellisearch:
@@ -23,13 +35,22 @@ services:
         command: ['./meilisearch']
     filemanager:
         image: mohamnag/nginx-file-browser
-        environment:
-          VIRTUAL_HOST: packages-dump.friendsofshopware.com
-          CERT_NAME: friendsofshopware.com
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.http-fos-packages-dump.entrypoints=web
+            - traefik.http.routers.http-fos-packages-dump.rule=Host(`packages-dump.friendsofshopware.com`)
+            - traefik.http.routers.http-fos-packages-dump.middlewares=web-redirect@file
+            - traefik.http.routers.fos-packages-dump.entrypoints=websecure
+            - traefik.http.routers.fos-packages-dump.rule=Host(`packages-dump.friendsofshopware.com`)
+            - traefik.http.routers.fos-packages-dump.tls=true
+            - traefik.http.routers.fos-packages-dump.middlewares=compress@file
+            - traefik.http.routers.fos-packages-dump.tls.certresolver=hetzner
+            - traefik.http.routers.fos-packages-dump.tls.domains[0].main=friendsofshopware.com
+            - traefik.http.routers.fos-packages-dump.tls.domains[0].sans=*.friendsofshopware.com
         volumes:
-          - /home/deploy/data/friendsofshopware/packages/volumes/dumps:/opt/www/files
+            - /home/deploy/data/friendsofshopware/packages/volumes/dumps:/opt/www/files
     backup:
         image: fradelg/mysql-cron-backup
         volumes:
-          - /home/deploy/data/friendsofshopware/packages/volumes/dumps:/backup
+            - /home/deploy/data/friendsofshopware/packages/volumes/dumps:/backup
         env_file: /home/deploy/data/friendsofshopware/packages/.env
