@@ -2017,16 +2017,16 @@
         },
         {
             "name": "meilisearch/meilisearch-php",
-            "version": "v0.17.1",
+            "version": "v0.17.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/meilisearch/meilisearch-php.git",
-                "reference": "17d858252b2e39c0e0338edd2d4c6e4bc8635b8f"
+                "reference": "a200a32093ae44c04523f6fd014ec888707ceb9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/17d858252b2e39c0e0338edd2d4c6e4bc8635b8f",
-                "reference": "17d858252b2e39c0e0338edd2d4c6e4bc8635b8f",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/a200a32093ae44c04523f6fd014ec888707ceb9e",
+                "reference": "a200a32093ae44c04523f6fd014ec888707ceb9e",
                 "shasum": ""
             },
             "require": {
@@ -2073,9 +2073,9 @@
             ],
             "support": {
                 "issues": "https://github.com/meilisearch/meilisearch-php/issues",
-                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.17.1"
+                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.17.2"
             },
-            "time": "2021-04-12T18:32:48+00:00"
+            "time": "2021-04-26T18:31:30+00:00"
         },
         {
             "name": "nyholm/psr7",
