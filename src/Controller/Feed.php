@@ -27,7 +27,7 @@ class Feed extends AbstractController
         $package = $this->packageRepository->findOne($packageName);
 
         if (!$package) {
-            throw new NotFoundHttpException(\sprintf('Cannot find package by name %s', $packageName));
+            throw new NotFoundHttpException(sprintf('Cannot find package by name %s', $packageName));
         }
 
         /** @var Version $latestVersion */
@@ -40,10 +40,10 @@ class Feed extends AbstractController
             'description' => 'Latest releases on Packages of ' . $packageName,
             'link' => $packageLink,
             'date' => $latestVersion->getReleaseDate(),
-            'items' => \array_map(static fn (Version $version) => [
-                'title' => \sprintf('%s (%s)', $packageName, $version->getVersion()),
+            'items' => array_map(static fn (Version $version) => [
+                'title' => sprintf('%s (%s)', $packageName, $version->getVersion()),
                 'link' => $packageLink . '?version=' . $version->getVersion(),
-                'description' => \strip_tags((string) $version->getChangelog(), '<br>'),
+                'description' => strip_tags((string) $version->getChangelog(), '<br>'),
                 'date' => $version->getReleaseDate(),
             ], $package->getVersions()->toArray()),
         ];

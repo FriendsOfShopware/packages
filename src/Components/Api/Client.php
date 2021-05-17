@@ -89,7 +89,7 @@ class Client
             ],
         ];
 
-        return $this->client->request($method, $url, \array_replace_recursive($defaultOptions, $options));
+        return $this->client->request($method, $url, array_replace_recursive($defaultOptions, $options));
     }
 
     /**
@@ -100,15 +100,15 @@ class Client
         $this->useToken($token);
 
         try {
-            $content = \json_decode(
+            $content = json_decode(
                 $this->sendRequest('GET', self::ENDPOINT . 'account/' . $token->getUserAccountId() . '/memberships')->getContent(),
                 false
             );
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return [];
         }
 
-        \usort($content, static function ($a, $b) {
+        usort($content, static function ($a, $b) {
             return $a->company->name <=> $b->company->name;
         });
 
@@ -129,7 +129,7 @@ class Client
             try {
                 $content = $this->sendRequest('GET', self::ENDPOINT . 'partners/' . $token->getUserId() . '/clientshops')->getContent();
 
-                $clientShops = Shop::mapList(\json_decode($content, false));
+                $clientShops = Shop::mapList(json_decode($content, false));
             } catch (ClientException) {
                 // We need more requests to determine that the user is an partner. Let the api check it for us.
             }
@@ -141,7 +141,7 @@ class Client
         if ($token->getMemberShip()->can(CompanyMemberShip::WILDCARD_SHOP_PERMISSION)) {
             try {
                 $content = $this->sendRequest('GET', self::ENDPOINT . 'wildcardlicenses?companyId=' . $token->getUserId() . '&type=partner')->getContent();
-                $content = \json_decode($content);
+                $content = json_decode($content);
 
                 foreach ($content as $wildcardInstance) {
                     $instances = $wildcardInstance->instances ?? [];
@@ -153,13 +153,13 @@ class Client
                         $shop->type = $wildcardInstance->type->name;
                         $shop->staging = false;
 
-                        $idn = \idn_to_ascii($shop->domain);
+                        $idn = idn_to_ascii($shop->domain);
 
                         if ($idn) {
                             $shop->domain_idn = $idn;
                         }
 
-                        $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => \date('Y-m-d H:i:s', \strtotime('+1 year'))])];
+                        $shop->subscriptionModules = [SubscriptionModules::make(['expirationDate' => date('Y-m-d H:i:s', strtotime('+1 year'))])];
                         $wildcardShops[] = $shop;
                     }
                 }
@@ -178,15 +178,15 @@ class Client
                     ],
                 ])->getContent();
 
-                $shops = Shop::mapList(\json_decode($shopsContent));
+                $shops = Shop::mapList(json_decode($shopsContent));
             } catch (ClientException) {
                 // Partner without own domains
             }
         }
 
-        $allShops = \array_merge($shops, $clientShops, $wildcardShops);
+        $allShops = array_merge($shops, $clientShops, $wildcardShops);
 
-        \usort($allShops, static function ($a, $b) {
+        usort($allShops, static function ($a, $b) {
             return $a->domain <=> $b->domain;
         });
 
@@ -210,7 +210,7 @@ class Client
             $item->expiresAfter(300);
 
             if ($token->getShop()->type === Shop::TYPE_PARTNER) {
-                $content = \json_decode($this->sendRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent(), true);
+                $content = json_decode($this->sendRequest('GET', self::ENDPOINT . 'wildcardlicensesinstances/' . $token->getShop()->id)->getContent(), true);
 
                 $licenses = [];
                 foreach ($content['plugins'] as $pluginData) {
@@ -227,7 +227,7 @@ class Client
             }
 
             try {
-                $content = \json_decode($this->sendRequest('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
+                $content = json_decode($this->sendRequest('GET', self::ENDPOINT . $this->getLicensesListPath($token), [
                     'query' => [
                         'variantTypes' => 'buy,free,rent,support,test',
                         'limit' => 1_000,
@@ -245,7 +245,7 @@ class Client
             }
 
             try {
-                $enterprisePlugins = \json_decode($this->sendRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
+                $enterprisePlugins = json_decode($this->sendRequest('GET', self::ENDPOINT . 'shops/' . $token->getShop()->id . '/productacceleratorlicenses')->getContent());
             } catch (ClientException) {
                 $enterprisePlugins = [];
             }
@@ -322,7 +322,7 @@ class Client
                 throw new ApiException($response['code']);
             }
 
-            throw new ApiException((string) \json_encode($response));
+            throw new ApiException((string) json_encode($response));
         }
 
         return $json;
@@ -377,7 +377,7 @@ class Client
             throw new \InvalidArgumentException('Token needs a Shop');
         }
 
-        return \md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
+        return md5('license' . $token->getUsername() . $token->getShop()->domain . $token->getUserId());
     }
 
     private function getLicensesListPath(AccessToken $token): string

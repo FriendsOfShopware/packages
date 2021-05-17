@@ -108,7 +108,7 @@ class AccessToken implements \JsonSerializable, UserInterface, \Stringable
      */
     public function jsonSerialize(): array
     {
-        return \get_object_vars($this);
+        return get_object_vars($this);
     }
 
     public function getRoles(): array

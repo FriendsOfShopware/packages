@@ -27,7 +27,7 @@ class PackageIndexerCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        \ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '2048M');
         $this->client->deleteAllIndexes();
         $index = $this->client->createIndex(self::INDEX_NAME);
         $index->updateSettings([
@@ -47,7 +47,7 @@ class PackageIndexerCommand extends Command
             $items = [];
 
             foreach ($packages as $package) {
-                $unifiedTypes = \array_values(\array_unique(\array_map(static fn (Version $version) => $version->getType(), $package->getVersions()->toArray())));
+                $unifiedTypes = array_values(array_unique(array_map(static fn (Version $version) => $version->getType(), $package->getVersions()->toArray())));
 
                 $items[] = [
                     'id' => $package->getId(),
@@ -64,7 +64,7 @@ class PackageIndexerCommand extends Command
 
             $progressBar->advance(100);
             unset($items, $packages);
-            \gc_collect_cycles();
+            gc_collect_cycles();
         }
 
         $output->writeln('');

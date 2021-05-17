@@ -23,18 +23,18 @@ class RequestContextResolver
             throw new InvalidTokenHttpException();
         }
 
-        if (\str_starts_with($tokenValue, 'Bearer ')) {
-            $tokenValue = \substr($tokenValue, 7);
+        if (str_starts_with($tokenValue, 'Bearer ')) {
+            $tokenValue = substr($tokenValue, 7);
         }
 
         try {
             $credentials = $this->encryption->decrypt((string) $tokenValue);
-        } catch (\Throwable) {
+        } catch (Throwable) {
             throw new InvalidTokenHttpException();
         }
 
-        $cacheKey = \md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
-        $token = $this->cache->get(\md5($cacheKey), function (ItemInterface $item) use ($tokenValue) {
+        $cacheKey = md5($credentials['username'] . $credentials['password'] . $credentials['domain'] . ($credentials['userId'] ?? ''));
+        $token = $this->cache->get(md5($cacheKey), function (ItemInterface $item) use ($tokenValue) {
             $credentials = $this->encryption->decrypt((string) $tokenValue);
 
             if (empty($credentials)) {

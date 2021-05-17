@@ -97,7 +97,7 @@ class DependencyPackage
 
     public function getPath(): string
     {
-        return \sprintf('%s/storage/%s/%s.zip', \dirname(__DIR__, 2), $this->name, $this->version);
+        return sprintf('%s/storage/%s/%s.zip', \dirname(__DIR__, 2), $this->name, $this->version);
     }
 
     /**

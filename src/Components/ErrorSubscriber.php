@@ -43,8 +43,8 @@ class ErrorSubscriber implements EventSubscriberInterface
 
         $userAgent = $event->getRequest()->headers->get('User-Agent', '');
 
-        if ($event->getThrowable() instanceof HttpException && !\str_contains($userAgent, 'Mozilla')) {
-            $key = \str_contains($userAgent, 'Composer') ? 'warning' : 'message';
+        if ($event->getThrowable() instanceof HttpException && !str_contains($userAgent, 'Mozilla')) {
+            $key = str_contains($userAgent, 'Composer') ? 'warning' : 'message';
 
             $event->setResponse(
                 new JsonResponse(

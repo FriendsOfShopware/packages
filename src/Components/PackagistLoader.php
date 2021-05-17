@@ -16,6 +16,7 @@ use Symfony\Component\Routing\RouterInterface;
 class PackagistLoader
 {
     private string $dependencyDownloadUrl;
+
     private string $binaryDownloadUrl;
 
     /**
@@ -60,7 +61,7 @@ class PackagistLoader
     {
         $response = [];
 
-        $pluginNames = \array_map(static fn ($license) => $license->plugin->name, $licenses);
+        $pluginNames = array_map(static fn ($license) => $license->plugin->name, $licenses);
 
         $databasePlugins = $this->packageRepository->findPackagesForLicenses($pluginNames);
 
@@ -74,11 +75,11 @@ class PackagistLoader
             if (
                 'test' === $license->variantType->name &&
                 !empty($license->expirationDate) &&
-                \time() >= \strtotime($license->expirationDate)) {
+                time() >= strtotime($license->expirationDate)) {
                 continue;
             }
 
-            $packageName = 'store.shopware.com/' . \strtolower($license->plugin->name);
+            $packageName = 'store.shopware.com/' . strtolower($license->plugin->name);
 
             if (!isset($databasePlugins[$packageName])) {
                 continue;
@@ -91,7 +92,7 @@ class PackagistLoader
 
             // Add dependency private packages
             /** @var Version $packageVersion */
-            foreach (\array_reverse($package->getVersions()->toArray()) as $packageVersion) {
+            foreach (array_reverse($package->getVersions()->toArray()) as $packageVersion) {
                 /** @var DependencyPackage $dependencyPackage */
                 foreach ($packageVersion->getDependencyPackages() as $dependencyPackage) {
                     if (!isset($response[$dependencyPackage->getName()])) {
@@ -104,7 +105,7 @@ class PackagistLoader
 
                     $composerJson = $dependencyPackage->getComposerJson();
                     $composerJson['dist'] = [
-                        'url' => $this->dependencyDownloadUrl . '?token=' . \urlencode($this->encryption->encrypt(['dependencyId' => $dependencyPackage->getId()])),
+                        'url' => $this->dependencyDownloadUrl . '?token=' . urlencode($this->encryption->encrypt(['dependencyId' => $dependencyPackage->getId()])),
                         'type' => 'zip'
                     ];
 
@@ -126,8 +127,8 @@ class PackagistLoader
         $versions = [];
 
         /** @var Version $binary */
-        foreach (\array_reverse($package->getVersions()->toArray()) as $binary) {
-            $subscriptionLeft = isset($license->subscription) && $binary->getReleaseDate()->getTimestamp() >= \strtotime($license->subscription->expirationDate);
+        foreach (array_reverse($package->getVersions()->toArray()) as $binary) {
+            $subscriptionLeft = isset($license->subscription) && $binary->getReleaseDate()->getTimestamp() >= strtotime($license->subscription->expirationDate);
 
             // If shop has a active subscription all premium / advanced features are unlocked
             if (($license->plugin->isPremiumPlugin || $license->plugin->isAdvancedFeature) && $shop->hasActiveSubscription()) {
@@ -176,6 +177,6 @@ class PackagistLoader
             $data['needsRepack'] = true;
         }
 
-        return $this->binaryDownloadUrl . '?token=' . \urlencode($this->encryption->encrypt($data));
+        return $this->binaryDownloadUrl . '?token=' . urlencode($this->encryption->encrypt($data));
     }
 }

@@ -7,7 +7,7 @@ use App\Struct\Struct;
 
 class Shop extends Struct
 {
-    const TYPE_PARTNER = 'partner';
+    public const TYPE_PARTNER = 'partner';
 
     public int $id;
 
@@ -48,7 +48,7 @@ class Shop extends Struct
     public function hasActiveSubscription(): bool
     {
         foreach ($this->subscriptionModules as $subscription) {
-            if (\strtotime($subscription->expirationDate) >= \time()) {
+            if (strtotime($subscription->expirationDate) >= time()) {
                 return true;
             }
         }

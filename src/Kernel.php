@@ -16,7 +16,7 @@ class Kernel extends BaseKernel
         $container->import('../config/{packages}/*.php');
         $container->import('../config/{packages}/' . $this->environment . '/*.php');
 
-        if (\is_file($path = \dirname(__DIR__) . '/config/services.php')) {
+        if (is_file($path = \dirname(__DIR__) . '/config/services.php')) {
             (require $path)($container->withPath($path), $this);
         }
     }
@@ -26,7 +26,7 @@ class Kernel extends BaseKernel
         $routes->import('../config/{routes}/' . $this->environment . '/*.php');
         $routes->import('../config/{routes}/*.php');
 
-        if (\is_file($path = \dirname(__DIR__) . '/config/routes.php')) {
+        if (is_file($path = \dirname(__DIR__) . '/config/routes.php')) {
             (require $path)($routes->withPath($path), $this);
         }
     }

@@ -89,29 +89,29 @@ class Download
     private function repackZip(string $url): Response
     {
         /** @var \CurlHandle $downloadCurl */
-        $downloadCurl = \curl_init($url);
+        $downloadCurl = curl_init($url);
 
-        \curl_setopt($downloadCurl, \CURLOPT_RETURNTRANSFER, true);
-        \curl_setopt($downloadCurl, \CURLOPT_FOLLOWLOCATION, true);
-        $zipContent = \curl_exec($downloadCurl);
+        curl_setopt($downloadCurl, \CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($downloadCurl, \CURLOPT_FOLLOWLOCATION, true);
+        $zipContent = curl_exec($downloadCurl);
 
-        if (\curl_getinfo($downloadCurl, \CURLINFO_RESPONSE_CODE) !== 200) {
+        if (curl_getinfo($downloadCurl, \CURLINFO_RESPONSE_CODE) !== 200) {
             return new Response((string) $zipContent, 403);
         }
 
-        \curl_close($downloadCurl);
+        curl_close($downloadCurl);
 
-        $tmpFile = \tempnam(\sys_get_temp_dir(), 'plugin');
+        $tmpFile = tempnam(sys_get_temp_dir(), 'plugin');
 
         if ($tmpFile == false) {
             throw new RuntimeException('Cannot create temp file');
         }
 
-        \file_put_contents($tmpFile, $zipContent);
+        file_put_contents($tmpFile, $zipContent);
 
-        $extractLocation = \sys_get_temp_dir() . '/' . \uniqid('location', true);
-        if (!\mkdir($extractLocation) && !\is_dir($extractLocation)) {
-            throw new RuntimeException(\sprintf('Directory "%s" was not created', $extractLocation));
+        $extractLocation = sys_get_temp_dir() . '/' . uniqid('location', true);
+        if (!mkdir($extractLocation) && !is_dir($extractLocation)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $extractLocation));
         }
 
         $zip = new ZipArchive();
@@ -124,16 +124,16 @@ class Download
                 continue;
             }
 
-            if (\str_starts_with($filename, 'Backend/')) {
-                $filename = \substr($filename, 8);
+            if (str_starts_with($filename, 'Backend/')) {
+                $filename = substr($filename, 8);
             }
 
-            if (\str_starts_with($filename, 'Core/')) {
-                $filename = \substr($filename, 5);
+            if (str_starts_with($filename, 'Core/')) {
+                $filename = substr($filename, 5);
             }
 
-            if (\str_starts_with($filename, 'Frontend/')) {
-                $filename = \substr($filename, 9);
+            if (str_starts_with($filename, 'Frontend/')) {
+                $filename = substr($filename, 9);
             }
 
             if ($filename === '') {

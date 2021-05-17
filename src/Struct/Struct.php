@@ -20,7 +20,7 @@ abstract class Struct implements \JsonSerializable
     {
         $newObject = new static();
 
-        foreach (\get_object_vars($object) as $key => $value) {
+        foreach (get_object_vars($object) as $key => $value) {
             if (empty($value)) {
                 $newObject->$key = $value;
                 continue;
@@ -59,7 +59,7 @@ abstract class Struct implements \JsonSerializable
             return [];
         }
 
-        return \array_map(static fn ($item) => static::map($item), $data);
+        return array_map(static fn ($item) => static::map($item), $data);
     }
 
     /**
@@ -99,6 +99,6 @@ abstract class Struct implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return \get_object_vars($this);
+        return get_object_vars($this);
     }
 }

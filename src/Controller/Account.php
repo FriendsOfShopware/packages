@@ -39,7 +39,7 @@ class Account extends AbstractController
         $licenses = $this->client->licenses($token);
         $context = new ResolverContext(false, $token);
         $data = $this->packagistLoader->load($licenses, $context);
-        $packageNames = \array_map(static fn (string $name) => \str_replace('store.shopware.com/', '', $name), \array_keys($data['packages']));
+        $packageNames = array_map(static fn (string $name) => str_replace('store.shopware.com/', '', $name), array_keys($data['packages']));
 
         /** @var Package[] $packages */
         $packages = $this->packageRepository->findPackagesByNames($packageNames);

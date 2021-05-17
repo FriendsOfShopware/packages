@@ -34,26 +34,26 @@ class ExtensionReader
             return $this->packages;
         }
 
-        $packageList = \file_get_contents('https://packagist.org/packages/list.json');
+        $packageList = file_get_contents('https://packagist.org/packages/list.json');
 
         if ($packageList === false) {
             throw new \RuntimeException('Cannot download package list from packages.org');
         }
 
-        $packages = \json_decode($packageList, true, \JSON_THROW_ON_ERROR);
+        $packages = json_decode($packageList, true, \JSON_THROW_ON_ERROR);
 
         return $this->packages = $packages['packageNames'];
     }
 
     public function readFromZip(string $content, Version $version): void
     {
-        $tmpFile = \tempnam(\sys_get_temp_dir(), 'plugin');
+        $tmpFile = tempnam(sys_get_temp_dir(), 'plugin');
 
         if ($tmpFile === false) {
             throw new \RuntimeException('Cannot generate tmp file');
         }
 
-        \file_put_contents($tmpFile, $content);
+        file_put_contents($tmpFile, $content);
 
         $zip = new \ZipArchive();
         if ($zip->open($tmpFile) !== true) {
@@ -66,22 +66,22 @@ class ExtensionReader
             throw new \InvalidArgumentException('Invalid zip file');
         }
 
-        $folderPath = \str_replace('\\', '/', $zipIndex['name']);
-        $pos = \strpos($folderPath, '/');
+        $folderPath = str_replace('\\', '/', $zipIndex['name']);
+        $pos = strpos($folderPath, '/');
 
         if ($pos === false) {
             throw new \InvalidArgumentException('Zip is wrong packed');
         }
 
-        $path = \substr($folderPath, 0, $pos);
+        $path = substr($folderPath, 0, $pos);
 
         switch ($path) {
             case 'Frontend':
             case 'Backend':
             case 'Core':
                 $zip->close();
-                \unlink($tmpFile);
-                $version->setType('shopware-' . \strtolower($path) . '-plugin');
+                unlink($tmpFile);
+                $version->setType('shopware-' . strtolower($path) . '-plugin');
                 break;
             default:
                 $this->readNewPluginSystem($zip, $tmpFile, $path, $version);
@@ -94,20 +94,20 @@ class ExtensionReader
 
         $reader = new XmlPluginReader();
 
-        $extractLocation = \sys_get_temp_dir() . '/' . \uniqid('location', true);
-        if (!\mkdir($extractLocation) && !\is_dir($extractLocation)) {
-            throw new \RuntimeException(\sprintf('Directory "%s" was not created', $extractLocation));
+        $extractLocation = sys_get_temp_dir() . '/' . uniqid('location', true);
+        if (!mkdir($extractLocation) && !is_dir($extractLocation)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $extractLocation));
         }
 
         $archive->extractTo($extractLocation);
         $archive->close();
 
-        if (\file_exists($extractLocation . '/' . $pluginName . '/plugin.xml')) {
+        if (file_exists($extractLocation . '/' . $pluginName . '/plugin.xml')) {
             $xml = $reader->read($extractLocation . '/' . $pluginName . '/plugin.xml');
 
             if (isset($xml['requiredPlugins'])) {
                 foreach ($xml['requiredPlugins'] as $requiredPlugin) {
-                    $requiredPluginName = \strtolower($requiredPlugin['pluginName']);
+                    $requiredPluginName = strtolower($requiredPlugin['pluginName']);
 
                     if ($requiredPluginName === 'cron') {
                         continue;
@@ -132,14 +132,14 @@ class ExtensionReader
             if (isset($xml['link'])) {
                 $version->setHomepage($xml['link']);
             }
-        } elseif (\file_exists($extractLocation . '/' . $pluginName . '/composer.json')) {
-            $composerJsonBody = \file_get_contents($extractLocation . '/' . $pluginName . '/composer.json');
+        } elseif (file_exists($extractLocation . '/' . $pluginName . '/composer.json')) {
+            $composerJsonBody = file_get_contents($extractLocation . '/' . $pluginName . '/composer.json');
 
             if ($composerJsonBody === false) {
                 throw new \RuntimeException('Cannot find composer.json in plugin');
             }
 
-            $composerJson = \json_decode($composerJsonBody, true, 512, \JSON_THROW_ON_ERROR);
+            $composerJson = json_decode($composerJsonBody, true, 512, \JSON_THROW_ON_ERROR);
 
             if (isset($composerJson['type'])) {
                 $version->setType($composerJson['type']);
@@ -182,7 +182,7 @@ class ExtensionReader
 
         $fs = new Filesystem();
         $fs->remove($extractLocation);
-        \unlink($tmpFile);
+        unlink($tmpFile);
     }
 
     /**
@@ -191,7 +191,7 @@ class ExtensionReader
     private function checkForPrivateDependencies(array $require, Version $version, string $extractLocation): void
     {
         // Has no vendor directory
-        if (!\file_exists($extractLocation . '/vendor/composer/installed.json')) {
+        if (!file_exists($extractLocation . '/vendor/composer/installed.json')) {
             return;
         }
 
@@ -201,7 +201,7 @@ class ExtensionReader
 
         foreach ($require as $key => $_) {
             // Runtime deps
-            if (\str_starts_with($key, 'ext') || $key === 'php') {
+            if (str_starts_with($key, 'ext') || $key === 'php') {
                 continue;
             }
 
@@ -211,16 +211,16 @@ class ExtensionReader
             }
 
             // Is not included in vendor
-            if (!\file_exists($extractLocation . '/vendor/' . $key) || !\file_exists($extractLocation . '/vendor/' . $key . '/composer.json')) {
+            if (!file_exists($extractLocation . '/vendor/' . $key) || !file_exists($extractLocation . '/vendor/' . $key . '/composer.json')) {
                 continue;
             }
 
-            $dependencyComposerJsonContent = \file_get_contents($extractLocation . '/vendor/' . $key . '/composer.json');
+            $dependencyComposerJsonContent = file_get_contents($extractLocation . '/vendor/' . $key . '/composer.json');
             if ($dependencyComposerJsonContent === false) {
                 continue;
             }
 
-            $vendorLibraryComposerJson = \json_decode($dependencyComposerJsonContent, true);
+            $vendorLibraryComposerJson = json_decode($dependencyComposerJsonContent, true);
 
             // The package needs an name
             if (!isset($vendorLibraryComposerJson['name'])) {
@@ -255,8 +255,8 @@ class ExtensionReader
                 $zip = new \ZipArchive();
                 $folder = \dirname($dependencyPackage->getPath());
 
-                if (!\file_exists($folder)) {
-                    \mkdir($folder, 0777, true);
+                if (!file_exists($folder)) {
+                    mkdir($folder, 0777, true);
                 }
 
                 $zip->open($dependencyPackage->getPath(), \ZipArchive::CREATE);
@@ -271,7 +271,7 @@ class ExtensionReader
                     }
 
                     $filePath = (string) $file->getRealPath();
-                    $relativePath = \substr($filePath, \strlen($dependencyPath) + 1);
+                    $relativePath = substr($filePath, \strlen($dependencyPath) + 1);
 
                     $zip->addFile($filePath, $relativePath);
                 }
@@ -288,13 +288,13 @@ class ExtensionReader
      */
     private function parseInstalledPackages(string $path): array
     {
-        $content = \file_get_contents($path);
+        $content = file_get_contents($path);
 
         if ($content === false) {
             throw new \RuntimeException('Cannot read from path' . $path);
         }
 
-        $deps = \json_decode($content, true, \JSON_THROW_ON_ERROR);
+        $deps = json_decode($content, true, \JSON_THROW_ON_ERROR);
         $indexedDeps = [];
 
         if (isset($deps['packages'])) {

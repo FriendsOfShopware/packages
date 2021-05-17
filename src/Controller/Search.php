@@ -22,7 +22,7 @@ class Search extends AbstractController
     {
         $index = $client->getIndex(PackageIndexerCommand::INDEX_NAME);
 
-        $term = \mb_strtolower($request->query->get('term', ''));
+        $term = mb_strtolower($request->query->get('term', ''));
         $options = [
             'facetsDistribution' => [
                 'types',
@@ -30,8 +30,8 @@ class Search extends AbstractController
             ],
         ];
 
-        $selectedTypes = \array_filter(\explode('|', $request->query->get('types', '')));
-        $selectedProducers = \array_filter(\explode('|', $request->query->get('producers', '')));
+        $selectedTypes = array_filter(explode('|', $request->query->get('types', '')));
+        $selectedProducers = array_filter(explode('|', $request->query->get('producers', '')));
 
         foreach ($selectedTypes as $selectedType) {
             $options['facetFilters'][] = 'types:' . $selectedType;

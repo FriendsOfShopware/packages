@@ -14,6 +14,7 @@ class Infos extends Struct
     public ?string $name;
 
     public ?string $description;
+
     public ?string $shortDescription;
 
     /**

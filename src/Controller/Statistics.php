@@ -72,11 +72,11 @@ SQL;
 
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
-            'labels' => \array_keys($values),
+            'labels' => array_keys($values),
             'datasets' => [
                 [
                     'label' => 'Downloads',
-                    'data' => \array_values($values),
+                    'data' => array_values($values),
                     'backgroundColor' => [
                         'rgba(22,75,229, .5)'
                     ],
@@ -108,11 +108,11 @@ SQL;
 
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
-            'labels' => \array_keys($values),
+            'labels' => array_keys($values),
             'datasets' => [
                 [
                     'label' => 'Downloads',
-                    'data' => \array_values($values),
+                    'data' => array_values($values),
                     'backgroundColor' => [
                         'rgba(22,75,229, .5)'
                     ],
