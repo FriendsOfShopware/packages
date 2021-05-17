@@ -96,11 +96,11 @@ class InternalPackageImportCommand extends Command
     {
         $client = HttpClient::create();
 
-        if (\getenv('SBP_LOGIN') === false) {
+        if (!isset($_SERVER['SBP_LOGIN'])) {
             throw new \RuntimeException('Please specify SBP_LOGIN env variable');
         }
 
-        $response = $client->request('POST', (string) \getenv('SBP_LOGIN'), [
+        $response = $client->request('POST', $_SERVER['SBP_LOGIN'], [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
@@ -123,11 +123,7 @@ class InternalPackageImportCommand extends Command
      */
     private function loadPlugins(int $offset): array
     {
-        if (\getenv('SBP_PLUGIN_LIST') === false) {
-            throw new \RuntimeException('Env variable SBP_PLUGIN_LIST is not defined');
-        }
-
-        return \json_decode($this->client->request('GET', (string) \getenv('SBP_PLUGIN_LIST'), [
+        return \json_decode($this->client->request('GET', $_SERVER['SBP_PLUGIN_LIST'], [
             'query' => [
                 'limit' => 100,
                 'offset' => $offset,
@@ -158,7 +154,7 @@ class InternalPackageImportCommand extends Command
         }
 
         /** @var Plugin $plugin */
-        $plugin = \json_decode($this->client->request('GET', (string) \getenv('SBP_PLUGIN_LIST') . '/' . $plugin->id)->getContent());
+        $plugin = \json_decode($this->client->request('GET', $_SERVER['SBP_PLUGIN_LIST'] . '/' . $plugin->id)->getContent());
 
         // For some reason the producer name is empty, skip it
         if (empty($plugin->producer->name) || empty($plugin->producer->prefix)) {

@@ -232,6 +232,10 @@ class ExtensionReader
                 continue;
             }
 
+            if (!empty($vendorLibraryComposerJson['require'])) {
+                $this->checkForPrivateDependencies($vendorLibraryComposerJson['require'], $version, $extractLocation);
+            }
+
             $dependencyPackage = $this->dependencyPackageRepository->findOneBy([
                 'name' => $vendorLibraryComposerJson['name'],
                 'version' => $installedDeps[$vendorLibraryComposerJson['name']]
