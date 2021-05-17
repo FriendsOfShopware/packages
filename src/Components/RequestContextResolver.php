@@ -8,6 +8,7 @@ use App\Exception\InvalidTokenHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Throwable;
 
 class RequestContextResolver
 {
