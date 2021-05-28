@@ -1,5 +1,7 @@
 on:
     push:
+        branches: 
+            - live
     pull_request:
 
 name: Analysis
