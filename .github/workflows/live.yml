@@ -7,36 +7,59 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
+            -   uses: actions/checkout@v2
+                with:
+                    fetch-depth: 0
 
-            - name: Get the version
-              id: get_version
-              run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+            -   name: Get the version
+                id: get_version
+                run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-            - name: Setup SSH Keys and known_hosts
-              env:
-                  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-              run: |
-                  mkdir -p ~/.ssh
-                  ssh-keyscan eevee.shyim.de >> ~/.ssh/known_hosts
-                  ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-                  ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+            -   name: Get Changelog
+                id: changelog
+                run: |
+                    wget https://github.com/git-chglog/git-chglog/releases/download/v0.14.2/git-chglog_0.14.2_linux_amd64.tar.gz
+                    tar xf git-chglog_0.14.2_linux_amd64.tar.gz
+                    REPORT=$(./git-chglog ${{ steps.get_version.outputs.VERSION }})
+                    REPORT="${REPORT//'%'/'%25'}"
+                    REPORT="${REPORT//$'\n'/'%0A'}"
+                    REPORT="${REPORT//$'\r'/'%0D'}"
+                    echo "::set-output name=CHANGELOG::$REPORT"
 
-            - name: Deploy
-              env:
-                  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-              run: |
-                  git remote add deploy deploy@eevee.shyim.de:packages
-                  git push -u deploy ${{ steps.get_version.outputs.VERSION }}
+            -   name: Create Release
+                id: create_release
+                uses: softprops/action-gh-release@v1
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    tag_name: ${{ steps.get_version.outputs.VERSION }}
+                    name: ${{ steps.get_version.outputs.VERSION }}
+                    body: "${{ steps.changelog.outputs.CHANGELOG }}"
+                    draft: false
+                    prerelease: false
 
-            - name: Create Sentry release
-              uses: getsentry/action-release@v1
-              env:
-                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-                  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-                  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-              with:
-                environment: production
-                version: "${{ steps.get_version.outputs.VERSION }}"
+            -   name: Setup SSH Keys and known_hosts
+                env:
+                    SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+                run: |
+                    mkdir -p ~/.ssh
+                    ssh-keyscan eevee.shyim.de >> ~/.ssh/known_hosts
+                    ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+                    ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
+
+            -   name: Deploy
+                env:
+                    SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+                run: |
+                    git remote add deploy deploy@eevee.shyim.de:packages
+                    git push -u deploy ${{ steps.get_version.outputs.VERSION }}
+
+            -   name: Create Sentry release
+                uses: getsentry/action-release@v1
+                env:
+                    SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+                    SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+                    SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+                with:
+                    environment: production
+                    version: "${{ steps.get_version.outputs.VERSION }}"
