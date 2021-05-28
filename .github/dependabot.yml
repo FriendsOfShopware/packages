@@ -11,7 +11,7 @@ updates:
           prefix: "chore(deps): "
       allow:
           - dependency-type: all
-      labels: ["Dependencies"]
+      labels: ["dependencies"]
 
     - package-ecosystem: "github-actions"
       directory: "/"
@@ -21,4 +21,4 @@ updates:
           interval: daily
           time: "06:00"
       open-pull-requests-limit: 20
-      labels: ["Dependencies"]
+      labels: ["dependencies"]
