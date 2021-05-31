@@ -17,6 +17,7 @@
         "@symfony/stimulus-bridge": "^2.0.2",
         "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/Resources/assets",
         "@symfony/webpack-encore": "^1.1.0",
+        "chart.js": "^2.9.4",
         "core-js": "^3.8.3",
         "regenerator-runtime": "^0.13.5",
         "sass": "^1.32.7",

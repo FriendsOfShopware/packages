@@ -22,10 +22,11 @@
         "sensio/framework-extra-bundle": "^6.1",
         "sentry/sentry": "^3.1",
         "symfony/cache": "5.3.*",
+        "symfony/flex": "*",
         "symfony/console": "5.3.*",
         "symfony/dotenv": "5.3.*",
         "symfony/expression-language": "5.3.*",
-        "symfony/framework-bundle": "5.2.*",
+        "symfony/framework-bundle": "5.3.*",
         "symfony/http-client": "5.3.*",
         "symfony/mime": "5.3.*",
         "symfony/orm-pack": "^2.0",
@@ -78,8 +79,8 @@
     },
     "scripts": {
         "auto-scripts": {
-            "cache:clear": "./bin/console cache:clear",
-            "assets:install %PUBLIC_DIR%": "./bin/console assets:install"
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -94,7 +95,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.2.*"
+            "require": "5.3.*"
         }
     }
 }
