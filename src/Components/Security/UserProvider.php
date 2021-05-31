@@ -3,13 +3,13 @@
 namespace App\Components\Security;
 
 use App\Components\Api\AccessToken;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface
 {
-    public function loadUserByUsername(string $username)
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
         throw new \RuntimeException('Invalid call');
     }
@@ -22,7 +22,7 @@ class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user)
     {
         if (time() >= $user->getExpire()->getTimestamp()) {
-            throw new UsernameNotFoundException('AccessToken expired');
+            throw new UserNotFoundException('AccessToken expired');
         }
 
         return $user;

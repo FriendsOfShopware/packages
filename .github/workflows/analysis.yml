@@ -1,6 +1,6 @@
 on:
     push:
-        branches: 
+        branches:
             - live
     pull_request:
 
@@ -23,7 +23,7 @@ jobs:
                 run: composer install --prefer-dist --no-progress --no-suggest || true
 
             -   name: PHPStan
-                run: php -d memory_limit=-1 ./vendor/bin/phpstan analyse -c .phpstan.neon
+                run: php -d memory_limit=-1 ./vendor/bin/phpstan
 
     cs-fixer:
         name: 'CS-Fixer'

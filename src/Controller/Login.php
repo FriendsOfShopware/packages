@@ -35,6 +35,8 @@ class Login extends AbstractController
     {
         $username = $request->request->get('shopwareId');
         $password = $request->request->get('password');
+        assert(is_string($username));
+        assert(is_string($password));
 
         try {
             $accessToken = $this->client->login($username, $password);
