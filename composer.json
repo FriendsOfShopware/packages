@@ -32,7 +32,7 @@
         "symfony/orm-pack": "^2.0",
         "symfony/polyfill-php80": "v1.23.0",
         "symfony/profiler-pack": "^1.0",
-        "symfony/security-bundle": "5.2.*",
+        "symfony/security-bundle": "5.3.*",
         "symfony/twig-pack": "^1.0",
         "symfony/ux-chartjs": "^1.0",
         "symfony/webpack-encore-bundle": "^1.7"
