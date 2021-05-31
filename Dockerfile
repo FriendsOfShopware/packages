@@ -24,7 +24,7 @@ RUN set -ex; \
 
 # Webpack Encore
 
-FROM node:14-alpine as npm
+FROM node:16-alpine as npm
 WORKDIR /app
 COPY package.json package-lock.json /app/
 COPY --from=vendor --chown=1000:1000 /app/vendor /app/vendor
