@@ -35,7 +35,7 @@ class Download
 
         $downloadToken = $request->query->get('token');
 
-        if (empty($downloadToken) || !is_string($downloadToken)) {
+        if (empty($downloadToken) || !\is_string($downloadToken)) {
             throw new InvalidTokenHttpException();
         }
 
@@ -63,7 +63,7 @@ class Download
     {
         $tokenValue = $request->query->get('token');
 
-        if (empty($tokenValue) || !is_string($tokenValue)) {
+        if (empty($tokenValue) || !\is_string($tokenValue)) {
             throw new InvalidTokenHttpException();
         }
 
