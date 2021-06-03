@@ -13,7 +13,7 @@ class UserProvider implements UserProviderInterface
     {
         throw new \RuntimeException('Invalid call');
     }
-    
+
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         throw new \RuntimeException('Invalid call');
