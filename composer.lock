@@ -3800,16 +3800,16 @@
         },
         {
             "name": "symfony/doctrine-bridge",
-            "version": "v5.3.0",
+            "version": "v5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/doctrine-bridge.git",
-                "reference": "b2b0193ab3f1db4108f5a445896650803f36bf47"
+                "reference": "29516dcc8165bc7e2339182a9360ea7d3471fb03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/doctrine-bridge/zipball/b2b0193ab3f1db4108f5a445896650803f36bf47",
-                "reference": "b2b0193ab3f1db4108f5a445896650803f36bf47",
+                "url": "https://api.github.com/repos/symfony/doctrine-bridge/zipball/29516dcc8165bc7e2339182a9360ea7d3471fb03",
+                "reference": "29516dcc8165bc7e2339182a9360ea7d3471fb03",
                 "shasum": ""
             },
             "require": {
@@ -3893,7 +3893,7 @@
             "description": "Provides integration for Doctrine with various Symfony components",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/doctrine-bridge/tree/v5.3.0"
+                "source": "https://github.com/symfony/doctrine-bridge/tree/v5.3.1"
             },
             "funding": [
                 {
@@ -3909,7 +3909,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-26T17:43:10+00:00"
+            "time": "2021-06-01T15:43:02+00:00"
         },
         {
             "name": "symfony/dotenv",
