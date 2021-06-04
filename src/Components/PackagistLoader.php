@@ -133,7 +133,7 @@ class PackagistLoader
         if ($shop->type === Shop::TYPE_PARTNER) {
             /** @var Version $binary */
             foreach (array_reverse($packageVersions) as $binary) {
-                if (!is_array($binary->getRequireSection())) {
+                if (!\is_array($binary->getRequireSection())) {
                     continue;
                 }
 
