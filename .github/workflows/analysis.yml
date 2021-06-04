@@ -49,7 +49,7 @@ jobs:
                     add: '.'
                     author_name: Frosh Bot
                     author_email: bot@fos.gg
-                    message: 'Fixed code-style issues'
+                    message: 'fix: code-style'
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
