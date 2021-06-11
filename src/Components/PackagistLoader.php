@@ -145,6 +145,7 @@ class PackagistLoader
 
                 if (Semver::satisfies($shop->shopwareVersion->name, $requireSection['shopware/core']) && $converted = $this->convertBinary($packageName, $license, $binary, $shop)) {
                     $versions[$binary->getVersion()] = $converted;
+                    break;
                 }
             }
 
@@ -167,6 +168,7 @@ class PackagistLoader
 
     /**
      * @param License $license
+     * @return array<string, mixed>
      */
     private function convertBinary(string $packageName, $license, Version $binary, Shop $shop): ?array
     {
