@@ -45,7 +45,7 @@
         "phpstan/phpstan-symfony": "*",
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-master",
-        "symfony/maker-bundle": "^1.13"
+        "symfony/maker-bundle": "^1.32"
     },
     "config": {
         "optimize-autoloader": true,
