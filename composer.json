@@ -35,7 +35,7 @@
         "symfony/security-bundle": "5.3.*",
         "symfony/twig-pack": "^1.0",
         "symfony/ux-chartjs": "^1.0",
-        "symfony/webpack-encore-bundle": "^1.7"
+        "symfony/webpack-encore-bundle": "^1.12"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
