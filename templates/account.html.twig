@@ -30,30 +30,28 @@
                     <h5 class="modal-title">Setup</h5>
                 </div>
                 <div class="modal-body">
-                    <p>Open project composer.json and add following repository</p>
+                    <ol>
+                        <li>
+                            <p>Run this command in shopware-root to register Packages as repository into the composer.json.</p>
 
 <pre id="composerCmd">
-"repositories": [
-    {
-        "type": "composer",
-        "url": "{{ url('home') }}"
-    }
-]
+composer config repositories.froshpackages '{"type": "composer", "url": "{{ url('home') }}"}'
 </pre>
-                    <p>
-                        <button class="btn btn-copy btn-primary" data-clipboard-target="#composerCmd">Copy config</button>
-                    </p>
+                            <p>
+                                <button class="btn btn-copy btn-primary" data-clipboard-target="#composerCmd">Copy command</button>
+                            </p>
+                        </li>
+                        <li>
+                            <p>Run this command in shopware-root to save the credentials into the auth.json.</p>
 
-                    <p>The credentials should be saved in a auth.json placed in the same folder with the composer.json</p>
-                    <pre id="authJSON">{
-    "bearer": {
-        "{{ app.request.host }}": "{{ token }}"
-    }
-}
+<pre id="authJSON">
+composer config bearer.{{ app.request.host }} "{{ token }}"
 </pre>
-                    <p>
-                        <button class="btn btn-copy btn-primary" data-clipboard-target="#authJSON">Copy config</button>
-                    </p>
+                            <p>
+                                <button class="btn btn-copy btn-primary" data-clipboard-target="#authJSON">Copy command</button>
+                            </p>
+                        </li>
+                    </ol>
 
                     <div class="alert alert-danger">Note: Make sure the auth.json file is in .gitignore to avoid leaking credentials into your git history.</div>
 
