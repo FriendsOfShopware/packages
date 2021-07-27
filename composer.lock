@@ -3521,23 +3521,23 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v5.3.3",
+            "version": "v5.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "e421c4f161848740ad1fcf09b12391ddca168d95"
+                "reference": "5a825e4b386066167a8b55487091cb62beec74c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/e421c4f161848740ad1fcf09b12391ddca168d95",
-                "reference": "e421c4f161848740ad1fcf09b12391ddca168d95",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/5a825e4b386066167a8b55487091cb62beec74c2",
+                "reference": "5a825e4b386066167a8b55487091cb62beec74c2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.5",
                 "psr/container": "^1.1.1",
                 "symfony/deprecation-contracts": "^2.1",
-                "symfony/polyfill-php80": "^1.15",
+                "symfony/polyfill-php80": "^1.16",
                 "symfony/service-contracts": "^1.1.6|^2"
             },
             "conflict": {
@@ -3589,7 +3589,7 @@
             "description": "Allows you to standardize and centralize the way objects are constructed in your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dependency-injection/tree/v5.3.3"
+                "source": "https://github.com/symfony/dependency-injection/tree/v5.3.4"
             },
             "funding": [
                 {
@@ -3605,7 +3605,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-24T08:13:00+00:00"
+            "time": "2021-07-23T15:55:36+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -4156,21 +4156,22 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.3.3",
+            "version": "v5.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "19b71c8f313b411172dd5f470fd61f24466d79a9"
+                "reference": "343f4fe324383ca46792cae728a3b6e2f708fb32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/19b71c8f313b411172dd5f470fd61f24466d79a9",
-                "reference": "19b71c8f313b411172dd5f470fd61f24466d79a9",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/343f4fe324383ca46792cae728a3b6e2f708fb32",
+                "reference": "343f4fe324383ca46792cae728a3b6e2f708fb32",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.5",
-                "symfony/polyfill-ctype": "~1.8"
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-php80": "^1.16"
             },
             "type": "library",
             "autoload": {
@@ -4198,7 +4199,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v5.3.3"
+                "source": "https://github.com/symfony/filesystem/tree/v5.3.4"
             },
             "funding": [
                 {
@@ -4214,7 +4215,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-30T07:27:52+00:00"
+            "time": "2021-07-21T12:40:44+00:00"
         },
         {
             "name": "symfony/finder",
@@ -5774,23 +5775,24 @@
         },
         {
             "name": "symfony/proxy-manager-bridge",
-            "version": "v5.3.0",
+            "version": "v5.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/proxy-manager-bridge.git",
-                "reference": "4e4997e77f30b4caed2b3cebefdecd7031e25a00"
+                "reference": "76e61f33f6a34a340bf6e02211214f466e8e1dba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/proxy-manager-bridge/zipball/4e4997e77f30b4caed2b3cebefdecd7031e25a00",
-                "reference": "4e4997e77f30b4caed2b3cebefdecd7031e25a00",
+                "url": "https://api.github.com/repos/symfony/proxy-manager-bridge/zipball/76e61f33f6a34a340bf6e02211214f466e8e1dba",
+                "reference": "76e61f33f6a34a340bf6e02211214f466e8e1dba",
                 "shasum": ""
             },
             "require": {
                 "composer/package-versions-deprecated": "^1.8",
                 "friendsofphp/proxy-manager-lts": "^1.0.2",
                 "php": ">=7.2.5",
-                "symfony/dependency-injection": "^5.0"
+                "symfony/dependency-injection": "^5.0",
+                "symfony/polyfill-php80": "^1.16"
             },
             "require-dev": {
                 "symfony/config": "^4.4|^5.0"
@@ -5821,7 +5823,7 @@
             "description": "Provides integration for ProxyManager with various Symfony components",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/proxy-manager-bridge/tree/v5.3.0"
+                "source": "https://github.com/symfony/proxy-manager-bridge/tree/v5.3.4"
             },
             "funding": [
                 {
@@ -5837,7 +5839,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-26T12:52:38+00:00"
+            "time": "2021-07-21T12:38:00+00:00"
         },
         {
             "name": "symfony/routing",
