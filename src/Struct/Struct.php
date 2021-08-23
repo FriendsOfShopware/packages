@@ -49,7 +49,7 @@ abstract class Struct implements \JsonSerializable
     }
 
     /**
-     * @param array<array<string, mixed>> $data
+     * @param array<\stdClass> $data
      *
      * @return static[]
      */
