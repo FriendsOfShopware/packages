@@ -45,10 +45,8 @@ class PackagistLoader
             'packages' => $this->mapLicensesToComposerPackages($licenses, $context->token->getShop()),
         ];
 
-        if ($context->usesDeprecatedHeader) {
-            $body['warning'] = 'Usage of Token header is deprecated. Please switch to bearer auth. You can generate a new configuration in the Packages account.';
-            $body['warning-versions'] = '>1.0.0';
-        }
+        $body['warning'] = 'FriendsOfShopware Packages is deprecated. Use the official Shopware packages solution. See https://shyim.me/blog/deprecation-frosh-packages/';
+        $body['warning-versions'] = '>1.0.0';
 
         return $body;
     }
