@@ -386,15 +386,15 @@ class Client
             throw new \InvalidArgumentException('Token needs a Shop');
         }
 
-        if ($token->getShop()->ownerId === $token->getUserId()) {
+        if ($token->getShop()->companyId === $token->getUserId()) {
             return 'shops/' . $token->getShop()->id . '/pluginlicenses';
         }
 
         $partnerAllocation = $this->getPartnerAllocation();
         if ($partnerAllocation === null || !isset($partnerAllocation['partnerId'])) {
-            return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
+            return 'partners/' . $token->getUserId() . '/customers/' . $token->getShop()->companyId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
         }
 
-        return 'partners/' . $partnerAllocation['partnerId'] . '/customers/' . $token->getShop()->ownerId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
+        return 'partners/' . $partnerAllocation['partnerId'] . '/customers/' . $token->getShop()->companyId . '/shops/' . $token->getShop()->id . '/pluginlicenses';
     }
 }

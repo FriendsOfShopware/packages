@@ -17,8 +17,6 @@ class Shop extends Struct
 
     public string $companyName;
 
-    public int $ownerId;
-
     public bool $isPartnerShop;
 
     public ?string $accountId;
