@@ -44,7 +44,7 @@ jobs:
                     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
                 run: |
                     mkdir -p ~/.ssh
-                    ssh-keyscan eevee.shyim.de >> ~/.ssh/known_hosts
+                    ssh-keyscan leafeon.shyim.de >> ~/.ssh/known_hosts
                     ssh-agent -a $SSH_AUTH_SOCK > /dev/null
                     ssh-add - <<< "${{ secrets.DEPLOY_SSH_KEY }}"
 
@@ -52,7 +52,7 @@ jobs:
                 env:
                     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
                 run: |
-                    git remote add deploy deploy@eevee.shyim.de:packages
+                    git remote add deploy deploy@leafeon.shyim.de:packages
                     git push -u deploy ${{ steps.get_version.outputs.VERSION }}
 
             -   name: Create Sentry release
