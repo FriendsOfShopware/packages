@@ -19,7 +19,7 @@
         "meilisearch/meilisearch-php": "^0.19.0",
         "nyholm/psr7": "^1.4",
         "psr/simple-cache": "^1.0",
-        "sensio/framework-extra-bundle": "^6.1",
+        "sensio/framework-extra-bundle": "^6.2",
         "sentry/sentry": "^3.3",
         "symfony/cache": "5.3.*",
         "symfony/flex": "*",
