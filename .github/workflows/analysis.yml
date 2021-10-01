@@ -43,7 +43,7 @@ jobs:
             -   name: PHP-CS-Fixer
                 run: ./vendor/bin/php-cs-fixer fix
 
-            -   uses: EndBug/add-and-commit@v7.3.0
+            -   uses: EndBug/add-and-commit@v7.4.0
                 continue-on-error: true
                 with:
                     add: '.'
