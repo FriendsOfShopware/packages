@@ -1,3 +1,5 @@
+# Discontinued use Shopware Packages instead with the Shopware Account https://shyim.me/blog/deprecation-frosh-packages/
+
 # Shopware Composer Repository
 
 If you want to contribute, please check before the open issues
